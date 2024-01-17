@@ -1,4 +1,4 @@
-# EZC-Backend
+# ezc-frontend
 A React Native development environment using Docker Compose.
 
 ## Getting Started
