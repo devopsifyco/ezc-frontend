@@ -1,21 +1,185 @@
+@Library('ezc-jenkins-library@init') _
+Map buildSetting
+
 pipeline {
     options {
         disableConcurrentBuilds()
         buildDiscarder(logRotator(daysToKeepStr: '10', numToKeepStr: '10', artifactNumToKeepStr: '10', artifactDaysToKeepStr: '10'))
     }
 
-    agent { docker { image 'node:20.11.0-alpine3.19' } }
+    agent {
+        label "master"
+    }
+
+    parameters {
+        booleanParam name: 'Release', defaultValue: false, description: 'Build release version'
+        booleanParam name: 'ScanSonar', defaultValue: false, description: 'Scan Sonarqube for CodeQuality'
+        booleanParam name: 'Deploy', defaultValue: false, description: 'Deploy the version'
+    }
 
     stages {
         stage('Prepare') {
+            agent {
+                docker {
+                    image 'node:20.11.0-alpine3.19'
+                    reuseNode true
+                }
+            }
             steps {
-                sh 'node --version'
+                script {
+                    checkout scm
+                    common.populateBuildOption(buildSetting)
+                    sh 'node --version'
+                }
+                print "TODO: Get git repo info"
+                print "TODO: Get app build info"
             }
         }
-        stage('Build') {
-            steps {
-                sh 'node --version'
+
+        stage('Tag release') {
+            agent {
+                docker {
+                    image 'node:20.11.0-alpine3.19'
+                    reuseNode true
+                }
             }
+            when {
+                expression {
+                    expression { params.Release.toBoolean() }
+                }
+            }
+            steps {
+                print 'TODO: Tag version on Github'
+            }
+        }
+
+        stage('builds') {
+            parallel {
+                stage('build test') {
+                    agent {
+                        docker {
+                            image 'node:20.11.0-alpine3.19'
+                            reuseNode true
+                        }
+                    }
+                    when {
+                        expression {
+                            expression { params.Release.toBoolean() }
+                        }
+                    }
+                    steps {
+                        // TODO
+                        echo 'build demo done'
+                    }
+                }
+                stage('build demo') {
+                    agent {
+                        docker {
+                            image 'node:20.11.0-alpine3.19'
+                            reuseNode true
+                        }
+                    }
+                    when {
+                        expression {
+                            expression { !params.Release.toBoolean() }
+                        }
+                    }
+                    steps {
+                        echo 'build demo done'
+                    }
+                }
+            }
+        }
+
+        stage('Code Quality') {
+            agent {
+                docker {
+                    image 'node:20.11.0-alpine3.19'
+                    reuseNode true
+                }
+            }
+            when {
+                expression {
+                    expression { params.ScanSonar.toBoolean() }
+                }
+            }
+            steps {
+                script {
+                    print 'TODO: Add publish command'
+                    common.cmd "echo Test lib"
+                }
+            }
+        }
+
+        stage('Build Docker Image') {
+            when {
+                expression {
+                    expression { params.Release.toBoolean() }
+                }
+            }
+            steps {
+                script {
+                    sh 'export DOCKER_CREDENTIAL_CONFIG=/usr/local/bin/.docker/config.json'
+
+                    dockerOptions = "--build-arg GIT_COMMIT=${GIT_COMMIT} --build-arg GIT_URL=${GIT_URL} --build-arg GIT_BRANCH=${GIT_BRANCH}"
+                    dockerOptions = dockerOptions + " --build-arg BUILD_NUMBER=${BUILD_NUMBER} --build-arg BUILD_URL=${BUILD_URL}"
+                    dockerOptions = dockerOptions + " --build-arg APP_NAME=ezc-frontend"
+
+                    sh "docker build ${dockerOptions} -t opsifydev/ezc-frontend -f Dockerfile ."
+                }
+            }
+        }
+
+        stage('Push Image to Dockerhub') {
+            when {
+                expression {
+                    expression { params.Release.toBoolean() }
+                }
+            }
+            steps {
+                script {
+                    withDockerRegistry([credentialsId: "GreenBee_DockerHub", url: '']) {
+                        sh 'docker push opsifydev/ezc-frontend'
+                    }
+                }
+            }
+        }
+
+        stage('deployments') {
+            parallel {
+                stage('deploy test') {
+                    when {
+                        expression {
+                            expression { params.Release.toBoolean() }
+                        }
+                    }
+                    steps {
+                        echo 'test deployment done'
+                    }
+                }
+                stage('deploy demo') {
+                    when {
+                        expression {
+                            expression { !params.Release.toBoolean() }
+                        }
+                    }
+                    steps {
+                        echo 'demo deployment done'
+                    }
+                }
+            }
+        }
+    }
+
+    post {
+        always {
+            script {
+                print 'TODO: Notify GoogleChat build status'
+                // common.notifyGoogleChat("This is test message from EZC GreenBee CICD Chatbot")
+            }
+        }
+        cleanup {
+            cleanWs()
         }
     }
 }
