@@ -5,7 +5,7 @@ import RegisterScreen from './RegisterScreen';
 import MoreRegisterScreen from './MoreRegisterScreen';
 import VerifyRegisterScreen from './VerifyRegisterScreen';
 import ForgotPassword from './ForgotPassword';
-import BottomTabs from '../routers/BottomTabs';
+import BottomTabs from '../models/routers/BottomTabs';
 
 const Stack = createNativeStackNavigator();
 
