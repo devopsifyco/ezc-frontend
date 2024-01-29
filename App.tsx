@@ -1,8 +1,13 @@
 import React from 'react';
-import HomeScreen from './src/screens/HomeScreen';
+import {NavigationContainer} from '@react-navigation/native';
+import EZChallenge from './src/screens/EZChallenge';
 
 const App = () => {
-  return <HomeScreen />;
+  return (
+    <NavigationContainer>
+      <EZChallenge />
+    </NavigationContainer>
+  );
 };
 
 export default App;
