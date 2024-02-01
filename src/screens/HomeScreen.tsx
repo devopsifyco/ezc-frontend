@@ -27,12 +27,11 @@ const HomeScreen: React.FC = () => {
         console.error('Error fetching challenges:', error);
       }
     };
-  
+
     fetchData();
   }, []);
-  
 
-  console.log(111, challenges)
+
 
 
   return (
@@ -47,6 +46,7 @@ const HomeScreen: React.FC = () => {
         <Image style={{ height: 150, width: '100%' }} source={require('../assets/slides.jpg')} />
       </View>
 
+
       <View style={styles.section}>
         <Text style={styles.sectionName}>Live right now</Text>
         <TouchableOpacity style={styles.seeAll}>
@@ -54,23 +54,24 @@ const HomeScreen: React.FC = () => {
           <Image source={require('../assets/icons/iconSeeAll.png')} />
         </TouchableOpacity>
       </View>
+      <View>
+        <FlatList
+          data={challenges}
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          keyExtractor={(item) => item.id}
+          renderItem={({ item }) => (
+            <LiveCard
+              date={item.Days}
+              isLive={item.isLive}
+              title={item.name}
+              location={item.Address}
+              images={item.images}
+            />
+          )}
+        />
+      </View>
 
-      <FlatList
-        data={challenges}
-        horizontal
-        showsHorizontalScrollIndicator={false}
-        keyExtractor={(item) => item.id}
-        renderItem={({ item }) => (
-          <LiveCard
-            date={item.Days}
-            isLive={item.isLive}
-            title={item.name}
-            location={item.Address}
-            images={item.images}
-          />
-        )}
-      />
-      
       <View style={styles.section}>
         <Text style={styles.sectionName}>Challenges</Text>
         <TouchableOpacity style={styles.seeAll}>
@@ -78,12 +79,26 @@ const HomeScreen: React.FC = () => {
           <Image source={require('../assets/icons/iconSeeAll.png')} />
         </TouchableOpacity>
       </View>
-      <ScrollView
-      >
-        <ListCard />
-      </ScrollView>
+      <View>
+        <FlatList
+          data={challenges}
+          showsVerticalScrollIndicator={false}
+          keyExtractor={(item) => item.id}
+          contentContainerStyle={{ flexGrow: 1 }}
+          renderItem={({ item }) => (
+            <ListCard
+              date={item.Days}
+              title={item.name}
+              location={item.Address}
+              images={item.images}
+            />
+
+          )}
+        />
+      </View>
 
     </View>
+
   );
 }
 export default HomeScreen;
