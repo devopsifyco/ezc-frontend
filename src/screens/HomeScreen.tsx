@@ -9,9 +9,11 @@ import {
   FlatList,
   ImageSourcePropType,
 } from 'react-native';
+import axios from 'axios';
+
 import LiveCard from '../components/LiveCard';
 import ListCard from '../components/ListCard';
-import axios from 'axios';
+import Slides from '../components/Slides';
 
 interface Challenge {
   id: string;
@@ -51,11 +53,8 @@ const HomeScreen: React.FC = () => {
         <Image source={require('../assets/icons/notification.png')} />
       </View>
 
-      <View>
-        <Image
-          style={{height: 150, width: '100%'}}
-          source={require('../assets/slides.jpg')}
-        />
+      <View style={{height:150}}>
+        <Slides />
       </View>
 
 

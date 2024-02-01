@@ -6,10 +6,9 @@ import HomeScreen from './src/screens/HomeScreen';
 const App = () => {
   return (
     <NavigationContainer>
-      {/* <EZChallenge /> */}
-      <HomeScreen/>
+      <EZChallenge />
     </NavigationContainer>
   );
-};
+};  
 
 export default App;
