@@ -40,6 +40,9 @@ const HomeScreen: React.FC = () => {
     fetchData();
   }, []);
 
+
+
+
   return (
     <View style={styles.container}>
       <View style={styles.header}>
