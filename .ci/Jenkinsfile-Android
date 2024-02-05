@@ -22,6 +22,7 @@ pipeline {
             agent {
                 docker {
                     image 'reactnativecommunity/react-native-android'
+                    args '-v ~/.npm:/.npm -v ~/.cache:/.cache'
                     reuseNode true
                 }
             }
@@ -67,6 +68,7 @@ pipeline {
             agent {
                 docker {
                     image 'reactnativecommunity/react-native-android'
+                    args '-v ~/.npm:/.npm -v ~/.cache:/.cache'
                     reuseNode true
                 }
             }
