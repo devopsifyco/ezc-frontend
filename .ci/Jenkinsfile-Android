@@ -79,7 +79,7 @@ pipeline {
             }
             steps {
                 configFileProvider([configFile(fileId: "defaultNPMSettings", variable: 'NPM_CONFIG_USERCONFIG')]) {
-                    sh 'yarn install && cd android && chmod +x gradlew && ./gradlew assembleRelease'
+                    sh 'yarn install && cd android && chmod +x gradlew && ./gradlew buildDebug'
                 }
             }
         }
