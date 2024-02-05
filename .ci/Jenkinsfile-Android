@@ -30,7 +30,7 @@ pipeline {
                     cleanWs()
                     checkout scm
                     common.populateBuildOption(buildSetting)
-                    sh 'npm i -g envinfo && envinfo'
+                    // sh 'npm i -g envinfo && envinfo'
 
                     print "${GIT_BRANCH}"
                     tagName = "${GIT_BRANCH}"
