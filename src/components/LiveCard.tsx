@@ -22,7 +22,8 @@ const LiveCard:FC<LiveCardProps> = ({ date, isLive, title, location, images }) =
             elevation: 5,
             alignItems: 'center',
             marginLeft: 8,
-            shadowColor: 'rgba(80, 85, 136, 0.6)'
+            shadowColor: 'rgba(80, 85, 136, 0.6)',
+            marginBottom:5
         }}>
             <TouchableOpacity>
                 <View style={{
@@ -60,7 +61,7 @@ const LiveCard:FC<LiveCardProps> = ({ date, isLive, title, location, images }) =
                             paddingHorizontal: 6,
                             paddingVertical: 8
                         }}
-                    >{isLive ? 'live' : 'offline'}</Text>
+                    >{isLive ? 'live' : 'off'}</Text>
                 </View>
 
                 <View style={{

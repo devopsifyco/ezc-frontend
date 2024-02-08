@@ -9,9 +9,11 @@ import {
   FlatList,
   ImageSourcePropType,
 } from 'react-native';
+import axios from 'axios';
+
 import LiveCard from '../components/LiveCard';
 import ListCard from '../components/ListCard';
-import axios from 'axios';
+import Slides from '../components/Slides';
 
 interface Challenge {
   id: string;
@@ -40,7 +42,8 @@ const HomeScreen: React.FC = () => {
     fetchData();
   }, []);
 
-  console.log(111, challenges);
+
+
 
   return (
     <View style={styles.container}>
@@ -50,12 +53,10 @@ const HomeScreen: React.FC = () => {
         <Image source={require('../assets/icons/notification.png')} />
       </View>
 
-      <View>
-        <Image
-          style={{height: 150, width: '100%'}}
-          source={require('../assets/slides.jpg')}
-        />
+      <View style={{height:150}}>
+        <Slides />
       </View>
+
 
       <View style={styles.section}>
         <Text style={styles.sectionName}>Live right now</Text>
@@ -64,22 +65,23 @@ const HomeScreen: React.FC = () => {
           <Image source={require('../assets/icons/iconSeeAll.png')} />
         </TouchableOpacity>
       </View>
-
-      <FlatList
-        data={challenges}
-        horizontal
-        showsHorizontalScrollIndicator={false}
-        keyExtractor={item => item.id}
-        renderItem={({item}) => (
-          <LiveCard
-            date={item.Days}
-            isLive={item.isLive}
-            title={item.name}
-            location={item.Address}
-            images={item.images}
-          />
-        )}
-      />
+      <View>
+        <FlatList
+          data={challenges}
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          keyExtractor={(item) => item.id}
+          renderItem={({ item }) => (
+            <LiveCard
+              date={item.Days}
+              isLive={item.isLive}
+              title={item.name}
+              location={item.Address}
+              images={item.images}
+            />
+          )}
+        />
+      </View>
 
       <View style={styles.section}>
         <Text style={styles.sectionName}>Challenges</Text>
@@ -88,10 +90,26 @@ const HomeScreen: React.FC = () => {
           <Image source={require('../assets/icons/iconSeeAll.png')} />
         </TouchableOpacity>
       </View>
-      <ScrollView>
-        <ListCard />
-      </ScrollView>
+      <View>
+        <FlatList
+          data={challenges}
+          showsVerticalScrollIndicator={false}
+          keyExtractor={(item) => item.id}
+          contentContainerStyle={{ flexGrow: 1 }}
+          renderItem={({ item }) => (
+            <ListCard
+              date={item.Days}
+              title={item.name}
+              location={item.Address}
+              images={item.images}
+            />
+
+          )}
+        />
+      </View>
+
     </View>
+
   );
 };
 export default HomeScreen;
