@@ -10,7 +10,7 @@ import BottomTabs from '../models/routers/BottomTabs';
 const Stack = createNativeStackNavigator();
 
 export default function EZChallenge() {
-  const isAuthenticated = null;
+  const isAuthenticated = 'EZChallenge';
 
   return (
     <Stack.Navigator
