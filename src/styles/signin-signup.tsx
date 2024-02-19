@@ -4,7 +4,10 @@ export const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
-  titleSmall: {},
+  titleSmall: {
+    color: '#A4A4A4',
+    fontSize: 11.5,
+  },
   imageBackground: {},
   formBackground: {
     backgroundColor: '#216C53',
@@ -12,10 +15,16 @@ export const styles = StyleSheet.create({
     borderTopRightRadius: 20,
     paddingHorizontal: 40,
     paddingTop: 20,
+    flex: 1,
   },
   formInput: {},
   inputContainter: {
     flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
+    backgroundColor: '#FFFFFF',
+    paddingHorizontal: 20,
+    borderRadius: 10,
   },
   input: {},
   options: {},
@@ -24,4 +33,8 @@ export const styles = StyleSheet.create({
   titleBold: {},
   moreLogin: {},
   displayOneline: {},
+  moreOption: {flexDirection: 'row', justifyContent: 'space-between'},
+  errorText: {
+    color: 'red',
+  },
 });

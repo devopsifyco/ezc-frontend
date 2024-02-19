@@ -2,7 +2,7 @@ import React from 'react';
 import {Image, Text, TextInput, View} from 'react-native';
 import Button from '../components/Button';
 import LoginOptions from '../components/LoginOptions';
-import {styles} from './LoginScreen';
+import {styles} from '../styles/signin-signup';
 import {NavigateType} from '../models/Navigations';
 import {Controller, useForm} from 'react-hook-form';
 
@@ -26,7 +26,7 @@ export default function ForgotPassword({navigation}: NavigateType) {
         source={require('../assets/signin_signup/background.png')}
         style={styles.imageBackground}
       />
-      <View style={styles.formBackgroundLogin}>
+      <View style={styles.formBackground}>
         <View style={styles.formInput}>
           {errors.email ? (
             <Text style={styles.errorText}>

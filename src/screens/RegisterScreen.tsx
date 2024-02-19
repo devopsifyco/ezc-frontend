@@ -71,12 +71,6 @@ export default function RegisterScreen({navigation}: NavigateType) {
           </Text>
         </View>
         <Button onPress={moveMoreRegister} title="Next step" />
-        <View style={styles.moreLogin}>
-          <Image source={require('../assets/signin_signup/arrowLeft.png')} />
-          <Text style={styles.titleSmall}>Or continue with</Text>
-          <Image source={require('../assets/signin_signup/arrowRight.png')} />
-        </View>
-
         <LoginOptions />
       </View>
     </View>

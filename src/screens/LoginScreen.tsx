@@ -8,9 +8,8 @@ import {styles} from '../styles/signin-signup';
 export default function LoginScreen({navigation}: NavigateType) {
   const passwordRegisterRef = useRef<TextInput>(null);
   const userRef = useRef<TextInput>(null);
-  const handleLogin = null;
-  const moveLogin = () => navigation.goBack();
-  const moveMoreRegister = () => navigation.navigate('MoreRegisterScreen');
+  const moveRegister = () => navigation.navigate('RegisterScreen');
+  const moveForgotPassword = () => navigation.navigate('ForgotPassword');
 
   return (
     <View style={styles.container}>
@@ -49,21 +48,25 @@ export default function LoginScreen({navigation}: NavigateType) {
             />
           </View>
         </View>
-        <View style={[styles.options, styles.setCenter]}>
-          <Text style={[styles.titleSmall, styles.tileWhiteColor]}>
-            Already have you an account?{' '}
-            <TouchableOpacity onPress={moveLogin}>
-              <Text style={[styles.titleSmall, styles.titleBold]}>Login</Text>
-            </TouchableOpacity>
-          </Text>
+        <View style={styles.moreOption}>
+          <View style={styles.options}>
+            <Text style={[styles.titleSmall, styles.tileWhiteColor]}>
+              You can{' '}
+              <TouchableOpacity onPress={moveRegister}>
+                <Text style={[styles.titleSmall, styles.titleBold]}>
+                  Register
+                </Text>
+              </TouchableOpacity>{' '}
+              here!
+            </Text>
+          </View>
+          <TouchableOpacity onPress={moveRegister}>
+            <Text style={[styles.titleSmall, styles.titleBold]}>
+              Forgot password?
+            </Text>
+          </TouchableOpacity>
         </View>
-        <Button onPress={moveMoreRegister} title="Next step" />
-        <View style={styles.moreLogin}>
-          <Image source={require('../assets/signin_signup/arrowLeft.png')} />
-          <Text style={styles.titleSmall}>Or continue with</Text>
-          <Image source={require('../assets/signin_signup/arrowRight.png')} />
-        </View>
-
+        <Button onPress={moveForgotPassword} title="Login" />
         <LoginOptions />
       </View>
     </View>
