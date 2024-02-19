@@ -1,6 +1,6 @@
 import React,{FC} from 'react'
 import { Text, View, StyleSheet, Image, TouchableOpacity, ImageSourcePropType } from 'react-native';
-
+import AvatarGroup from './AvatarGroup';
 
 interface LiveCardProps {
     date: string;
@@ -15,7 +15,7 @@ const LiveCard:FC<LiveCardProps> = ({ date, isLive, title, location, images }) =
     return (
         <View style={{
             width: 230,
-            height:230,
+            height:270,
             padding: 10,
             borderRadius: 18,
             backgroundColor: '#FFFFFF',
@@ -76,6 +76,7 @@ const LiveCard:FC<LiveCardProps> = ({ date, isLive, title, location, images }) =
                     }}>
                          {title}
                     </Text>
+                    <AvatarGroup />
                     <View style={{
                         flexDirection: 'row',
                         alignItems: 'center',
