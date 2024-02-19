@@ -1,5 +1,6 @@
 import React from 'react';
 import { Text, View, StyleSheet, Image, TouchableOpacity, ImageSourcePropType } from 'react-native';
+import Moment from 'moment';
 
 interface LiveCardProps {
     date: string;
@@ -34,12 +35,13 @@ const ListCard: React.FC<LiveCardProps> = ({ date, title, location, images }) =>
                 }}>
                     <Text style={{
                         color: "#216C53",
+                        fontWeight: "bold",
                     }}>
-                        {date}
+                        {Moment(date).format('ddd, MMM DD • LT')}
                     </Text>
                     <Text numberOfLines={1} style={{
                         fontSize: 15,
-                        fontWeight: '700',
+                        fontWeight: "bold",
                         color: "#000000",
                         marginBottom: 15,
                     }}>
@@ -49,10 +51,11 @@ const ListCard: React.FC<LiveCardProps> = ({ date, title, location, images }) =>
                         flexDirection: 'row',
                         alignItems: 'center',
                     }}>
-                        <Image source={require('../assets/icons/map-pin.png')} />
+                        <Image source={require('../assets/icons/locationList.png')} />
                         <Text style={{
                             fontSize: 13,
-                            marginLeft: 5,
+                            marginLeft: 4,
+                            fontWeight: "bold",
                         }}>{location}</Text>
                     </View>
                 </View>
