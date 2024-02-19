@@ -21,9 +21,9 @@ export default function ForgotPassword({navigation}: NavigateType) {
 
   return (
     <View style={styles.container}>
-      <Image source={require('../assets/login/Logo.png')} />
+      <Image source={require('../assets/signin_signup/logo.png')} />
       <Image
-        source={require('../assets/login/background.png')}
+        source={require('../assets/signin_signup/background.png')}
         style={styles.imageBackground}
       />
       <View style={styles.formBackgroundLogin}>
@@ -37,7 +37,7 @@ export default function ForgotPassword({navigation}: NavigateType) {
           )}
 
           <View style={styles.inputContainter}>
-            <Image source={require('../assets/login/email.png')} />
+            <Image source={require('../assets/signin_signup/email-icon.png')} />
             <Controller
               name="email"
               control={control}
@@ -63,9 +63,9 @@ export default function ForgotPassword({navigation}: NavigateType) {
         </View>
         <Button onPress={handleSubmit(handleVerification)} title="Send code" />
         <View style={styles.moreLogin}>
-          <Image source={require('../assets/login/arrowLeft.png')} />
+          <Image source={require('../assets/signin_signup/arrowLeft.png')} />
           <Text style={styles.titleSmall}>Or continue with</Text>
-          <Image source={require('../assets/login/arrowRight.png')} />
+          <Image source={require('../assets/signin_signup/arrowRight.png')} />
         </View>
         <LoginOptions />
       </View>
