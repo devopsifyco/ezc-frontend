@@ -11,7 +11,7 @@ import SeeAllLive from './SeeAllLive';
 const Stack = createNativeStackNavigator();
 
 export default function EZChallenge() {
-  const isAuthenticated = 'EZChallenge';
+  const isAuthenticated = null;
 
   return (
     <Stack.Navigator
