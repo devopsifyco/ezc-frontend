@@ -1,4 +1,4 @@
-import react, {useEffect, useState} from 'react';
+import react, { useEffect, useState } from 'react';
 import {
   Text,
   View,
@@ -14,17 +14,11 @@ import axios from 'axios';
 import LiveCard from '../components/LiveCard';
 import ListCard from '../components/ListCard';
 import Slides from '../components/Slides';
+import { NavigateType } from '../models/Navigations';
+import { Challenge } from '../models/InfChallenge';
 
-interface Challenge {
-  id: string;
-  Days: string;
-  isLive: boolean;
-  name: string;
-  Address: string;
-  images: ImageSourcePropType;
-}
 
-const HomeScreen: React.FC = () => {
+const HomeScreen: React.FC<NavigateType> = ({ navigation }) => {
   const [challenges, setChallenges] = useState<Challenge[]>([]);
 
   useEffect(() => {
@@ -53,7 +47,7 @@ const HomeScreen: React.FC = () => {
         <Image source={require('../assets/icons/notification.png')} />
       </View>
 
-      <View style={{height:150}}>
+      <View style={{ height: 150 }}>
         <Slides />
       </View>
 
@@ -61,7 +55,9 @@ const HomeScreen: React.FC = () => {
       <View style={styles.section}>
         <Text style={styles.sectionName}>Live right now</Text>
         <TouchableOpacity style={styles.seeAll}>
-          <Text>See All</Text>
+          <Text
+            onPress={() => navigation.navigate('SeeAllLive')}
+          >See All</Text>
           <Image source={require('../assets/icons/iconSeeAll.png')} />
         </TouchableOpacity>
       </View>
@@ -86,7 +82,9 @@ const HomeScreen: React.FC = () => {
       <View style={styles.section}>
         <Text style={styles.sectionName}>Challenges</Text>
         <TouchableOpacity style={styles.seeAll}>
-          <Text>See All</Text>
+          <Text
+            onPress={() => navigation.navigate('SeeAllChallange')}
+          >See All</Text>
           <Image source={require('../assets/icons/iconSeeAll.png')} />
         </TouchableOpacity>
       </View>
@@ -114,7 +112,7 @@ const HomeScreen: React.FC = () => {
 };
 export default HomeScreen;
 
-export const styles = StyleSheet.create({
+const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#FEFEFE',

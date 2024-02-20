@@ -1,12 +1,13 @@
 import React from 'react';
-import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import LoginScreen from './LoginScreen';
 import RegisterScreen from './RegisterScreen';
 import MoreRegisterScreen from './MoreRegisterScreen';
 import VerifyRegisterScreen from './VerifyRegisterScreen';
 import ForgotPassword from './ForgotPassword';
 import BottomTabs from '../models/routers/BottomTabs';
-
+import SeeAllChallenges from './SeeAllChallenges';
+import SeeAllLive from './SeeAllLive';
 const Stack = createNativeStackNavigator();
 
 export default function EZChallenge() {
@@ -15,7 +16,7 @@ export default function EZChallenge() {
   return (
     <Stack.Navigator
       initialRouteName={isAuthenticated ? 'EZChallenge' : 'LoginScreen'}>
-      <Stack.Group screenOptions={{headerShown: false}}>
+      <Stack.Group screenOptions={{ headerShown: false }}>
         <Stack.Screen name="LoginScreen" component={LoginScreen} />
         <Stack.Screen name="RegisterScreen" component={RegisterScreen} />
         <Stack.Screen
@@ -29,7 +30,12 @@ export default function EZChallenge() {
         <Stack.Screen name="ForgotPassword" component={ForgotPassword} />
       </Stack.Group>
 
-      <Stack.Group screenOptions={{headerShown: false}}>
+      <Stack.Group screenOptions={{ headerShown: false }}>
+        <Stack.Screen name="SeeAllChallange" component={SeeAllChallenges} />
+        <Stack.Screen name="SeeAllLive" component={SeeAllLive} />
+      </Stack.Group>
+
+      <Stack.Group screenOptions={{ headerShown: false }}>
         <Stack.Screen name="EZChallenge" component={BottomTabs} />
       </Stack.Group>
     </Stack.Navigator>
