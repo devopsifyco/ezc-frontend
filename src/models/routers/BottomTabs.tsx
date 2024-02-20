@@ -62,6 +62,7 @@ export default function BottomTabs() {
             height: 85,
           },
         })}>
+
         <Tab.Screen
           name="HomeScreen"
           component={HomeScreen}

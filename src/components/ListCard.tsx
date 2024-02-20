@@ -6,7 +6,7 @@ interface LiveCardProps {
     date: string;
     title: string;
     location: string;
-    images: ImageSourcePropType;
+    images: string[];
 }
 
 const ListCard: React.FC<LiveCardProps> = ({ date, title, location, images }) => {

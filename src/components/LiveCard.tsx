@@ -8,7 +8,7 @@ interface LiveCardProps {
     isLive: boolean;
     title: string;
     location: string;
-    images: ImageSourcePropType;
+    images: string[];
 }
 
 

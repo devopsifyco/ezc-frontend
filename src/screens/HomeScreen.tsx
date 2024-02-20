@@ -14,6 +14,7 @@ import axios from 'axios';
 import LiveCard from '../components/LiveCard';
 import ListCard from '../components/ListCard';
 import Slides from '../components/Slides';
+import {NavigateType} from '../models/Navigations';
 
 interface Challenge {
   id: string;
@@ -21,10 +22,11 @@ interface Challenge {
   isLive: boolean;
   name: string;
   Address: string;
-  images: ImageSourcePropType;
+  images: string[];
 }
 
-const HomeScreen: React.FC = () => {
+
+const HomeScreen: React.FC<NavigateType> = ({navigation}) => {
   const [challenges, setChallenges] = useState<Challenge[]>([]);
 
   useEffect(() => {
@@ -86,7 +88,9 @@ const HomeScreen: React.FC = () => {
       <View style={styles.section}>
         <Text style={styles.sectionName}>Challenges</Text>
         <TouchableOpacity style={styles.seeAll}>
-          <Text>See All</Text>
+          <Text 
+            onPress={()=> navigation.navigate('SeeAll')}
+          >See All</Text>
           <Image source={require('../assets/icons/iconSeeAll.png')} />
         </TouchableOpacity>
       </View>
@@ -114,7 +118,7 @@ const HomeScreen: React.FC = () => {
 };
 export default HomeScreen;
 
-export const styles = StyleSheet.create({
+const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#FEFEFE',
