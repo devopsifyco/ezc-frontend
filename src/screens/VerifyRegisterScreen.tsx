@@ -1,12 +1,37 @@
-import React from 'react';
+import React, {useState, useRef} from 'react';
 import {Image, Text, TextInput, View} from 'react-native';
 import Button from '../components/Button';
 import LoginOptions from '../components/LoginOptions';
-import {styles} from './LoginScreen';
+import {styles} from '../styles/signin-signup';
 import {NavigateType} from '../models/Navigations';
 
 export default function VerifyRegisterScreen({navigation}: NavigateType) {
-  const handleVerify = () => navigation.navigate('LoginScreen');
+  const [verificationCodes, setVerificationCodes] = useState(['', '', '', '']);
+  const verificationCodeRefs = [
+    useRef<TextInput>(null),
+    useRef<TextInput>(null),
+    useRef<TextInput>(null),
+    useRef<TextInput>(null),
+  ];
+
+  const handleVerify = () => {
+    const code = verificationCodes.join('');
+    // Perform verification logic with the 'code'
+    // For now, just navigate to LoginScreen
+    navigation.navigate('LoginScreen');
+  };
+
+  const handleCodeInput = (index: number, value: string) => {
+    setVerificationCodes(prevCodes => {
+      const newCodes = [...prevCodes];
+      newCodes[index] = value;
+      return newCodes;
+    });
+
+    if (value !== '' && index < 3) {
+      verificationCodeRefs[index + 1].current?.focus();
+    }
+  };
 
   return (
     <View style={styles.container}>
@@ -19,34 +44,20 @@ export default function VerifyRegisterScreen({navigation}: NavigateType) {
         <View style={styles.formInput}>
           <Text>Verification codes</Text>
           <View style={styles.inputVerify}>
-            <View style={[styles.inputContainter, styles.itemVerify]}>
-              <TextInput
-                style={[styles.titleBold, styles.titleLarge]}
-                maxLength={1}
-                keyboardType="numeric"
-              />
-            </View>
-            <View style={[styles.inputContainter, styles.itemVerify]}>
-              <TextInput
-                style={[styles.titleBold, styles.titleLarge]}
-                maxLength={1}
-                keyboardType="numeric"
-              />
-            </View>
-            <View style={[styles.inputContainter, styles.itemVerify]}>
-              <TextInput
-                style={[styles.titleBold, styles.titleLarge]}
-                maxLength={1}
-                keyboardType="numeric"
-              />
-            </View>
-            <View style={[styles.inputContainter, styles.itemVerify]}>
-              <TextInput
-                style={[styles.titleBold, styles.titleLarge]}
-                maxLength={1}
-                keyboardType="numeric"
-              />
-            </View>
+            {verificationCodes.map((code, index) => (
+              <View
+                key={index}
+                style={[styles.inputContainter, styles.itemVerify]}>
+                <TextInput
+                  ref={verificationCodeRefs[index]}
+                  style={[styles.titleBold, styles.titleLarge]}
+                  maxLength={1}
+                  keyboardType="numeric"
+                  value={code}
+                  onChangeText={text => handleCodeInput(index, text)}
+                />
+              </View>
+            ))}
           </View>
         </View>
         <Button onPress={handleVerify} title="Confirm code" />

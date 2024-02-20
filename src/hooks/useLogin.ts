@@ -11,7 +11,7 @@ export default function useLogin() {
       return res.data;
     },
     onSuccess: data => Alert.alert(data.message),
-    onError: data => Alert.alert('Login failed', data.message),
+    onError: data => Alert.alert(data.message),
   });
 
   return {...login};

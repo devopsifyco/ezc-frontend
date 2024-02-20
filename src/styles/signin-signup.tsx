@@ -4,6 +4,9 @@ export const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
+  logo: {
+    marginTop: 30,
+  },
   titleSmall: {
     color: '#A4A4A4',
     fontSize: 11.5,
@@ -13,11 +16,15 @@ export const styles = StyleSheet.create({
     backgroundColor: '#216C53',
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
-    paddingHorizontal: 40,
-    paddingTop: 20,
-    flex: 1,
+    paddingHorizontal: '6.3%',
+    position: 'absolute',
+    bottom: '0%',
   },
-  formInput: {},
+  formContainer: {
+    paddingTop: 20,
+    paddingBottom: 20,
+  },
+  formInput: {paddingBottom: 10, gap: 10},
   inputContainter: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -26,15 +33,26 @@ export const styles = StyleSheet.create({
     paddingHorizontal: 20,
     borderRadius: 10,
   },
-  input: {},
+  input: {
+    color: '#000000',
+    width: 210,
+  },
   options: {},
   setCenter: {},
   tileWhiteColor: {},
-  titleBold: {},
+  titleBold: {fontWeight: 'bold'},
+  textRegister: {
+    color: '#FFFFFF',
+    top: 3.5,
+  },
   moreLogin: {},
   displayOneline: {},
   moreOption: {flexDirection: 'row', justifyContent: 'space-between'},
   errorText: {
     color: 'red',
   },
+  inputVerify: {},
+  titleLarge: {},
+  itemVerify: {},
+  //passwordIcon: {paddingLeft: 85},
 });
