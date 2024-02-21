@@ -35,38 +35,36 @@ export default function VerifyRegisterScreen({navigation}: NavigateType) {
 
   return (
     <View style={styles.container}>
-      <Image source={require('../assets/signin_signup/logo.png')} />
+      <Image
+        style={styles.logo}
+        source={require('../assets/signin_signup/logo.png')}
+      />
       <Image
         source={require('../assets/signin_signup/background.png')}
         style={styles.imageBackground}
       />
       <View style={styles.formBackground}>
-        <View style={styles.formInput}>
-          <Text>Verification codes</Text>
-          <View style={styles.inputVerify}>
-            {verificationCodes.map((code, index) => (
-              <View
-                key={index}
-                style={[styles.inputContainter, styles.itemVerify]}>
-                <TextInput
-                  ref={verificationCodeRefs[index]}
-                  style={[styles.titleBold, styles.titleLarge]}
-                  maxLength={1}
-                  keyboardType="numeric"
-                  value={code}
-                  onChangeText={text => handleCodeInput(index, text)}
-                />
-              </View>
-            ))}
+        <View style={styles.formContainer}>
+          <View style={styles.formInput}>
+            <Text>Verification codes</Text>
+            <View style={styles.inputVerifyContainer}>
+              {verificationCodes.map((code, index) => (
+                <View key={index} style={styles.inputVerify}>
+                  <TextInput
+                    ref={verificationCodeRefs[index]}
+                    style={[styles.titleBold, styles.titleLarge]}
+                    maxLength={1}
+                    keyboardType="numeric"
+                    value={code}
+                    onChangeText={text => handleCodeInput(index, text)}
+                  />
+                </View>
+              ))}
+            </View>
           </View>
+          <Button onPress={handleVerify} title="Confirm code" />
+          <LoginOptions />
         </View>
-        <Button onPress={handleVerify} title="Confirm code" />
-        <View style={styles.moreLogin}>
-          <Image source={require('../assets/signin_signup/arrowLeft.png')} />
-          <Text style={styles.titleSmall}>Or continue with</Text>
-          <Image source={require('../assets/signin_signup/arrowRight.png')} />
-        </View>
-        <LoginOptions />
       </View>
     </View>
   );
