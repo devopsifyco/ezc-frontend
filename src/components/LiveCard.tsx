@@ -1,21 +1,22 @@
-import React,{FC} from 'react'
+import React, { FC } from 'react'
 import { Text, View, StyleSheet, Image, TouchableOpacity, ImageSourcePropType } from 'react-native';
-
+import AvatarGroup from './AvatarGroup';
+import Moment from 'moment';
 
 interface LiveCardProps {
     date: string;
     isLive: boolean;
     title: string;
     location: string;
-    images: ImageSourcePropType;
+    images: string[];
 }
 
 
-const LiveCard:FC<LiveCardProps> = ({ date, isLive, title, location, images }) => {
+const LiveCard: FC<LiveCardProps> = ({ date, isLive, title, location, images }) => {
     return (
         <View style={{
             width: 230,
-            height:230,
+            height: 270,
             padding: 10,
             borderRadius: 18,
             backgroundColor: '#FFFFFF',
@@ -23,29 +24,37 @@ const LiveCard:FC<LiveCardProps> = ({ date, isLive, title, location, images }) =
             alignItems: 'center',
             marginLeft: 8,
             shadowColor: 'rgba(80, 85, 136, 0.6)',
-            marginBottom:5
+            marginBottom: 5
         }}>
             <TouchableOpacity>
                 <View style={{
                     position: 'relative',
                 }}>
-                    <Image style={{ borderRadius: 10, width:218, height:150 }} source={{uri: 'https://cdn.photographylife.com/wp-content/uploads/2018/11/Moeraki-Boulders-New-Zealand.jpg'}} resizeMode="cover"  />
-                    <Text style={{
-                        position: 'absolute',
-                        width: 45,
-                        backgroundColor: 'rgba(255, 255, 255, 0.7)',
-                        borderRadius: 10,
-                        left: 8,
-                        top: 8,
-                        textAlign: 'center',
-                        textTransform: 'uppercase',
-                        fontSize: 10,
-                        fontWeight: '500',
-                        color: "#F0635A",
-                        paddingHorizontal: 6,  
-                        paddingVertical: 8
+                    <Image
+                        style={{
+                            borderRadius: 10,
+                            width: 218,
+                            height: 150
+                        }}
+                        source={{ uri: 'https://cdn.photographylife.com/wp-content/uploads/2018/11/Moeraki-Boulders-New-Zealand.jpg' }} resizeMode="cover" />
+                    <View style={{ position: 'absolute', left: 8, top: 8 }}>
+                        <Text style={{
+                            width: 45,
+                            backgroundColor: 'rgba(255, 255, 255, 0.7)',
+                            borderRadius: 10,
+                            textAlign: 'center',
+                            textTransform: 'uppercase',
+                            fontSize: 10,
+                            fontWeight: '500',
+                            color: "#F0635A",
+                            paddingHorizontal: 6,
+                            paddingVertical: 8
+                        }}>
+                            <Text style={{ fontSize: 18, fontWeight: '700' }}>{Moment(date).format('DD')}</Text>{'\n'}
+                            {Moment(date).format('MMM')}
+                        </Text>
+                    </View>
 
-                    }}> <Text style={{ fontSize: 18, fontWeight: '700' }}>10</Text> june</Text>
                     <Text
                         style={{
                             position: 'absolute',
@@ -74,8 +83,9 @@ const LiveCard:FC<LiveCardProps> = ({ date, isLive, title, location, images }) =
                         fontWeight: '500',
                         color: "#000000",
                     }}>
-                         {title}
+                        {title}
                     </Text>
+                    <AvatarGroup />
                     <View style={{
                         flexDirection: 'row',
                         alignItems: 'center',
