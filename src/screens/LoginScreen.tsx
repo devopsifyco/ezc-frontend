@@ -1,4 +1,4 @@
-import React, {useRef, useState} from 'react';
+import React, {useEffect, useRef, useState} from 'react';
 import {Image, Text, TextInput, View, TouchableOpacity} from 'react-native';
 import Button from '../components/Button';
 import LoginOptions from '../components/LoginOptions';
@@ -6,6 +6,7 @@ import {NavigateType} from '../models/Navigations';
 import {styles} from '../styles/signin-signup';
 import {useForm, Controller} from 'react-hook-form';
 import useLogin from '../hooks/useLogin';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function LoginScreen({navigation}: NavigateType) {
   const passwordLoginRef = useRef<TextInput>(null);
@@ -21,6 +22,21 @@ export default function LoginScreen({navigation}: NavigateType) {
     },
   });
 
+  useEffect(() => {
+    const getData = async () => {
+      try {
+        const jsonString = await AsyncStorage.getItem('userData');
+        if (jsonString !== null) {
+          const userData = JSON.parse(jsonString);
+          navigation.navigate('EZChallenge');
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    getData();
+  }, []);
+
   const moveRegister = () => navigation.navigate('RegisterScreen');
   const moveForgotPassword = () => navigation.navigate('ForgotPassword');
   const togglePasswordVisibility = () => {
@@ -32,6 +48,8 @@ export default function LoginScreen({navigation}: NavigateType) {
   const handleLogin = (fromData: any) => {
     mutate(fromData, {
       onSuccess: () => {
+        const jsonString = JSON.stringify(fromData);
+        AsyncStorage.setItem('userdata', jsonString);
         navigation.navigate('EZChallenge');
       },
     });
