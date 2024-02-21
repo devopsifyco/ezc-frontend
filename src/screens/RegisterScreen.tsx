@@ -1,4 +1,4 @@
-import React, {useRef} from 'react';
+import React, {useRef, useState} from 'react';
 import {
   Image,
   Text,
@@ -16,7 +16,11 @@ import {RegistrationData} from '../models/Register';
 
 export default function RegisterScreen({navigation}: NavigateType) {
   const passwordRegisterRef = useRef<TextInput>(null);
-  const userRef = useRef<TextInput>(null);
+  const userNameRef = useRef<TextInput>(null);
+  const [showPassword, setShowPassword] = useState(false);
+  const togglePasswordVisibility = () => {
+    setShowPassword(prev => !prev);
+  };
 
   const moveLogin = () => navigation.goBack();
   const moveMoreRegister = (data: RegistrationData) => {
@@ -24,7 +28,6 @@ export default function RegisterScreen({navigation}: NavigateType) {
   };
 
   const onSubmit = (data: RegistrationData) => {
-    // Pass the data object to moveMoreRegister
     moveMoreRegister(data);
   };
 
@@ -75,7 +78,7 @@ export default function RegisterScreen({navigation}: NavigateType) {
                     onBlur={onBlur}
                     value={value}
                     enterKeyHint={'next'}
-                    onSubmitEditing={() => userRef.current?.focus()}
+                    onSubmitEditing={() => userNameRef.current?.focus()}
                   />
                 )}
                 name="email"
@@ -105,6 +108,7 @@ export default function RegisterScreen({navigation}: NavigateType) {
                 control={control}
                 render={({field: {onChange, onBlur, value}}) => (
                   <TextInput
+                    ref={userNameRef}
                     style={styles.input}
                     placeholder="Enter your user name"
                     placeholderTextColor="#00000080"
@@ -143,6 +147,7 @@ export default function RegisterScreen({navigation}: NavigateType) {
                     onChangeText={text => onChange(text)}
                     placeholder="Enter your password"
                     placeholderTextColor="#00000080"
+                    secureTextEntry={!showPassword}
                     enterKeyHint={'done'}
                   />
                 )}
@@ -155,6 +160,15 @@ export default function RegisterScreen({navigation}: NavigateType) {
                   },
                 }}
               />
+              <TouchableOpacity onPress={togglePasswordVisibility}>
+                <Image
+                  source={
+                    showPassword
+                      ? require('../assets/signin_signup/open-eye.png')
+                      : require('../assets/signin_signup/close-eye.png')
+                  }
+                />
+              </TouchableOpacity>
             </View>
           </View>
           <View style={[styles.options, styles.setCenter]}>
