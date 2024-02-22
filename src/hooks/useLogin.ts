@@ -17,9 +17,9 @@ export default function useLogin() {
       AsyncStorage.setItem("accessToken", data.accessToken);
       AsyncStorage.setItem("refreshToken", data.refreshToken);
     },
-    onError: error => {
-      Alert.alert(error.message),
-      console.log(error);
+    onError: (error) => {
+      Alert.alert(error?.response.data.message);
+      console.log(error?.response.data.message);
     }
   });
 
