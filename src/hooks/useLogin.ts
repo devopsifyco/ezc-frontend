@@ -10,7 +10,6 @@ export default function useLogin() {
   const login = useMutation({
     mutationKey: ['login'],
     mutationFn: async (userData: { email: string; password: string }) => {
-    // mutationFn: async userData => {
       const res = await axios.post(API_LOGIN, userData);
       return res.data;
     },
@@ -28,6 +27,7 @@ export default function useLogin() {
     try {
       const userdataString  = await AsyncStorage.getItem('userdata');
       if (userdataString) {
+        console.log(userdataString);
         const userData = JSON.parse(userdataString);
         const { email, password } = userData;
         login.mutate({ email: email, password: password });
