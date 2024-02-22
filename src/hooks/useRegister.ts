@@ -13,6 +13,7 @@ export default function useRegister() {
       return res.data;
     },
     onSuccess: () => Alert.alert('Registration successful'),
+    onError: error => Alert.alert(error.message),
   });
 
   return {...register};

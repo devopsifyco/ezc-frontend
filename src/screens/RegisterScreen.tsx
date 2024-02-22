@@ -15,8 +15,9 @@ import {useForm, Controller} from 'react-hook-form';
 import {RegistrationData} from '../models/Register';
 
 export default function RegisterScreen({navigation}: NavigateType) {
-  const passwordRegisterRef = useRef<TextInput>(null);
   const userNameRef = useRef<TextInput>(null);
+  const passwordRegisterRef = useRef<TextInput>(null);
+  const confirmPasswordRef = useRef<TextInput>(null);
   const [showPassword, setShowPassword] = useState(false);
   const togglePasswordVisibility = () => {
     setShowPassword(prev => !prev);
@@ -40,6 +41,7 @@ export default function RegisterScreen({navigation}: NavigateType) {
       email: '',
       username: '',
       password: '',
+      confirmPassword: '',
     },
   });
 
@@ -148,7 +150,8 @@ export default function RegisterScreen({navigation}: NavigateType) {
                     placeholder="Enter your password"
                     placeholderTextColor="#00000080"
                     secureTextEntry={!showPassword}
-                    enterKeyHint={'done'}
+                    enterKeyHint={'next'}
+                    onSubmitEditing={() => confirmPasswordRef.current?.focus()}
                   />
                 )}
                 name="password"
@@ -159,6 +162,46 @@ export default function RegisterScreen({navigation}: NavigateType) {
                     message: 'Password must be 8 characters!',
                   },
                 }}
+              />
+              <TouchableOpacity onPress={togglePasswordVisibility}>
+                <Image
+                  source={
+                    showPassword
+                      ? require('../assets/signin_signup/open-eye.png')
+                      : require('../assets/signin_signup/close-eye.png')
+                  }
+                />
+              </TouchableOpacity>
+            </View>
+          </View>
+          <View style={styles.formInput}>
+            {errors.confirmPassword ? (
+              <Text style={styles.errorText}>
+                {errors.confirmPassword.message}
+              </Text>
+            ) : (
+              <Text>Confirm password</Text>
+            )}
+            <View style={styles.inputContainter}>
+              <Image
+                source={require('../assets/signin_signup/password-icon.png')}
+              />
+              <Controller
+                control={control}
+                render={({field: {onChange, onBlur, value}}) => (
+                  <TextInput
+                    ref={confirmPasswordRef}
+                    style={styles.input}
+                    placeholder="Enter your password"
+                    placeholderTextColor="#00000080"
+                    enterKeyHint={'done'}
+                    value={value}
+                    onBlur={onBlur}
+                    onChangeText={text => onChange(text)}
+                  />
+                )}
+                name="confirmPassword"
+                rules={{required: 'Confirm Password is required!'}}
               />
               <TouchableOpacity onPress={togglePasswordVisibility}>
                 <Image
