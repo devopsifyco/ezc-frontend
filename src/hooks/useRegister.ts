@@ -3,7 +3,7 @@ import axios from 'axios';
 import {RegistrationData} from '../models/Register';
 import {Alert} from 'react-native';
 
-const API_REGISTER = 'https://ezc-test-api.greenbee.gke.vn/api/sign-up';
+const API_REGISTER = `https://${process.env.IP_COMPUTER}:4000/api/sign-up`;
 
 export default function useRegister() {
   const register = useMutation({
