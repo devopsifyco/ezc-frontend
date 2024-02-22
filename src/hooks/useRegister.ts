@@ -12,8 +12,8 @@ export default function useRegister() {
       const res = await axios.post(API_REGISTER, dataRegister);
       return res.data;
     },
-    onSuccess: () => Alert.alert('Registration successful'),
-    onError: error => Alert.alert(error.message),
+    onSuccess: async data => console.log(data.message),
+    onError: error => Alert.alert(error?.response.data.message),
   });
 
   return {...register};

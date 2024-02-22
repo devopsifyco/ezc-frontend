@@ -6,13 +6,16 @@ import {
   View,
   TouchableOpacity,
   ScrollView,
+  Alert,
 } from 'react-native';
 import Button from '../components/Button';
 import LoginOptions from '../components/LoginOptions';
-import {styles} from '../styles/signin-signup';
-import {NavigateType} from '../models/Navigations';
-import {useForm, Controller} from 'react-hook-form';
-import {RegistrationData} from '../models/Register';
+import { styles } from '../styles/signin-signup';
+import { NavigateType } from '../models/Navigations';
+import { useForm, Controller } from 'react-hook-form';
+import { RegistrationData } from '../models/Register';
+import useRegister from '../hooks/useRegister';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function RegisterScreen({navigation}: NavigateType) {
   const userNameRef = useRef<TextInput>(null);
@@ -24,12 +27,21 @@ export default function RegisterScreen({navigation}: NavigateType) {
   };
 
   const moveLogin = () => navigation.goBack();
-  const moveMoreRegister = (data: RegistrationData) => {
-    navigation.navigate('MoreRegisterScreen', data);
-  };
+
+  const { mutate } = useRegister();
+
 
   const onSubmit = (data: RegistrationData) => {
-    moveMoreRegister(data);
+    if (data.password === data.confirmPassword) {
+      mutate(data, {
+        onSuccess: () => {
+          navigation.navigate('VerifyRegisterScreen');
+          AsyncStorage.setItem('email', data.email);
+        },
+      })
+    } else {
+      Alert.alert("Confirm password does not match with password")
+    }
   };
 
   const {
