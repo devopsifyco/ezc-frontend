@@ -1,19 +1,20 @@
-import React, {useRef, useState} from 'react';
-import {Image, Text, TextInput, View, TouchableOpacity} from 'react-native';
+import React, { useEffect, useRef, useState } from 'react';
+import { Image, Text, TextInput, View, TouchableOpacity } from 'react-native';
 import Button from '../components/Button';
 import LoginOptions from '../components/LoginOptions';
-import {NavigateType} from '../models/Navigations';
-import {styles} from '../styles/signin-signup';
-import {useForm, Controller} from 'react-hook-form';
+import { NavigateType } from '../models/Navigations';
+import { styles } from '../styles/signin-signup';
+import { useForm, Controller } from 'react-hook-form';
 import useLogin from '../hooks/useLogin';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-export default function LoginScreen({navigation}: NavigateType) {
+export default function LoginScreen({ navigation }: NavigateType) {
   const passwordLoginRef = useRef<TextInput>(null);
   const [showPassword, setShowPassword] = useState(false);
   const {
     control,
     handleSubmit,
-    formState: {errors},
+    formState: { errors },
   } = useForm({
     defaultValues: {
       email: '',
@@ -21,17 +22,30 @@ export default function LoginScreen({navigation}: NavigateType) {
     },
   });
 
+  useEffect(() => {
+    const getData = async () => {
+      try {
+        navigation.navigate('EZChallenge');
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    getData();
+  }, []);
+
   const moveRegister = () => navigation.navigate('RegisterScreen');
   const moveForgotPassword = () => navigation.navigate('ForgotPassword');
   const togglePasswordVisibility = () => {
     setShowPassword(prev => !prev);
   };
 
-  const {mutate} = useLogin();
+  const { mutate } = useLogin();
 
   const handleLogin = (fromData: any) => {
     mutate(fromData, {
       onSuccess: () => {
+        const jsonString = JSON.stringify(fromData);
+        AsyncStorage.setItem('userdata', jsonString);
         navigation.navigate('EZChallenge');
       },
     });
@@ -63,7 +77,7 @@ export default function LoginScreen({navigation}: NavigateType) {
               />
               <Controller
                 control={control}
-                render={({field: {onChange, onBlur, value}}) => (
+                render={({ field: { onChange, onBlur, value } }) => (
                   <TextInput
                     style={styles.input}
                     placeholder="Enter your email"
@@ -101,7 +115,7 @@ export default function LoginScreen({navigation}: NavigateType) {
               />
               <Controller
                 control={control}
-                render={({field: {onChange, onBlur, value}}) => (
+                render={({ field: { onChange, onBlur, value } }) => (
                   <TextInput
                     ref={passwordLoginRef}
                     style={styles.input}
