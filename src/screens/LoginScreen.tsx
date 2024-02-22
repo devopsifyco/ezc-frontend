@@ -26,10 +26,10 @@ export default function LoginScreen({navigation}: NavigateType) {
     const getData = async () => {
       try {
         const jsonString = await AsyncStorage.getItem('userData');
-        if (jsonString !== null) {
-          const userData = JSON.parse(jsonString);
+        // if (jsonString !== null) {
+          // const userData = JSON.parse(jsonString);
           navigation.navigate('EZChallenge');
-        }
+        // }
       } catch (error) {
         console.error(error);
       }

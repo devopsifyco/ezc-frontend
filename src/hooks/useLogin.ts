@@ -9,26 +9,28 @@ export default function useLogin() {
 
   const login = useMutation({
     mutationKey: ['login'],
-    mutationFn: async userData => {
+    mutationFn: async (userData: { email: string; password: string }) => {
+    // mutationFn: async userData => {
       const res = await axios.post(API_LOGIN, userData);
       return res.data;
     },
     onSuccess: async data => {
       AsyncStorage.setItem("accessToken", data.accessToken);
       AsyncStorage.setItem("refreshToken", data.refreshToken);
-      AsyncStorage.getItem('userdata').then((data) => {
-        console.log(data);
-      });
     },
-    onError: error => Alert.alert(error.message),
+    onError: error => {
+      Alert.alert(error.message),
+      console.log(error);
+    }
   });
-
 
   const autoLogin = async () => {
     try {
-      const userdata = await AsyncStorage.getItem('userdata');
-      if (userdata) {
-        login.mutate(userdata);
+      const userdataString  = await AsyncStorage.getItem('userdata');
+      if (userdataString) {
+        const userData = JSON.parse(userdataString);
+        const { email, password } = userData;
+        login.mutate({ email: email, password: password });
       } else {
         console.log("Empty");
       }
