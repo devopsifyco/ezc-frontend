@@ -1,11 +1,13 @@
-import React, {useState, useRef} from 'react';
-import {Image, Text, TextInput, View} from 'react-native';
+import React, { useState, useRef, useEffect } from 'react';
+import { Image, Text, TextInput, View } from 'react-native';
 import Button from '../components/Button';
 import LoginOptions from '../components/LoginOptions';
-import {styles} from '../styles/signin-signup';
-import {NavigateType} from '../models/Navigations';
+import { styles } from '../styles/signin-signup';
+import { NavigateType } from '../models/Navigations';
+// import useVerify from '../hooks/useVerify';
+import { VerifyData } from '../models/Verify';
 
-export default function VerifyRegisterScreen({navigation}: NavigateType) {
+export default function VerifyRegisterScreen({ navigation }: NavigateType) {
   const [verificationCodes, setVerificationCodes] = useState(['', '', '', '']);
   const verificationCodeRefs = [
     useRef<TextInput>(null),
@@ -14,12 +16,21 @@ export default function VerifyRegisterScreen({navigation}: NavigateType) {
     useRef<TextInput>(null),
   ];
 
+  // const { mutate } = useVerify();
+
   const handleVerify = () => {
-    const code = verificationCodes.join('');
-    // Perform verification logic with the 'code'
-    // For now, just navigate to LoginScreen
     navigation.navigate('LoginScreen');
   };
+
+  // const sendCode = (data: VerifyData) => {
+  //   mutate(data, {
+  //     onSuccess: () => {
+  //       console.log("Verify is ok");
+  //       navigation.navigate('LoginScreen');
+  //     },
+  //   })
+  // }
+
 
   const handleCodeInput = (index: number, value: string) => {
     setVerificationCodes(prevCodes => {
@@ -62,6 +73,7 @@ export default function VerifyRegisterScreen({navigation}: NavigateType) {
               ))}
             </View>
           </View>
+          {/* <Button onPress={sendCode} title="Send code" /> */}
           <Button onPress={handleVerify} title="Confirm code" />
           <LoginOptions />
         </View>

@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Image, Text, TextInput, View, TouchableOpacity } from 'react-native';
+import { Image, Text, TextInput, View, TouchableOpacity, Alert } from 'react-native';
 import Button from '../components/Button';
 import LoginOptions from '../components/LoginOptions';
 import { NavigateType } from '../models/Navigations';
@@ -48,6 +48,10 @@ export default function LoginScreen({ navigation }: NavigateType) {
         AsyncStorage.setItem('userdata', jsonString);
         navigation.navigate('EZChallenge');
       },
+      onError: (error) => {
+        Alert.alert(error?.response.data.message);
+        console.log(error?.response.data.message);
+      }
     });
   };
 
