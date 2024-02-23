@@ -1,28 +1,19 @@
 import { StyleSheet, Text, View, Image, TouchableOpacity, FlatList } from 'react-native'
 import react, { useEffect, useState } from 'react';
 import { NavigateType } from '../models/Navigations';
-import { Challenge } from '../models/InfChallenge';
 import ListCard from '../components/ListCard';
-import axios from 'axios';
+import useGetAllChallenges from '../hooks/useChallange';
 
 const SeeAllChallenges = ({ navigation }: NavigateType) => {
 
-  const [challenges, setChallenges] = useState<Challenge[]>([]);
-
+  const { data: challenges, mutate } = useGetAllChallenges();
+  
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axios.get(
-          'https://63aa9cf2fdc006ba6046fb58.mockapi.io/challenges',
-        );
-        setChallenges(response.data);
-      } catch (error) {
-        console.error('Error fetching challenges:', error);
-      }
-    };
+    mutate();
+  }, [mutate]);
 
-    fetchData();
-  }, []);
+
+
   return (
     <View style={styles.container}>
       <View style={styles.header}>

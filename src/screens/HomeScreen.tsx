@@ -5,36 +5,27 @@ import {
   StyleSheet,
   Image,
   TouchableOpacity,
-  ScrollView,
   FlatList,
-  ImageSourcePropType,
 } from 'react-native';
-import axios from 'axios';
 
 import LiveCard from '../components/LiveCard';
 import ListCard from '../components/ListCard';
 import Slides from '../components/Slides';
+
 import { NavigateType } from '../models/Navigations';
-import { Challenge } from '../models/InfChallenge';
+import useGetAllChallenges from '../hooks/useChallange';
+
 
 
 const HomeScreen: React.FC<NavigateType> = ({ navigation }) => {
-  const [challenges, setChallenges] = useState<Challenge[]>([]);
-
+  const { data: challenges,  mutate } = useGetAllChallenges();
+  
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axios.get(
-          'https://63aa9cf2fdc006ba6046fb58.mockapi.io/challenges',
-        );
-        setChallenges(response.data);
-      } catch (error) {
-        console.error('Error fetching challenges:', error);
-      }
-    };
+    mutate();
+  }, [mutate]);
 
-    fetchData();
-  }, []);
+  console.log('ggg', challenges)
+
 
 
 
@@ -71,7 +62,7 @@ const HomeScreen: React.FC<NavigateType> = ({ navigation }) => {
             <LiveCard
               date={item.Days}
               isLive={item.isLive}
-              title={item.name}
+              title={item.title}
               location={item.Address}
               images={item.images}
             />
