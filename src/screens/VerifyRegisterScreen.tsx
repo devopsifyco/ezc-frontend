@@ -1,11 +1,10 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Image, Text, TextInput, View } from 'react-native';
+import { Alert, Image, Text, TextInput, View } from 'react-native';
 import Button from '../components/Button';
-import LoginOptions from '../components/LoginOptions';
 import { styles } from '../styles/signin-signup';
 import { NavigateType } from '../models/Navigations';
-// import useVerify from '../hooks/useVerify';
-import { VerifyData } from '../models/Verify';
+import useVerify from '../hooks/useVerify';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function VerifyRegisterScreen({ navigation }: NavigateType) {
   const [verificationCodes, setVerificationCodes] = useState(['', '', '', '']);
@@ -16,20 +15,33 @@ export default function VerifyRegisterScreen({ navigation }: NavigateType) {
     useRef<TextInput>(null),
   ];
 
-  // const { mutate } = useVerify();
+  const { mutate } = useVerify();
 
-  const handleVerify = () => {
-    navigation.navigate('LoginScreen');
+
+  const handleVerify = async () => {
+    try {
+      const code = verificationCodes.join('');
+      const email = await AsyncStorage.getItem("email");
+      
+      if (email) {
+        const dataVerify = { email, code };
+        
+        mutate(dataVerify, {
+          onSuccess: () => {
+            navigation.navigate('LoginScreen');
+          },
+          onError: (error) => {
+            console.log(error?.response.data.message);
+          }
+        });
+      } else {
+        Alert.alert('Email not found in AsyncStorage');
+      }
+    } catch (error) {
+      console.error('Error retrieving email:', error);
+      Alert.alert('Error retrieving email');
+    }
   };
-
-  // const sendCode = (data: VerifyData) => {
-  //   mutate(data, {
-  //     onSuccess: () => {
-  //       console.log("Verify is ok");
-  //       navigation.navigate('LoginScreen');
-  //     },
-  //   })
-  // }
 
 
   const handleCodeInput = (index: number, value: string) => {
@@ -73,9 +85,7 @@ export default function VerifyRegisterScreen({ navigation }: NavigateType) {
               ))}
             </View>
           </View>
-          {/* <Button onPress={sendCode} title="Send code" /> */}
           <Button onPress={handleVerify} title="Confirm code" />
-          <LoginOptions />
         </View>
       </View>
     </View>

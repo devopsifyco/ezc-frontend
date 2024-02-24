@@ -22,16 +22,16 @@ export default function LoginScreen({ navigation }: NavigateType) {
     },
   });
 
-  useEffect(() => {
-    const getData = async () => {
-      try {
-        navigation.navigate('EZChallenge');
-      } catch (error) {
-        console.error(error);
-      }
-    };
-    getData();
-  }, []);
+  // useEffect(() => {
+  //   const getData = async () => {
+  //     try {
+  //       navigation.navigate('EZChallenge');
+  //     } catch (error) {
+  //       console.error(error);
+  //     }
+  //   };
+  //   getData();
+  // }, []);
 
   const moveRegister = () => navigation.navigate('RegisterScreen');
   const moveForgotPassword = () => navigation.navigate('ForgotPassword');
