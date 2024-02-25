@@ -1,24 +1,37 @@
 import React from 'react';
-import {Text, View, StyleSheet} from 'react-native';
-import {NavigateType} from '../models/Navigations';
+import {View, StyleSheet} from 'react-native';
+import MapView, {PROVIDER_GOOGLE} from 'react-native-maps';
 
-export default function MapScreen({navigation}: NavigateType) {
+const MapScreen = () => {
+  const initialRegion = {
+    latitude: 37.78825,
+    longitude: -122.4324,
+    latitudeDelta: 0.015,
+    longitudeDelta: 0.0121,
+  };
+
   return (
     <View style={styles.container}>
-      <Text style={styles.textDemo}>EZ Challenge</Text>
+      <MapView
+        provider={PROVIDER_GOOGLE} // Remove if not using Google Maps
+        style={styles.map}
+        initialRegion={initialRegion}
+      />
     </View>
   );
-}
+};
 
-export const styles = StyleSheet.create({
+const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    justifyContent: 'center',
+    ...StyleSheet.absoluteFillObject,
+    height: '100%', // Use '100%' for full height
+    width: '100%', // Use '100%' for full width
+    justifyContent: 'flex-end',
     alignItems: 'center',
   },
-  textDemo: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: 'tomato',
+  map: {
+    ...StyleSheet.absoluteFillObject,
   },
 });
+
+export default MapScreen;
