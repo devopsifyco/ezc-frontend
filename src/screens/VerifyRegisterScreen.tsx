@@ -1,11 +1,12 @@
-import React, {useState, useRef} from 'react';
-import {Image, Text, TextInput, View} from 'react-native';
+import React, { useState, useRef, useEffect } from 'react';
+import { Alert, Image, Text, TextInput, View } from 'react-native';
 import Button from '../components/Button';
-import LoginOptions from '../components/LoginOptions';
-import {styles} from '../styles/signin-signup';
-import {NavigateType} from '../models/Navigations';
+import { styles } from '../styles/signin-signup';
+import { NavigateType } from '../models/Navigations';
+import useVerify from '../hooks/useVerify';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-export default function VerifyRegisterScreen({navigation}: NavigateType) {
+export default function VerifyRegisterScreen({ navigation }: NavigateType) {
   const [verificationCodes, setVerificationCodes] = useState(['', '', '', '']);
   const verificationCodeRefs = [
     useRef<TextInput>(null),
@@ -14,12 +15,34 @@ export default function VerifyRegisterScreen({navigation}: NavigateType) {
     useRef<TextInput>(null),
   ];
 
-  const handleVerify = () => {
-    const code = verificationCodes.join('');
-    // Perform verification logic with the 'code'
-    // For now, just navigate to LoginScreen
-    navigation.navigate('LoginScreen');
+  const { mutate } = useVerify();
+
+
+  const handleVerify = async () => {
+    try {
+      const code = verificationCodes.join('');
+      const email = await AsyncStorage.getItem("email");
+      
+      if (email) {
+        const dataVerify = { email, code };
+        
+        mutate(dataVerify, {
+          onSuccess: () => {
+            navigation.navigate('LoginScreen');
+          },
+          onError: (error) => {
+            console.log(error?.response.data.message);
+          }
+        });
+      } else {
+        Alert.alert('Email not found in AsyncStorage');
+      }
+    } catch (error) {
+      console.error('Error retrieving email:', error);
+      Alert.alert('Error retrieving email');
+    }
   };
+
 
   const handleCodeInput = (index: number, value: string) => {
     setVerificationCodes(prevCodes => {
@@ -63,7 +86,6 @@ export default function VerifyRegisterScreen({navigation}: NavigateType) {
             </View>
           </View>
           <Button onPress={handleVerify} title="Confirm code" />
-          <LoginOptions />
         </View>
       </View>
     </View>
