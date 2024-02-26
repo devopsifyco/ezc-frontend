@@ -9,15 +9,17 @@ import SeeAllChallenges from './SeeAllChallenges';
 import SeeAllLive from './SeeAllLive';
 import SubProfileScreen from './profile/ProfileScreen';
 import EditProfile from './profile/EditProfile';
+import {Welcome, Welcome2, Welcome3} from './Welcome';
+
 const Stack = createNativeStackNavigator();
 
 export default function EZChallenge() {
-  const isAuthenticated = 'EZChallenge';
-
   return (
-    <Stack.Navigator
-      initialRouteName={isAuthenticated ? 'EZChallenge' : 'LoginScreen'}>
+    <Stack.Navigator>
       <Stack.Group screenOptions={{headerShown: false}}>
+        <Stack.Screen name="Welcome" component={Welcome} />
+        <Stack.Screen name="Welcome2" component={Welcome2} />
+        <Stack.Screen name="Welcome3" component={Welcome3} />
         <Stack.Screen name="LoginScreen" component={LoginScreen} />
         <Stack.Screen name="RegisterScreen" component={RegisterScreen} />
         <Stack.Screen
@@ -28,14 +30,11 @@ export default function EZChallenge() {
       </Stack.Group>
 
       <Stack.Group screenOptions={{headerShown: false}}>
-        <Stack.Screen name="SeeAllChallange" component={SeeAllChallenges} />
-        <Stack.Screen name="SeeAllLive" component={SeeAllLive} />
-      </Stack.Group>
-
-      <Stack.Group screenOptions={{headerShown: false}}>
         <Stack.Screen name="EZChallenge" component={BottomTabs} />
         <Stack.Screen name="SubProfileScreen" component={SubProfileScreen} />
         <Stack.Screen name="EditProfile" component={EditProfile} />
+        <Stack.Screen name="SeeAllChallange" component={SeeAllChallenges} />
+        <Stack.Screen name="SeeAllLive" component={SeeAllLive} />
       </Stack.Group>
     </Stack.Navigator>
   );
