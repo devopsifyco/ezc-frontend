@@ -1,18 +1,13 @@
 import React, { FC } from 'react'
-import { Text, View, StyleSheet, Image, TouchableOpacity, ImageSourcePropType } from 'react-native';
+import { Text, View, StyleSheet, Image, TouchableOpacity, } from 'react-native';
 import AvatarGroup from './AvatarGroup';
 import Moment from 'moment';
-
-interface LiveCardProps {
-    date: string;
-    isLive: boolean;
-    title: string;
-    location: string;
-    images: string[];
-}
+import { Challenge } from '../models/InfChallenge';
 
 
-const LiveCard: FC<LiveCardProps> = ({ date, isLive, title, location, images }) => {
+
+const LiveCard: FC<Challenge> = ({  Days, title, Address, location, images_path, isLive }) => {
+
     return (
         <View style={{
             width: 230,
@@ -36,7 +31,7 @@ const LiveCard: FC<LiveCardProps> = ({ date, isLive, title, location, images }) 
                             width: 218,
                             height: 150
                         }}
-                        source={{ uri: 'https://cdn.photographylife.com/wp-content/uploads/2018/11/Moeraki-Boulders-New-Zealand.jpg' }} resizeMode="cover" />
+                        source={{ uri: `${images_path?.[0]?.downloadLink}`}} resizeMode="cover" />
                     <View style={{ position: 'absolute', left: 8, top: 8 }}>
                         <Text style={{
                             width: 45,
@@ -50,8 +45,8 @@ const LiveCard: FC<LiveCardProps> = ({ date, isLive, title, location, images }) 
                             paddingHorizontal: 6,
                             paddingVertical: 8
                         }}>
-                            <Text style={{ fontSize: 18, fontWeight: '700' }}>{Moment(date).format('DD')}</Text>{'\n'}
-                            {Moment(date).format('MMM')}
+                            <Text style={{ fontSize: 18, fontWeight: '700' }}>{Moment(Days).format('DD')}</Text>{'\n'}
+                            {Moment(Days).format('MMM')}
                         </Text>
                     </View>
 

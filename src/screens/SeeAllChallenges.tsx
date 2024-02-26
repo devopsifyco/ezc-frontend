@@ -7,7 +7,7 @@ import useGetAllChallenges from '../hooks/useChallenge';
 const SeeAllChallenges = ({ navigation }: NavigateType) => {
 
   const { data: challenges, mutate } = useGetAllChallenges();
-  
+
   useEffect(() => {
     mutate();
   }, [mutate]);
@@ -33,10 +33,12 @@ const SeeAllChallenges = ({ navigation }: NavigateType) => {
             <ListCard
               Days={item.Days}
               title={item.title}
-              location={item.Address}
-              images_path={item.images}
+              Address={item.Address}
+              location={item.location}
+              images_path={item.images_path}
+              isLive={item.isLive}
+              key={item.id}
             />
-
           )}
         />
       </View>

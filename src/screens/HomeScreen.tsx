@@ -53,14 +53,16 @@ const HomeScreen: React.FC<NavigateType> = ({ navigation }) => {
           data={challenges}
           horizontal
           showsHorizontalScrollIndicator={false}
-          keyExtractor={(item) => item.id}
+          keyExtractor={(item) => (item.id)}
           renderItem={({ item }) => (
             <LiveCard
-              date={item.Days}
-              isLive={item.isLive}
+              key={item.id}
+              Days={item.Days}
               title={item.title}
-              location={item.Address}
-              images={item.images}
+              Address={item.Address}
+              location={item.location}
+              images_path={item.images_path}
+              isLive={item.isLive}
             />
           )}
         />
@@ -79,11 +81,11 @@ const HomeScreen: React.FC<NavigateType> = ({ navigation }) => {
         <FlatList
           data={challenges}
           showsVerticalScrollIndicator={false}
-          keyExtractor={(item) => item.id}
+          keyExtractor={(item) => (item.id)}
           contentContainerStyle={{ flexGrow: 1 }}
           renderItem={({ item }) => (
             <ListCard
-              id={item.id}
+              key={item.id}
               Days={item.Days}
               title={item.title}
               Address={item.Address}
@@ -91,7 +93,6 @@ const HomeScreen: React.FC<NavigateType> = ({ navigation }) => {
               images_path={item.images_path}
               isLive={item.isLive}
             />
-
           )}
         />
       </View>

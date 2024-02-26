@@ -4,7 +4,7 @@ import Moment from 'moment';
 import { Challenge } from '../models/InfChallenge';
 
 
-const ListCard: React.FC<Challenge> = ({ id, Days, title, Address, location, images_path, isLive }) => {
+const ListCard: React.FC<Challenge> = ({  Days, title, Address, location, images_path, isLive }) => {
 
   return (
     <View
@@ -22,7 +22,7 @@ const ListCard: React.FC<Challenge> = ({ id, Days, title, Address, location, ima
         style={{
           flexDirection: 'row',
         }}>
-        <Image style={{ borderRadius: 10, width: 80, height: 100 }} source={{uri: `${images_path[0].dowloadlink}`}} />
+        <Image style={{ borderRadius: 10, width: 80, height: 100 }} source={{ uri: `${images_path?.[0]?.downloadLink}` }} />
 
         <View style={{
           justifyContent: 'center',
