@@ -18,16 +18,12 @@ import useGetAllChallenges from '../hooks/useChallange';
 
 
 const HomeScreen: React.FC<NavigateType> = ({ navigation }) => {
+
   const { data: challenges,  mutate } = useGetAllChallenges();
   
   useEffect(() => {
     mutate();
   }, [mutate]);
-
-  console.log('ggg', challenges)
-
-
-
 
 
   return (
@@ -88,7 +84,7 @@ const HomeScreen: React.FC<NavigateType> = ({ navigation }) => {
           renderItem={({ item }) => (
             <ListCard
               date={item.Days}
-              title={item.name}
+              title={item.title}
               location={item.Address}
               images={item.images}
             />

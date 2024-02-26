@@ -30,7 +30,7 @@ const SeeAllLive = ({ navigation }: NavigateType) => {
           renderItem={({ item }) => (
             <ListCard
               date={item.Days}
-              title={item.name}
+              title={item.title}
               location={item.Address}
               images={item.images}
             />
