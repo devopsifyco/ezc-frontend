@@ -4,6 +4,7 @@ export interface Challenge {
     isLive: boolean;
     title: string;
     Address: string;
-    images: string[];
+    location: string;
+    images_path: { name: string, dowloadlink: string }[];
 }
   

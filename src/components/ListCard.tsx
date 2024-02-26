@@ -1,15 +1,11 @@
 import React from 'react';
 import { Text, View, StyleSheet, Image, TouchableOpacity, ImageSourcePropType } from 'react-native';
 import Moment from 'moment';
+import { Challenge } from '../models/InfChallenge';
 
-interface LiveCardProps {
-  date: string;
-  title: string;
-  location: string;
-  images: string[];
-}
 
-const ListCard: React.FC<LiveCardProps> = ({ date, title, location, images }) => {
+const ListCard: React.FC<Challenge> = ({ id, Days, title, Address, location, images_path, isLive }) => {
+
   return (
     <View
       style={{
@@ -26,7 +22,8 @@ const ListCard: React.FC<LiveCardProps> = ({ date, title, location, images }) =>
         style={{
           flexDirection: 'row',
         }}>
-        <Image style={{ borderRadius: 10, width: 80, height: 100 }} source={require('../assets/images/challenges1.jpg')} />
+        <Image style={{ borderRadius: 10, width: 80, height: 100 }} source={{uri: `${images_path[0].dowloadlink}`}} />
+
         <View style={{
           justifyContent: 'center',
           paddingVertical: 15,
@@ -37,7 +34,7 @@ const ListCard: React.FC<LiveCardProps> = ({ date, title, location, images }) =>
             color: "#216C53",
             fontWeight: "bold",
           }}>
-            {Moment(date).format('ddd, MMM DD • LT')}
+            {Moment(Days).format('ddd, MMM DD • LT')}
           </Text>
           <Text numberOfLines={1} style={{
             fontSize: 15,

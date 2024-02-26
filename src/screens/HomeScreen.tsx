@@ -13,14 +13,14 @@ import ListCard from '../components/ListCard';
 import Slides from '../components/Slides';
 
 import { NavigateType } from '../models/Navigations';
-import useGetAllChallenges from '../hooks/useChallange';
+import useGetAllChallenges from '../hooks/useChallenge';
 
 
 
 const HomeScreen: React.FC<NavigateType> = ({ navigation }) => {
 
-  const { data: challenges,  mutate } = useGetAllChallenges();
-  
+  const { data: challenges, mutate } = useGetAllChallenges();
+
   useEffect(() => {
     mutate();
   }, [mutate]);
@@ -83,10 +83,13 @@ const HomeScreen: React.FC<NavigateType> = ({ navigation }) => {
           contentContainerStyle={{ flexGrow: 1 }}
           renderItem={({ item }) => (
             <ListCard
-              date={item.Days}
+              id={item.id}
+              Days={item.Days}
               title={item.title}
-              location={item.Address}
-              images={item.images}
+              Address={item.Address}
+              location={item.location}
+              images_path={item.images_path}
+              isLive={item.isLive}
             />
 
           )}
