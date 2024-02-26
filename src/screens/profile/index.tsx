@@ -1,45 +1,105 @@
-import React from 'react';
-import {Text, View, StyleSheet, Image} from 'react-native';
+import React, {useState} from 'react';
+import {
+  Text,
+  View,
+  StyleSheet,
+  Image,
+  TouchableOpacity,
+  Alert,
+} from 'react-native';
+import ButtonProfile from '../../components/ButtonProfile';
+import ButtonProfile2 from '../../components/ButtonProfile2';
+import HeaderProfile from '../../components/HeaderProfile';
+import {NavigateType} from '../../models/Navigations';
+import AboutScreen from './AboutScreen';
+import ChallengeScreen from './ChallengeScreen';
+import ReviewScreen from './ReviewScreen';
 
 const DATA = {
   name: 'A Tien',
   image: require('../../assets/profile/atien.jpg'),
-  flowing: 345,
-  flower: 55,
-  des: 'Em sống vì cộng đồng nên là thằng nào có tiền thì donate cho tao. Ít thì 5 quả trứng nhiều thì 1 quả tên lửa. Chúng mày nhớ chưa',
-  interest: ['Game Online', 'Music', 'Reading Book', 'Foot ball'],
+  location: '101B Le Huu Trac',
+  fllowing: 345,
+  fllower: 55,
+  title:
+    'Em sống vì cộng đồng nên là thằng nào có tiền thì donate cho tao. Ít thì 5 quả trứng nhiều thì 1 quả tên lửa. Chúng mày nhớ chưa',
+  interested: [
+    'Game Online',
+    'Concert',
+    'Play Game',
+    'Soccor',
+    'Voleyball',
+    'Reading',
+    'Orther',
+  ],
 };
 
-export default function ProfileScreen() {
-  const {name, image, flower, flowing, des, interest} = DATA;
+export default function ProfileScreen({navigation}: NavigateType) {
+  const handleFllow = () => {
+    Alert.alert('Oke m');
+  };
+  const [selectedTab, setSelectedTab] = useState('ABOUT');
 
   return (
     <View style={styles.container}>
+      <View style={styles.header}>
+        <HeaderProfile navigation={navigation} />
+        <TouchableOpacity
+          onPress={() => navigation.navigate('SubProfileScreen', {DATA})}>
+          <Image source={require('../../assets/profile/menu-toggle.png')} />
+        </TouchableOpacity>
+      </View>
       <View style={styles.profile}>
-        <Image source={image} style={styles.profileImage} />
-        <Text style={styles.profileName}>{name}</Text>
+        <Image source={DATA.image} style={styles.profileImage} />
+        <Text style={styles.profileName}>{DATA.name}</Text>
         <View style={styles.numberStatus}>
-          <View style={styles.itemFlowing}>
-            <Text style={styles.itemNumber}>{flowing}</Text>
-            <Text style={styles.titleMedium}>Flowing</Text>
+          <View style={styles.itemfllowing}>
+            <Text style={styles.itemNumber}>{DATA.fllowing}</Text>
+            <Text style={styles.titleMedium}>Following</Text>
           </View>
           <View style={styles.arrowMiddle} />
-          <View style={styles.itemFlower}>
-            <Text style={styles.itemNumber}>{flower}</Text>
-            <Text style={styles.titleMedium}>Flower</Text>
+          <View style={styles.itemfllower}>
+            <Text style={styles.itemNumber}>{DATA.fllower}</Text>
+            <Text style={styles.titleMedium}>Followers</Text>
           </View>
         </View>
       </View>
-      <Text style={styles.titleLarge}>About me</Text>
-      <Text style={styles.description}>{des}</Text>
-      <View>
-        <Text style={styles.titleLarge}>Interests</Text>
-        {interest.map((item, index) => (
-          <Text key={index} style={styles.interestItem}>
-            {item}
-          </Text>
-        ))}
+      <View style={styles.actionInteraction}>
+        <ButtonProfile
+          title="Follow"
+          icon={require('../../assets/profile/flower.png')}
+          onPress={handleFllow}
+        />
+        <ButtonProfile2
+          title="Message"
+          icon={require('../../assets/profile/message.png')}
+          onPress={handleFllow}
+        />
       </View>
+      <View style={styles.listActions}>
+        <TouchableOpacity
+          onPress={() => setSelectedTab('ABOUT')}
+          style={[styles.tab, selectedTab === 'ABOUT' && styles.selectedTab]}>
+          <Text style={styles.titleLarge}>ABOUT</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => setSelectedTab('CHALLENGE')}
+          style={[
+            styles.tab,
+            selectedTab === 'CHALLENGE' && styles.selectedTab,
+          ]}>
+          <Text style={styles.titleLarge}>CHALLENGE</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => setSelectedTab('REVIEWS')}
+          style={[styles.tab, selectedTab === 'REVIEWS' && styles.selectedTab]}>
+          <Text style={styles.titleLarge}>REVIEWS</Text>
+        </TouchableOpacity>
+      </View>
+
+      {selectedTab === 'ABOUT' && <AboutScreen data={DATA} />}
+      {selectedTab === 'CHALLENGE' && <ChallengeScreen />}
+      {selectedTab === 'REVIEWS' && <ReviewScreen />}
     </View>
   );
 }
@@ -47,7 +107,12 @@ export default function ProfileScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 16,
+    paddingHorizontal: 20,
+    paddingTop: 20,
+  },
+  header: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
   },
   profile: {
     alignItems: 'center',
@@ -67,12 +132,12 @@ const styles = StyleSheet.create({
   numberStatus: {
     flexDirection: 'row',
     justifyContent: 'space-around',
-    width: '50%',
+    gap: 10,
   },
-  itemFlowing: {
+  itemfllowing: {
     alignItems: 'center',
   },
-  itemFlower: {
+  itemfllower: {
     alignItems: 'center',
   },
   itemNumber: {
@@ -80,15 +145,12 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: '#120D26',
   },
-  description: {
-    marginBottom: 16,
-    color: '#120D26',
-  },
+
   titleLarge: {
     fontSize: 16,
     fontWeight: 'bold',
     marginBottom: 8,
-    color: '#120D26',
+    color: '#216C53',
   },
   interestItem: {
     fontSize: 14,
@@ -105,5 +167,23 @@ const styles = StyleSheet.create({
     width: 1,
     height: 45,
     backgroundColor: '#120D26',
+  },
+  interestList: {},
+  listActions: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+  },
+  actionInteraction: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+  },
+  tab: {
+    flex: 1,
+    alignItems: 'center',
+  },
+  selectedTab: {
+    borderBottomWidth: 2,
+    borderColor: '#216C53',
+    width: 50,
   },
 });

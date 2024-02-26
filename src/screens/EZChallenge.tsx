@@ -7,10 +7,12 @@ import ForgotPassword from './ForgotPassword';
 import BottomTabs from '../models/routers/BottomTabs';
 import SeeAllChallenges from './SeeAllChallenges';
 import SeeAllLive from './SeeAllLive';
+import SubProfileScreen from './profile/ProfileScreen';
+import EditProfile from './profile/EditProfile';
 const Stack = createNativeStackNavigator();
 
 export default function EZChallenge() {
-  const isAuthenticated = null;
+  const isAuthenticated = 'EZChallenge';
 
   return (
     <Stack.Navigator
@@ -32,6 +34,8 @@ export default function EZChallenge() {
 
       <Stack.Group screenOptions={{headerShown: false}}>
         <Stack.Screen name="EZChallenge" component={BottomTabs} />
+        <Stack.Screen name="SubProfileScreen" component={SubProfileScreen} />
+        <Stack.Screen name="EditProfile" component={EditProfile} />
       </Stack.Group>
     </Stack.Navigator>
   );
