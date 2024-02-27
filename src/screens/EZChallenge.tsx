@@ -15,6 +15,7 @@ import EditProfile from './profile/EditProfile';
 
 import {Welcome, Welcome2, Welcome3} from './Welcome';
 import RatingScreen from './RatingScreen';
+import NotificationScreen from './Notification';
 
 const Stack = createNativeStackNavigator();
 
@@ -41,6 +42,7 @@ export default function EZChallenge() {
         <Stack.Screen name="SeeAllChallange" component={SeeAllChallenges} />
         <Stack.Screen name="SeeAllLive" component={SeeAllLive} />
         <Stack.Screen name="RatingScreen" component={RatingScreen} />
+        <Stack.Screen name='NotificationScreen' component={NotificationScreen} />
       </Stack.Group>
     </Stack.Navigator>
   );

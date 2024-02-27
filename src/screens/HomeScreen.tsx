@@ -13,6 +13,28 @@ import ListCard from '../components/ListCard';
 import Slides from '../components/Slides';
 
 import { NavigateType } from '../models/Navigations';
+import { Challenge } from '../models/InfChallenge';
+import NotificationScreen from './Notification';
+
+const HomeScreen: React.FC<NavigateType> = ({ navigation }) => {
+  const [challenges, setChallenges] = useState<Challenge[]>([]);
+  const handleNotificationPress = () => {
+    navigation.navigate('Notification');
+  };
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await axios.get(
+          'https://63aa9cf2fdc006ba6046fb58.mockapi.io/challenges',
+        );
+        setChallenges(response.data);
+      } catch (error) {
+        console.error('Error fetching challenges:', error);
+      }
+    };
+
+    fetchData();
+  }, []);
 import useGetAllChallenges from '../hooks/useChallenge';
 
 
@@ -31,7 +53,9 @@ const HomeScreen: React.FC<NavigateType> = ({ navigation }) => {
       <View style={styles.header}>
         <Image source={require('../assets/logoEZC.png')} />
         <Text style={styles.titles}>Home</Text>
-        <Image source={require('../assets/icons/notification.png')} />
+        <TouchableOpacity onPress={handleNotificationPress}>
+          <Image source={require('../assets/icons/notification.png')} />
+        </TouchableOpacity>
       </View>
 
       <View style={{ height: 150 }}>
