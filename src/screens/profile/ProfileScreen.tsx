@@ -1,5 +1,6 @@
 import React from 'react';
 import {Text, View, StyleSheet, Image, TouchableOpacity} from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import Modal from 'react-native-modal';
 import LinearGradient from 'react-native-linear-gradient';
 import ButtonProfile from '../../components/ButtonProfile';
@@ -31,8 +32,13 @@ export default function SubProfileScreen({
   };
   const [isModalVisible, setModalVisible] = React.useState(false);
   const toggleModal = () => setModalVisible(!isModalVisible);
-  const handleLogout = () => {
-    toggleModal();
+  const handleLogout = async () => {
+    try {
+      await AsyncStorage.removeItem('accessToken');
+      navigation.navigate('LoginScreen');
+    } catch (error) {
+      console.error('Error logging out:', error);
+    }
   };
 
   return (
@@ -64,7 +70,7 @@ export default function SubProfileScreen({
         <ButtonProfile
           title="Logout"
           icon={require('../../assets/profile/log_out.png')}
-          onPress={handleLogout}
+          onPress={toggleModal}
         />
       </View>
       <Text style={styles.titleLarge}>About me</Text>

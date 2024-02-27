@@ -5,15 +5,13 @@ import {
   StyleSheet,
   Image,
   TouchableOpacity,
-  ScrollView,
   FlatList,
-  ImageSourcePropType,
 } from 'react-native';
-import axios from 'axios';
 
 import LiveCard from '../components/LiveCard';
 import ListCard from '../components/ListCard';
 import Slides from '../components/Slides';
+
 import { NavigateType } from '../models/Navigations';
 import { Challenge } from '../models/InfChallenge';
 import NotificationScreen from './Notification';
@@ -37,6 +35,19 @@ const HomeScreen: React.FC<NavigateType> = ({ navigation }) => {
 
     fetchData();
   }, []);
+import useGetAllChallenges from '../hooks/useChallenge';
+
+
+
+const HomeScreen: React.FC<NavigateType> = ({ navigation }) => {
+
+  const { data: challenges, mutate } = useGetAllChallenges();
+
+  useEffect(() => {
+    mutate();
+  }, [mutate]);
+
+
   return (
     <View style={styles.container}>
       <View style={styles.header}>
@@ -66,14 +77,15 @@ const HomeScreen: React.FC<NavigateType> = ({ navigation }) => {
           data={challenges}
           horizontal
           showsHorizontalScrollIndicator={false}
-          keyExtractor={(item) => item.id}
-          renderItem={({ item }) => (
+          keyExtractor={(item, index) => index.toString()}
+          renderItem={({ item, index }) => (
             <LiveCard
-              date={item.Days}
+              key={item.id ? item.id.toString() : index.toString()}
+              Days={item.Days}
+              title={item.title}
+              Address={item.Address}
+              images_path={item.images_path}
               isLive={item.isLive}
-              title={item.name}
-              location={item.Address}
-              images={item.images}
             />
           )}
         />
@@ -92,16 +104,17 @@ const HomeScreen: React.FC<NavigateType> = ({ navigation }) => {
         <FlatList
           data={challenges}
           showsVerticalScrollIndicator={false}
-          keyExtractor={(item) => item.id}
+          keyExtractor={(item, index) => index.toString()}
           contentContainerStyle={{ flexGrow: 1 }}
-          renderItem={({ item }) => (
+          renderItem={({ item, index }) => (
             <ListCard
-              date={item.Days}
-              title={item.name}
-              location={item.Address}
-              images={item.images}
+              key={item.id ? item.id.toString() : index.toString()}
+              Days={item.Days}
+              title={item.title}
+              Address={item.Address}
+              images_path={item.images_path}
+              isLive={item.isLive}
             />
-
           )}
         />
       </View>

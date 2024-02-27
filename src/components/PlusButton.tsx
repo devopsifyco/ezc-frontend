@@ -1,4 +1,3 @@
-// PlusButton.tsx
 import React, {useRef, useState} from 'react';
 import {
   View,
@@ -6,6 +5,7 @@ import {
   TouchableHighlight,
   Animated,
   Text,
+  TouchableOpacity,
 } from 'react-native';
 import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
 import {
@@ -14,8 +14,10 @@ import {
   faMedal,
   faPlus,
 } from '@fortawesome/free-solid-svg-icons';
+import {useNavigation} from '@react-navigation/native';
 
 export default function PlusButton() {
+  const navigation = useNavigation();
   const [isExpanded, setIsExpanded] = useState(false);
   const mode = useRef(new Animated.Value(0)).current;
   const buttonSize = useRef(new Animated.Value(1)).current;
@@ -57,12 +59,14 @@ export default function PlusButton() {
     }
   };
 
-  const renderSecondaryButton = (icon, offsetX, offsetY, text) => (
+  const renderSecondaryButton = (icon, offsetX, offsetY, text, screen) => (
     <Animated.View style={{position: 'absolute', left: offsetX, top: offsetY}}>
-      <View style={styles.secondaryButton}>
+      <TouchableOpacity
+        style={styles.secondaryButton}
+        onPress={() => navigation.navigate(screen)}>
         <FontAwesomeIcon icon={icon} color="#FFFFFF" />
         <Text style={styles.buttonText}>{text}</Text>
-      </View>
+      </TouchableOpacity>
     </Animated.View>
   );
 
@@ -108,9 +112,17 @@ export default function PlusButton() {
   return (
     <View style={{position: 'absolute', alignItems: 'center'}}>
       {isExpanded &&
-        renderSecondaryButton(faMedal, thermometerX, thermometerY, 'Ratings')}
-      {isExpanded && renderSecondaryButton(faPen, timeX, timeY, 'Create')}
-      {isExpanded && renderSecondaryButton(faGift, pulseX, pulseY, 'Gilf')}
+        renderSecondaryButton(
+          faMedal,
+          thermometerX,
+          thermometerY,
+          'Ratings',
+          'RatingScreen',
+        )}
+      {isExpanded &&
+        renderSecondaryButton(faPen, timeX, timeY, 'Create', 'ListGift')}
+      {isExpanded &&
+        renderSecondaryButton(faGift, pulseX, pulseY, 'Gift', 'ExchangeGifts')}
 
       <Animated.View style={[styles.button, sizeStyle]}>
         <TouchableHighlight onPress={handlePress} underlayColor="#FF890B">

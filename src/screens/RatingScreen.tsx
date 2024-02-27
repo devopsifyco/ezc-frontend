@@ -4,7 +4,11 @@ import {View, StyleSheet, Text, TouchableOpacity, Image} from 'react-native';
 export default function RatingScreen() {
   const [selectedOption, setSelectedOption] = useState('Monthly');
 
+<<<<<<< HEAD
   const handleOptionPress = (option:any) => {
+=======
+  const handleOptionPress = ({option}: any) => {
+>>>>>>> fb1b5a7d4de4f3b60d5e312b2f99501963eccbd9
     setSelectedOption(option);
   };
 

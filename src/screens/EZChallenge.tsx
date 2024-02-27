@@ -12,16 +12,20 @@ import ExchangeGifts from './ExchangeGifts';
 import GiftDetail from './GiftDetail';
 import SubProfileScreen from './profile/ProfileScreen';
 import EditProfile from './profile/EditProfile';
+
+import {Welcome, Welcome2, Welcome3} from './Welcome';
+import RatingScreen from './RatingScreen';
 import NotificationScreen from './Notification';
 
-export default function EZChallenge() {
-  const Stack = createNativeStackNavigator();
-  const isAuthenticated = 'EZChallenge';
+const Stack = createNativeStackNavigator();
 
+export default function EZChallenge() {
   return (
-    <Stack.Navigator
-      initialRouteName={isAuthenticated ? 'EZChallenge' : 'LoginScreen'}>
+    <Stack.Navigator>
       <Stack.Group screenOptions={{headerShown: false}}>
+        <Stack.Screen name="Welcome" component={Welcome} />
+        <Stack.Screen name="Welcome2" component={Welcome2} />
+        <Stack.Screen name="Welcome3" component={Welcome3} />
         <Stack.Screen name="LoginScreen" component={LoginScreen} />
         <Stack.Screen name="RegisterScreen" component={RegisterScreen} />
         <Stack.Screen
@@ -29,23 +33,16 @@ export default function EZChallenge() {
           component={VerifyRegisterScreen}
         />
         <Stack.Screen name="ForgotPassword" component={ForgotPassword} />
-      </Stack.Group>
-
-      <Stack.Group screenOptions={{headerShown: false}}>
-        <Stack.Screen name="SeeAllChallange" component={SeeAllChallenges} />
-        <Stack.Screen name="SeeAllLive" component={SeeAllLive} />
-      </Stack.Group>
-
-      <Stack.Group screenOptions={{ headerShown: false }}>
         <Stack.Screen name="ListGift" component={ListGift} />
         <Stack.Screen name="GiftDetail" component={GiftDetail} />
-        <Stack.Screen name='ExchangeGifts' component={ExchangeGifts} />
+        <Stack.Screen name="ExchangeGifts" component={ExchangeGifts} />
         <Stack.Screen name="EZChallenge" component={BottomTabs} />
         <Stack.Screen name="SubProfileScreen" component={SubProfileScreen} />
         <Stack.Screen name="EditProfile" component={EditProfile} />
-      </Stack.Group>
-      <Stack.Group screenOptions={{headerShown: false}}>
-        <Stack.Screen name="Notification" component={NotificationScreen} />
+        <Stack.Screen name="SeeAllChallange" component={SeeAllChallenges} />
+        <Stack.Screen name="SeeAllLive" component={SeeAllLive} />
+        <Stack.Screen name="RatingScreen" component={RatingScreen} />
+        <Stack.Screen name='NotificationScreen' component={NotificationScreen} />
       </Stack.Group>
     </Stack.Navigator>
   );
