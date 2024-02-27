@@ -3,6 +3,7 @@ import {StyleSheet} from 'react-native';
 export const styles = StyleSheet.create({
   container: {
     flex: 1,
+    alignItems: 'center',
   },
   logo: {
     marginTop: 30,
@@ -11,7 +12,10 @@ export const styles = StyleSheet.create({
     color: '#A4A4A4',
     fontSize: 11.5,
   },
-  imageBackground: {},
+  imageBackground: {
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   formBackground: {
     backgroundColor: '#216C53',
     borderTopLeftRadius: 20,
@@ -51,8 +55,21 @@ export const styles = StyleSheet.create({
   errorText: {
     color: 'red',
   },
-  inputVerify: {},
-  titleLarge: {},
+  formInputVerify: {},
+  inputVerifyContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-around',
+    gap: 25,
+  },
+  inputVerify: {
+    backgroundColor: 'rgba(63, 218, 133, 0.2)',
+    width: 57,
+    height: 57,
+    borderRadius: 10,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  titleLarge: {fontSize: 24},
   itemVerify: {},
-  //passwordIcon: {paddingLeft: 85},
 });

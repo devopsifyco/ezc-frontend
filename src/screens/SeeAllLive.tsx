@@ -1,28 +1,17 @@
 import { StyleSheet, Text, View, Image, TouchableOpacity, FlatList } from 'react-native'
 import react, { useEffect, useState } from 'react';
 import { NavigateType } from '../models/Navigations';
-import { Challenge } from '../models/InfChallenge';
 import ListCard from '../components/ListCard';
-import axios from 'axios';
+import useGetAllChallenges from '../hooks/useChallenge';
 
 const SeeAllLive = ({ navigation }: NavigateType) => {
-
-  const [challenges, setChallenges] = useState<Challenge[]>([]);
+  const { data: challenges, mutate } = useGetAllChallenges();
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axios.get(
-          'https://63aa9cf2fdc006ba6046fb58.mockapi.io/challenges',
-        );
-        setChallenges(response.data);
-      } catch (error) {
-        console.error('Error fetching challenges:', error);
-      }
-    };
+    mutate();
+  }, [mutate]);
 
-    fetchData();
-  }, []);
+
   return (
     <View style={styles.container}>
       <View style={styles.header}>
@@ -36,16 +25,17 @@ const SeeAllLive = ({ navigation }: NavigateType) => {
         <FlatList
           data={challenges}
           showsVerticalScrollIndicator={false}
-          keyExtractor={(item) => item.id}
+          keyExtractor={(item, index) => index.toString()}
           contentContainerStyle={{ flexGrow: 1 }}
-          renderItem={({ item }) => (
+          renderItem={({ item, index }) => (
             <ListCard
-              date={item.Days}
-              title={item.name}
-              location={item.Address}
-              images={item.images}
+              Days={item.Days}
+              title={item.title}
+              Address={item.Address}
+              images_path={item.images_path}
+              isLive={item.isLive}
+              key={item.id ? item.id.toString() : index.toString()}
             />
-
           )}
         />
       </View>

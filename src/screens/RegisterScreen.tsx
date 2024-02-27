@@ -1,4 +1,4 @@
-import React, {useRef} from 'react';
+import React, {useRef, useState} from 'react';
 import {
   Image,
   Text,
@@ -6,37 +6,69 @@ import {
   View,
   TouchableOpacity,
   ScrollView,
+  Alert,
 } from 'react-native';
 import Button from '../components/Button';
 import LoginOptions from '../components/LoginOptions';
-import {styles} from '../styles/signin-signup';
-import {NavigateType} from '../models/Navigations';
-import {useForm, Controller} from 'react-hook-form';
-import {RegistrationData} from '../models/Register';
+import { styles } from '../styles/signin-signup';
+import { NavigateType } from '../models/Navigations';
+import { useForm, Controller } from 'react-hook-form';
+import { RegistrationData } from '../models/Register';
+import useRegister from '../hooks/useRegister';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import axios from 'axios';
 
 export default function RegisterScreen({navigation}: NavigateType) {
+  const userNameRef = useRef<TextInput>(null);
   const passwordRegisterRef = useRef<TextInput>(null);
-  const userRef = useRef<TextInput>(null);
-
-  const moveLogin = () => navigation.goBack();
-  const moveMoreRegister = (data: RegistrationData) => {
-    navigation.navigate('MoreRegisterScreen', data);
+  const confirmPasswordRef = useRef<TextInput>(null);
+  const [showPassword, setShowPassword] = useState(false);
+  const togglePasswordVisibility = () => {
+    setShowPassword(prev => !prev);
   };
 
+  const moveLogin = () => navigation.goBack();
+
+  const { mutate } = useRegister();
+
+
   const onSubmit = (data: RegistrationData) => {
-    // Pass the data object to moveMoreRegister
-    moveMoreRegister(data);
+    if (data.password === data.confirmPassword) {
+      mutate(data, {
+        onSuccess: async () => {
+          AsyncStorage.setItem('email', data.email);
+          console.log("data ne: ", data);
+          try {
+            await axios.post(`http://${process.env.IP_COMPUTER}:4000/api/send-verification-code`, {
+              "email": data.email
+            }, {
+              headers: {
+                'Content-Type': 'application/json'
+              }
+            });
+          } catch (error) {
+            console.log("data ne: ", data);
+            console.log("verification error");
+            console.log(error);
+          }
+          navigation.navigate('VerifyRegisterScreen');
+        },
+      })
+    } else {
+      Alert.alert("Confirm password does not match with password")
+    }
   };
 
   const {
     control,
     handleSubmit,
-    formState: {errors},
+    formState: { errors },
   } = useForm({
     defaultValues: {
       email: '',
       username: '',
       password: '',
+      confirmPassword: '',
     },
   });
 
@@ -66,7 +98,7 @@ export default function RegisterScreen({navigation}: NavigateType) {
               />
               <Controller
                 control={control}
-                render={({field: {onChange, onBlur, value}}) => (
+                render={({ field: { onChange, onBlur, value } }) => (
                   <TextInput
                     style={styles.input}
                     placeholder="Enter your email"
@@ -75,7 +107,7 @@ export default function RegisterScreen({navigation}: NavigateType) {
                     onBlur={onBlur}
                     value={value}
                     enterKeyHint={'next'}
-                    onSubmitEditing={() => userRef.current?.focus()}
+                    onSubmitEditing={() => userNameRef.current?.focus()}
                   />
                 )}
                 name="email"
@@ -103,8 +135,9 @@ export default function RegisterScreen({navigation}: NavigateType) {
               />
               <Controller
                 control={control}
-                render={({field: {onChange, onBlur, value}}) => (
+                render={({ field: { onChange, onBlur, value } }) => (
                   <TextInput
+                    ref={userNameRef}
                     style={styles.input}
                     placeholder="Enter your user name"
                     placeholderTextColor="#00000080"
@@ -116,7 +149,7 @@ export default function RegisterScreen({navigation}: NavigateType) {
                   />
                 )}
                 name="username"
-                rules={{required: 'User name is require!'}}
+                rules={{ required: 'User name is require!' }}
               />
             </View>
           </View>
@@ -134,7 +167,7 @@ export default function RegisterScreen({navigation}: NavigateType) {
               />
               <Controller
                 control={control}
-                render={({field: {onChange, onBlur, value}}) => (
+                render={({ field: { onChange, onBlur, value } }) => (
                   <TextInput
                     ref={passwordRegisterRef}
                     style={styles.input}
@@ -143,7 +176,9 @@ export default function RegisterScreen({navigation}: NavigateType) {
                     onChangeText={text => onChange(text)}
                     placeholder="Enter your password"
                     placeholderTextColor="#00000080"
-                    enterKeyHint={'done'}
+                    secureTextEntry={!showPassword}
+                    enterKeyHint={'next'}
+                    onSubmitEditing={() => confirmPasswordRef.current?.focus()}
                   />
                 )}
                 name="password"
@@ -155,6 +190,55 @@ export default function RegisterScreen({navigation}: NavigateType) {
                   },
                 }}
               />
+              <TouchableOpacity onPress={togglePasswordVisibility}>
+                <Image
+                  source={
+                    showPassword
+                      ? require('../assets/signin_signup/open-eye.png')
+                      : require('../assets/signin_signup/close-eye.png')
+                  }
+                />
+              </TouchableOpacity>
+            </View>
+          </View>
+          <View style={styles.formInput}>
+            {errors.confirmPassword ? (
+              <Text style={styles.errorText}>
+                {errors.confirmPassword.message}
+              </Text>
+            ) : (
+              <Text>Confirm password</Text>
+            )}
+            <View style={styles.inputContainter}>
+              <Image
+                source={require('../assets/signin_signup/password-icon.png')}
+              />
+              <Controller
+                control={control}
+                render={({ field: { onChange, onBlur, value } }) => (
+                  <TextInput
+                    ref={confirmPasswordRef}
+                    style={styles.input}
+                    placeholder="Enter your password"
+                    placeholderTextColor="#00000080"
+                    enterKeyHint={'done'}
+                    value={value}
+                    onBlur={onBlur}
+                    onChangeText={text => onChange(text)}
+                  />
+                )}
+                name="confirmPassword"
+                rules={{ required: 'Confirm Password is required!' }}
+              />
+              <TouchableOpacity onPress={togglePasswordVisibility}>
+                <Image
+                  source={
+                    showPassword
+                      ? require('../assets/signin_signup/open-eye.png')
+                      : require('../assets/signin_signup/close-eye.png')
+                  }
+                />
+              </TouchableOpacity>
             </View>
           </View>
           <View style={[styles.options, styles.setCenter]}>
