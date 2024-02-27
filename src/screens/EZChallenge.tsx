@@ -18,7 +18,6 @@ import {Welcome, Welcome2, Welcome3} from './Welcome';
 const Stack = createNativeStackNavigator();
 
 export default function EZChallenge() {
-
   return (
     <Stack.Navigator>
       <Stack.Group screenOptions={{headerShown: false}}>
@@ -32,20 +31,9 @@ export default function EZChallenge() {
           component={VerifyRegisterScreen}
         />
         <Stack.Screen name="ForgotPassword" component={ForgotPassword} />
-      </Stack.Group>
-
-      <Stack.Group screenOptions={{headerShown: false}}>
-
-        <Stack.Screen name="SeeAllChallange" component={SeeAllChallenges} />
-        <Stack.Screen name="SeeAllLive" component={SeeAllLive} />
-      </Stack.Group>
-
-      <Stack.Group screenOptions={{ headerShown: false }}>
         <Stack.Screen name="ListGift" component={ListGift} />
         <Stack.Screen name="GiftDetail" component={GiftDetail} />
-        <Stack.Screen name='ExchangeGifts' component={ExchangeGifts} />
-      <Stack.Group screenOptions={{headerShown: false}}>
-
+        <Stack.Screen name="ExchangeGifts" component={ExchangeGifts} />
         <Stack.Screen name="EZChallenge" component={BottomTabs} />
         <Stack.Screen name="SubProfileScreen" component={SubProfileScreen} />
         <Stack.Screen name="EditProfile" component={EditProfile} />
