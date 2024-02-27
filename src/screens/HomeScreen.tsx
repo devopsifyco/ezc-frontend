@@ -32,6 +32,7 @@ const HomeScreen: React.FC<NavigateType> = ({ navigation }) => {
   const handleNotificationPress = () => {
     navigation.navigate('Notification');
   };
+  console.log('ID', challenges[0].id)
 
 
   return (
@@ -66,6 +67,7 @@ const HomeScreen: React.FC<NavigateType> = ({ navigation }) => {
           keyExtractor={(item, index) => index.toString()}
           renderItem={({ item, index }) => (
             <LiveCard
+              id={item.id}
               key={item.id ? item.id.toString() : index.toString()}
               Days={item.Days}
               title={item.title}
@@ -95,6 +97,7 @@ const HomeScreen: React.FC<NavigateType> = ({ navigation }) => {
           contentContainerStyle={{ flexGrow: 1 }}
           renderItem={({ item, index }) => (
             <ListCard
+              id={item.id}
               key={item.id ? item.id.toString() : index.toString()}
               Days={item.Days}
               title={item.title}
