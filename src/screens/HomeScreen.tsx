@@ -16,11 +16,13 @@ import ListCard from '../components/ListCard';
 import Slides from '../components/Slides';
 import { NavigateType } from '../models/Navigations';
 import { Challenge } from '../models/InfChallenge';
-
+import NotificationScreen from './Notification';
 
 const HomeScreen: React.FC<NavigateType> = ({ navigation }) => {
   const [challenges, setChallenges] = useState<Challenge[]>([]);
-
+  const handleNotificationPress = () => {
+    navigation.navigate('Notification');
+  };
   useEffect(() => {
     const fetchData = async () => {
       try {
@@ -35,16 +37,14 @@ const HomeScreen: React.FC<NavigateType> = ({ navigation }) => {
 
     fetchData();
   }, []);
-
-
-
-
   return (
     <View style={styles.container}>
       <View style={styles.header}>
         <Image source={require('../assets/logoEZC.png')} />
         <Text style={styles.titles}>Home</Text>
-        <Image source={require('../assets/icons/notification.png')} />
+        <TouchableOpacity onPress={handleNotificationPress}>
+          <Image source={require('../assets/icons/notification.png')} />
+        </TouchableOpacity>
       </View>
 
       <View style={{ height: 150 }}>

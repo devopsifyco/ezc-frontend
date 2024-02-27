@@ -48,50 +48,50 @@ export default function MoreRegisterScreen({navigation}: NavigateType) {
 
   return (
     <View style={styles.container}>
-      <Image source={require('../assets/signin_signup/logo.png')} />
+      <Image
+        style={styles.logo}
+        source={require('../assets/signin_signup/logo.png')}
+      />
       <Image
         source={require('../assets/signin_signup/background.png')}
         style={styles.imageBackground}
       />
       <View style={styles.formBackground}>
-        <View style={styles.formInput}>
-          {errors.confirmPassword ? (
-            <Text style={styles.errorText}>
-              {errors.confirmPassword.message}
-            </Text>
-          ) : (
-            <Text>Confirm password</Text>
-          )}
-          <View style={styles.inputContainter}>
-            <Image
-              source={require('../assets/signin_signup/password-icon.png')}
-            />
-            <Controller
-              control={control}
-              render={({field: {onChange, onBlur, value}}) => (
-                <TextInput
-                  ref={confirmPasswordRef}
-                  style={styles.input}
-                  placeholder="Enter your password"
-                  placeholderTextColor="#00000080"
-                  enterKeyHint={'done'}
-                  value={value}
-                  onBlur={onBlur}
-                  onChangeText={text => onChange(text)}
-                />
-              )}
-              name="confirmPassword"
-              rules={{required: 'Confirm Password is required!'}}
-            />
+        <View style={styles.formContainer}>
+          <View style={styles.formInput}>
+            {errors.confirmPassword ? (
+              <Text style={styles.errorText}>
+                {errors.confirmPassword.message}
+              </Text>
+            ) : (
+              <Text>Confirm password</Text>
+            )}
+            <View style={styles.inputContainter}>
+              <Image
+                source={require('../assets/signin_signup/password-icon.png')}
+              />
+              <Controller
+                control={control}
+                render={({field: {onChange, onBlur, value}}) => (
+                  <TextInput
+                    ref={confirmPasswordRef}
+                    style={styles.input}
+                    placeholder="Enter your password"
+                    placeholderTextColor="#00000080"
+                    enterKeyHint={'done'}
+                    value={value}
+                    onBlur={onBlur}
+                    onChangeText={text => onChange(text)}
+                  />
+                )}
+                name="confirmPassword"
+                rules={{required: 'Confirm Password is required!'}}
+              />
+            </View>
           </View>
+          <Button onPress={handleSubmit(onSubmit)} title="Register" />
+          <LoginOptions />
         </View>
-        <Button onPress={handleSubmit(onSubmit)} title="Register" />
-        <View style={styles.moreLogin}>
-          <Image source={require('../assets/signin_signup/arrowLeft.png')} />
-          <Text style={styles.titleSmall}>Or continue with</Text>
-          <Image source={require('../assets/signin_signup/arrowRight.png')} />
-        </View>
-        <LoginOptions />
       </View>
     </View>
   );
