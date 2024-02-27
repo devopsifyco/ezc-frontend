@@ -21,7 +21,10 @@ export default function ForgotPassword({navigation}: NavigateType) {
 
   return (
     <View style={styles.container}>
-      <Image source={require('../assets/signin_signup/logo.png')} />
+      <Image
+        style={styles.logo}
+        source={require('../assets/signin_signup/logo.png')}
+      />
       <Image
         source={require('../assets/signin_signup/background.png')}
         style={styles.imageBackground}

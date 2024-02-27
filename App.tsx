@@ -12,7 +12,7 @@ const App = () => {
   return (
     <QueryClientProvider client={queryClient}>
       <NavigationContainer>
-        <RatingScreen/>
+        <EZChallenge/>
       </NavigationContainer>
     </QueryClientProvider>
   );

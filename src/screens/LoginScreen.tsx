@@ -1,5 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Image, Text, TextInput, View, TouchableOpacity } from 'react-native';
+import { Image, Text, TextInput, View, TouchableOpacity, Alert } from 'react-native';
 import Button from '../components/Button';
 import LoginOptions from '../components/LoginOptions';
 import { NavigateType } from '../models/Navigations';
@@ -22,16 +22,16 @@ export default function LoginScreen({ navigation }: NavigateType) {
     },
   });
 
-  useEffect(() => {
-    const getData = async () => {
-      try {
-        navigation.navigate('EZChallenge');
-      } catch (error) {
-        console.error(error);
-      }
-    };
-    getData();
-  }, []);
+  // useEffect(() => {
+  //   const getData = async () => {
+  //     try {
+  //       navigation.navigate('EZChallenge');
+  //     } catch (error) {
+  //       console.error(error);
+  //     }
+  //   };
+  //   getData();
+  // }, []);
 
   const moveRegister = () => navigation.navigate('RegisterScreen');
   const moveForgotPassword = () => navigation.navigate('ForgotPassword');
@@ -48,6 +48,10 @@ export default function LoginScreen({ navigation }: NavigateType) {
         AsyncStorage.setItem('userdata', jsonString);
         navigation.navigate('EZChallenge');
       },
+      onError: (error) => {
+        Alert.alert(error?.response.data.message);
+        console.log(error?.response.data.message);
+      }
     });
   };
 
