@@ -27,17 +27,17 @@ const SeeAllChallenges = ({ navigation }: NavigateType) => {
         <FlatList
           data={challenges}
           showsVerticalScrollIndicator={false}
-          keyExtractor={(item) => item.id}
+          keyExtractor={(item, index) => index.toString()}
           contentContainerStyle={{ flexGrow: 1 }}
-          renderItem={({ item }) => (
+          renderItem={({ item, index }) => (
             <ListCard
+              key={item.id ? item.id.toString() : index.toString()}
               Days={item.Days}
               title={item.title}
               Address={item.Address}
-              location={item.location}
               images_path={item.images_path}
               isLive={item.isLive}
-              key={item.id}
+              
             />
           )}
         />

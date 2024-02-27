@@ -6,7 +6,7 @@ import { Challenge } from '../models/InfChallenge';
 
 
 
-const LiveCard: FC<Challenge> = ({  Days, title, Address, location, images_path, isLive }) => {
+const LiveCard: FC<Challenge> = ({  Days, title, Address, images_path, isLive }) => {
 
     return (
         <View style={{
@@ -89,7 +89,7 @@ const LiveCard: FC<Challenge> = ({  Days, title, Address, location, images_path,
                         <Text style={{
                             fontSize: 13,
                             marginLeft: 5,
-                        }}>{location}</Text>
+                        }}>{Address}</Text>
                     </View>
                 </View>
             </TouchableOpacity>

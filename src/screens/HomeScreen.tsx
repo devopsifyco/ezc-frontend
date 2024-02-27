@@ -53,14 +53,13 @@ const HomeScreen: React.FC<NavigateType> = ({ navigation }) => {
           data={challenges}
           horizontal
           showsHorizontalScrollIndicator={false}
-          keyExtractor={(item) => (item.id)}
-          renderItem={({ item }) => (
+          keyExtractor={(item, index) => index.toString()}
+          renderItem={({ item, index }) => (
             <LiveCard
-              key={item.id}
+              key={item.id ? item.id.toString() : index.toString()}
               Days={item.Days}
               title={item.title}
               Address={item.Address}
-              location={item.location}
               images_path={item.images_path}
               isLive={item.isLive}
             />
@@ -81,15 +80,14 @@ const HomeScreen: React.FC<NavigateType> = ({ navigation }) => {
         <FlatList
           data={challenges}
           showsVerticalScrollIndicator={false}
-          keyExtractor={(item) => (item.id)}
+          keyExtractor={(item, index) => index.toString()}
           contentContainerStyle={{ flexGrow: 1 }}
-          renderItem={({ item }) => (
+          renderItem={({ item, index }) => (
             <ListCard
-              key={item.id}
+              key={item.id ? item.id.toString() : index.toString()}
               Days={item.Days}
               title={item.title}
               Address={item.Address}
-              location={item.location}
               images_path={item.images_path}
               isLive={item.isLive}
             />

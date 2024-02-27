@@ -3,7 +3,6 @@ export interface Challenge {
     isLive: boolean;
     title: string;
     Address: string;
-    location: string;
     images_path: { name: string, downloadLink: string}[];
 }
   

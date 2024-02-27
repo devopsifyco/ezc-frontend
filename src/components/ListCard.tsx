@@ -4,7 +4,7 @@ import Moment from 'moment';
 import { Challenge } from '../models/InfChallenge';
 
 
-const ListCard: React.FC<Challenge> = ({  Days, title, Address, location, images_path, isLive }) => {
+const ListCard: React.FC<Challenge> = ({  Days, title, Address, images_path, isLive }) => {
 
   return (
     <View
@@ -53,7 +53,7 @@ const ListCard: React.FC<Challenge> = ({  Days, title, Address, location, images
               fontSize: 13,
               marginLeft: 4,
               fontWeight: "bold",
-            }}>{location}</Text>
+            }}>{Address}</Text>
           </View>
         </View>
       </TouchableOpacity>
