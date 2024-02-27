@@ -1,7 +1,15 @@
-import React, { useState } from 'react';
-import { View, Text, StyleSheet, Image, SafeAreaView, ScrollView, TextInput } from 'react-native';
+import React, {useState} from 'react';
+import {
+  View,
+  Text,
+  StyleSheet,
+  Image,
+  SafeAreaView,
+  ScrollView,
+  TextInput,
+} from 'react-native';
 import DatePicker from 'react-native-datepicker';
-import { ProgressSteps, ProgressStep } from 'react-native-progress-steps';
+import {ProgressSteps, ProgressStep} from 'react-native-progress-steps';
 
 export default function DatePickerValue() {
   const [date1, setDate1] = useState('2022-04-17');
@@ -36,24 +44,29 @@ export default function DatePickerValue() {
           <Text style={styles.titles}>Create Challenges</Text>
           <Image source={require('../assets/icons/notifications.png')} />
         </View>
-        <View style={{ flex: 1 }}>
+        <View style={{flex: 1}}>
           <ProgressSteps>
-            <ProgressStep 
-              label="First Step" 
-              nextBtnText="Next" 
-              nextBtnStyle={{ backgroundColor: 'white' }} 
-              nextBtnTextStyle={{ color: 'white' }} >
-              <View style={{ alignItems: 'center' }}>
-                
-              </View>
+            <ProgressStep
+              label="First Step"
+              nextBtnText="Next"
+              nextBtnStyle={{backgroundColor: 'white'}}
+              nextBtnTextStyle={{color: 'white'}}>
+              <View style={{alignItems: 'center'}}></View>
             </ProgressStep>
-            <ProgressStep label="Second Step" nextBtnText="Next" previousBtnText="Back" nextBtnStyle={{ backgroundColor: 'blue' }} nextBtnTextStyle={{ color: 'white' }} previousBtnStyle={{ backgroundColor: 'green' }} previousBtnTextStyle={{ color: 'white' }}>
-              <View style={{ alignItems: 'center' }}>
+            <ProgressStep
+              label="Second Step"
+              nextBtnText="Next"
+              previousBtnText="Back"
+              nextBtnStyle={{backgroundColor: 'blue'}}
+              nextBtnTextStyle={{color: 'white'}}
+              previousBtnStyle={{backgroundColor: 'green'}}
+              previousBtnTextStyle={{color: 'white'}}>
+              <View style={{alignItems: 'center'}}>
                 <View></View>
               </View>
             </ProgressStep>
             <ProgressStep label="Done" previousBtnText="Back">
-              <View style={{ alignItems: 'center' }}>
+              <View style={{alignItems: 'center'}}>
                 <View></View>
               </View>
             </ProgressStep>
@@ -62,7 +75,7 @@ export default function DatePickerValue() {
       </ScrollView>
     </SafeAreaView>
   );
-};
+}
 
 const styles = StyleSheet.create({
   container: {
@@ -109,8 +122,8 @@ const styles = StyleSheet.create({
     marginBottom: 5,
   },
   buttonGroup: {
-    flexDirection: 'row', 
-    justifyContent: 'space-between', 
+    flexDirection: 'row',
+    justifyContent: 'space-between',
     marginTop: 20,
   },
   input: {
@@ -137,12 +150,11 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderStyle: 'dotted',
     marginBottom: 5,
-    
   },
-  
+
   button: {
     borderRadius: 25,
-    width: '48%', 
+    width: '48%',
   },
   gradient: {
     padding: 10,
@@ -160,7 +172,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     marginHorizontal: 20,
     marginBottom: 10,
-    
   },
   status: {
     backgroundColor: '#216C53',
@@ -177,14 +188,14 @@ const styles = StyleSheet.create({
     backgroundColor: 'red',
     width: '100%',
   },
-  viewAdd:{
-    flexDirection: 'row', 
-    justifyContent: 'space-between', 
+  viewAdd: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
   },
   rowContainer: {
     width: '100%',
-    flexDirection: 'row', 
-    justifyContent: 'space-between', 
+    flexDirection: 'row',
+    justifyContent: 'space-between',
     marginBottom: 20,
-  }
+  },
 });
