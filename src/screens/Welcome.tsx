@@ -34,7 +34,10 @@ export function Welcome({navigation}: any) {
 }
 
 export function Welcome2({navigation}: any) {
-  const navigateWelcom3 = () => navigation.navigate('Welcome3');
+  const navigateWelcom3 = () => {
+    AsyncStorage.setItem('welcomeCompleted', 'false');
+    navigation.navigate('Welcome3');
+  };
 
   return (
     <>
@@ -60,7 +63,26 @@ export function Welcome2({navigation}: any) {
 }
 
 export function Welcome3({navigation}: any) {
-  const handleGetStart = () => navigation.navigete('LoginScreen');
+  const handleCheckScreen = async () => {
+    try {
+      const welcomeCompleted = await AsyncStorage.getItem('welcomeCompleted');
+
+      if (welcomeCompleted === 'true') {
+        navigation.reset({
+          index: 0,
+          routes: [{name: 'EZChallenge'}],
+        });
+      } else {
+        navigation.navigate('LoginScreen');
+      }
+    } catch (error) {
+      console.error('Error checking screen:', error);
+    }
+  };
+
+  const handleLogin = () => {
+    handleCheckScreen();
+  };
 
   return (
     <>
@@ -74,7 +96,7 @@ export function Welcome3({navigation}: any) {
             Join the challenge with friends and everyone
           </Text>
         </View>
-        <Button title="Next" onPress={handleGetStart} />
+        <Button title="Next" onPress={handleLogin} />
       </View>
     </>
   );
