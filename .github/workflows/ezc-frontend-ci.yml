@@ -18,10 +18,18 @@ jobs:
       - name: Install npm dependencies
         run: |
           npm install
+
   build-android:
     needs: install-and-test
     runs-on: ubuntu-latest
     steps:
+      - name: Install Java
+        uses: actions/setup-java@v3
+        with:
+          java-version: "17"
+          distribution: "adopt"
+          cache: "gradle"
+
       - uses: actions/checkout@v4
       - name: Install npm dependencies
         run: |
