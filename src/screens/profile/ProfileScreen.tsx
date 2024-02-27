@@ -40,6 +40,7 @@ export default function SubProfileScreen({
       <View style={styles.header}>
         <HeaderProfile navigation={navigation} />
       </View>
+
       <View style={styles.profile}>
         <Image source={DATA.image} style={styles.profileImage} />
         <Text style={styles.profileName}>{DATA.name}</Text>
@@ -55,6 +56,7 @@ export default function SubProfileScreen({
           </View>
         </View>
       </View>
+      
       <View style={styles.actionInteraction}>
         <ButtonProfile2
           title="Edit Profile"

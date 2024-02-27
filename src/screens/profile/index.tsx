@@ -49,6 +49,7 @@ export default function ProfileScreen({navigation}: NavigateType) {
           <Image source={require('../../assets/profile/menu-toggle.png')} />
         </TouchableOpacity>
       </View>
+      
       <View style={styles.profile}>
         <Image source={DATA.image} style={styles.profileImage} />
         <Text style={styles.profileName}>{DATA.name}</Text>

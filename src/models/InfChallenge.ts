@@ -4,5 +4,7 @@ export interface Challenge {
     title: string;
     Address: string;
     images_path: { name: string, downloadLink: string}[];
+    onPress: () => void;
+
 }
   

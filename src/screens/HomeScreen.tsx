@@ -62,6 +62,7 @@ const HomeScreen: React.FC<NavigateType> = ({ navigation }) => {
               Address={item.Address}
               images_path={item.images_path}
               isLive={item.isLive}
+              onPress={() => navigation.navigate('ChallengeDetail')}
             />
           )}
         />
@@ -76,7 +77,7 @@ const HomeScreen: React.FC<NavigateType> = ({ navigation }) => {
           <Image source={require('../assets/icons/iconSeeAll.png')} />
         </TouchableOpacity>
       </View>
-      <View>
+      <View style={{flex:1}}>
         <FlatList
           data={challenges}
           showsVerticalScrollIndicator={false}
@@ -90,6 +91,7 @@ const HomeScreen: React.FC<NavigateType> = ({ navigation }) => {
               Address={item.Address}
               images_path={item.images_path}
               isLive={item.isLive}
+              onPress={() => navigation.navigate('ChallengeDetail')}
             />
           )}
         />

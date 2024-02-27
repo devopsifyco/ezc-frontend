@@ -9,6 +9,8 @@ import SeeAllChallenges from './SeeAllChallenges';
 import SeeAllLive from './SeeAllLive';
 import SubProfileScreen from './profile/ProfileScreen';
 import EditProfile from './profile/EditProfile';
+import ChallengeDetail from './ChallengeDetail';
+
 const Stack = createNativeStackNavigator();
 
 export default function EZChallenge() {
@@ -36,6 +38,10 @@ export default function EZChallenge() {
         <Stack.Screen name="EZChallenge" component={BottomTabs} />
         <Stack.Screen name="SubProfileScreen" component={SubProfileScreen} />
         <Stack.Screen name="EditProfile" component={EditProfile} />
+      </Stack.Group>
+      
+      <Stack.Group screenOptions={{headerShown: false}}>
+        <Stack.Screen name="ChallengeDetail" component={ChallengeDetail} />
       </Stack.Group>
     </Stack.Navigator>
   );
