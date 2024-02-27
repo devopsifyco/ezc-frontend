@@ -7,12 +7,16 @@ import ForgotPassword from './ForgotPassword';
 import BottomTabs from '../models/routers/BottomTabs';
 import SeeAllChallenges from './SeeAllChallenges';
 import SeeAllLive from './SeeAllLive';
+import ListGift from './SubExChangeGift';
+import ExchangeGifts from './ExchangeGifts';
+import GiftDetail from './GiftDetail';
 import SubProfileScreen from './profile/ProfileScreen';
 import EditProfile from './profile/EditProfile';
+
 const Stack = createNativeStackNavigator();
 
 export default function EZChallenge() {
-  const isAuthenticated = null;
+  const isAuthenticated = "ExchangeGifts";
 
   return (
     <Stack.Navigator
@@ -32,6 +36,10 @@ export default function EZChallenge() {
         <Stack.Screen name="SeeAllLive" component={SeeAllLive} />
       </Stack.Group>
 
+      <Stack.Group screenOptions={{ headerShown: false }}>
+        <Stack.Screen name="ListGift" component={ListGift} />
+        <Stack.Screen name="GiftDetail" component={GiftDetail} />
+        <Stack.Screen name='ExchangeGifts' component={ExchangeGifts} />
       <Stack.Group screenOptions={{headerShown: false}}>
         <Stack.Screen name="EZChallenge" component={BottomTabs} />
         <Stack.Screen name="SubProfileScreen" component={SubProfileScreen} />
