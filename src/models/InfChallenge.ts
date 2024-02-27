@@ -1,9 +1,8 @@
 export interface Challenge {
-    id: string;
     Days: string;
     isLive: boolean;
-    name: string;
+    title: string;
     Address: string;
-    images: string[];
+    images_path: { name: string, downloadLink: string}[];
 }
   

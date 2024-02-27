@@ -12,7 +12,7 @@ import EditProfile from './profile/EditProfile';
 const Stack = createNativeStackNavigator();
 
 export default function EZChallenge() {
-  const isAuthenticated = 'EZChallenge';
+  const isAuthenticated = null;
 
   return (
     <Stack.Navigator
