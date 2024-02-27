@@ -2,12 +2,25 @@ import React, {useEffect} from 'react';
 import {Image, StyleSheet, View, Text} from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Button from '../components/Button';
-import {get} from 'react-native/Libraries/TurboModule/TurboModuleRegistry';
 
 export function Welcome({navigation}: any) {
   useEffect(() => {
+    const handleGetStart = async () => {
+      try {
+        const getToken = await AsyncStorage.getItem('accessToken');
+
+        if (getToken !== null) {
+          navigation.replace('EZChallenge');
+        } else {
+          navigation.navigate('Welcome2');
+        }
+      } catch (error) {
+        console.error('Error checking authentication:', error);
+      }
+    };
+
     const timer = setTimeout(() => {
-      navigation.navigate('Welcome2');
+      handleGetStart();
     }, 2000);
 
     return () => clearTimeout(timer);
@@ -47,20 +60,7 @@ export function Welcome2({navigation}: any) {
 }
 
 export function Welcome3({navigation}: any) {
-  const handleGetStart = async () => {
-    try {
-      const getToken = await AsyncStorage.getItem('accessToken');
-      console.log(getToken);
-
-      if (getToken !== null) {
-        navigation.navigate('EZChallenge');
-      } else {
-        navigation.navigate('LoginScreen');
-      }
-    } catch (error) {
-      console.error('Error checking authentication:', error);
-    }
-  };
+  const handleGetStart = () => navigation.navigete('LoginScreen');
 
   return (
     <>
