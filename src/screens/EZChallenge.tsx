@@ -37,7 +37,6 @@ export default function EZChallenge() {
         <Stack.Screen name="ListGift" component={ListGift} />
         <Stack.Screen name="GiftDetail" component={GiftDetail} />
         <Stack.Screen name='ExchangeGifts' component={ExchangeGifts} />
-      <Stack.Group screenOptions={{headerShown: false}}>
         <Stack.Screen name="EZChallenge" component={BottomTabs} />
       </Stack.Group>
     </Stack.Navigator>
