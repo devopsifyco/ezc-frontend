@@ -31,8 +31,7 @@ const ChallengeDetail = ({ navigation }: NavigateType) => {
   // The number of lines you want to display
   const numberOfLinesToShow = 4;
 
-  const content = `Ngày môi trường của Tổ chức môi trường thế giới.Bạn luôn thắc mắc ngày môi trường thế giới là ngày nào sau đây, ngày môi trường thế giới là ngày. Nên là thằng nào có tiền thì donate cho tao. Ít thì năm... quả trứng, 
-  nhiều thì một quả tên lửa, chúng mày nhớ chưa, 
+  const content = `Ngày môi trường của Tổ chức môi trường thế giới.Bạn luôn thắc mắc ngày môi trường thế giới là ngày nào sau đây, ngày môi trường thế giới là ngày. Nên là thằng nào có tiền thì donate cho tao. Ít thì năm... quả trứng,nhiều thì một quả tên lửa, chúng mày nhớ chưa, 
   chúng mày giúp anh, sau này anh sẽ giúp lại chúng mày`;
 
 
