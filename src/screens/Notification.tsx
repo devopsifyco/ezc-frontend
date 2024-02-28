@@ -163,12 +163,14 @@ const styles = StyleSheet.create({
     borderWidth:1,
     borderColor:"#216C53",
     borderRadius:10,
-    marginLeft:50
+    display:"flex",
+    alignSelf: 'flex-end',
   },
   markAllText:{
     fontSize:16,
     fontWeight:"700",
-    padding:5
+    padding:5,
+    color:"#808080"
   },
   tabBar:{
     marginTop:30,
@@ -186,7 +188,8 @@ const styles = StyleSheet.create({
   },
   tabText: {
     fontSize:16,
-    fontWeight:"bold"
+    fontWeight:"bold",
+    color:"#808080"
   },
   tabButton: {
     paddingVertical: 10,
@@ -224,7 +227,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     borderWidth:1,
     backgroundColor:"#216C53",
-    marginRight: 10,
   },
   index: {
     color: '#FFF',
@@ -239,7 +241,8 @@ const styles = StyleSheet.create({
   InfoDetail: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap:20
+    flex: 1,
+    gap:10
   },
   titleContent: {
     flex: 1,
@@ -251,10 +254,13 @@ const styles = StyleSheet.create({
     color:"#000",
     fontSize:14,
     fontWeight:"600",
-    width:250
+    display:"flex",
+    flexWrap: 'wrap',
+    maxWidth: '80%',
   },
   time: {
     fontSize:14,
+    color:"#808080"
   },
   message: {
 
