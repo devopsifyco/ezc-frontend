@@ -1,8 +1,9 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useMutation } from '@tanstack/react-query';
+import {useMutation} from '@tanstack/react-query';
 import axios from 'axios';
+import {EZCHALLENG_API} from '../api/endPoint';
 
-const API_ALLCHALLENGE = `http://${process.env.IP_COMPUTER}:4000/api/challenges`;
+const API_ALLCHALLENGE = `${EZCHALLENG_API}/challenges`;
 
 export default function useGetAllChallenges() {
   const getAllChallenges = useMutation({
@@ -13,7 +14,7 @@ export default function useGetAllChallenges() {
         const res = await axios.get(API_ALLCHALLENGE, {
           headers: {
             'Content-Type': `application/json`,
-            'Authorization': `Bearer ${token}`
+            Authorization: `Bearer ${token}`,
           },
         });
         return res.data;
@@ -25,5 +26,5 @@ export default function useGetAllChallenges() {
     onSuccess: () => console.log('Request successful'),
   });
 
-  return { ...getAllChallenges };
+  return {...getAllChallenges};
 }
