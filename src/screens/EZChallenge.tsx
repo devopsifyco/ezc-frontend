@@ -12,6 +12,7 @@ import ExchangeGifts from './ExchangeGifts';
 import GiftDetail from './GiftDetail';
 import SubProfileScreen from './profile/ProfileScreen';
 import EditProfile from './profile/EditProfile';
+import ChallengeDetail from './ChallengeDetail';
 
 import {Welcome, Welcome2, Welcome3} from './Welcome';
 import RatingScreen from './RatingScreen';
@@ -43,6 +44,10 @@ export default function EZChallenge() {
         <Stack.Screen name="SeeAllLive" component={SeeAllLive} />
         <Stack.Screen name="RatingScreen" component={RatingScreen} />
         <Stack.Screen name='NotificationScreen' component={NotificationScreen} />
+      </Stack.Group>
+      
+      <Stack.Group screenOptions={{headerShown: false}}>
+        <Stack.Screen name="ChallengeDetail" component={ChallengeDetail} />
       </Stack.Group>
     </Stack.Navigator>
   );
