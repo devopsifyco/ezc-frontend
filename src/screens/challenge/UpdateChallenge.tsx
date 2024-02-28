@@ -7,12 +7,17 @@ import {
   ScrollView,
   StyleSheet,
   Image,
+  TouchableOpacity
 } from 'react-native';
 import DatePicker from 'react-native-datepicker';
 import Next from './Next';
+import { NavigateType } from '../../models/Navigations';
 
 
-export default function UpdateChallenge() {
+
+const UpdateChallenge: React.FC<NavigateType> = ({ navigation }) => {
+
+
   const [challengeName, setChallengeName] = useState('');
   const [challengeType, setChallengeType] = useState('');
   const [challengeMode, setChallengeMode] = useState('');
@@ -43,75 +48,76 @@ export default function UpdateChallenge() {
     setTime2(Time2);
   };
 
+
+  const handleNotificationPress = () => {
+    navigation.navigate('NotificationScreen');
+  };
+
+
   return (
     <View style={styles.container}>
+      <View style={styles.header}>
+        <TouchableOpacity onPress={() => navigation.goBack()} >
+          <Image source={require('../../assets/icons/arrow-left.png')} />
+        </TouchableOpacity>
+        <Text style={[styles.titleLarge, { fontSize: 20 }]}>Update Challenges</Text>
+        <TouchableOpacity onPress={handleNotificationPress}>
+          <Image source={require('../../assets/icons/notification.png')} />
+        </TouchableOpacity>
+      </View>
       <ScrollView contentContainerStyle={styles.formContainer}>
-        <View style={styles.header}>
-          <Text style={styles.titleLarge}>Update Challenges</Text>
-        </View>
         <View>
-
-          <View>
-            <View style={styles.container}>
-              <View style={styles.mediaContainer}>
-                <Text style={styles.titleMedium}>
-                  Attached Photos and Videos
-                </Text>
-              </View>
-              <View style={styles.viewChoose}>
-                {selectedImage ? (
-                  <Image
-                    source={{ uri: selectedImage }}
-                    style={styles.imageLarge}
-                  />
-                ) : (
-                  <Next setSelectedImage={setSelectedImage} />
-                )}
-                <Text></Text>
-              </View>
-              <View style={styles.viewAdd}>
-                <View style={styles.rowContainer}>
-                  {selectedImage1 ? (
-                    <Image
-                      source={{ uri: selectedImage1 }}
-                      style={styles.imageMedium}
-                    />
-                  ) : (
-                    <Next setSelectedImage1={setSelectedImage1} />
-                  )}
-                  <Text></Text>
-                </View>
-                <View style={styles.rowContainer}>
-                  {selectedImage2 ? (
-                    <Image
-                      source={{ uri: selectedImage2 }}
-                      style={styles.imageMedium}
-                    />
-                  ) : (
-                    <Next setSelectedImage2={setSelectedImage2} />
-                  )}
-                  <Text></Text>
-                </View>
-                <View style={styles.rowContainer}>
-                  {selectedImage3 ? (
-                    <Image
-                      source={{ uri: selectedImage3 }}
-                      style={styles.imageMedium}
-                    />
-                  ) : (
-                    <Next setSelectedImage3={setSelectedImage3} />
-                  )}
-                  <Text></Text>
-                </View>
-              </View>
-            </View>
-          </View>
-
           <View style={styles.container}>
             <View style={styles.mediaContainer}>
               <Text style={styles.titleLarge}>
                 Attached Photos and Videos
               </Text>
+            </View>
+            <View style={styles.viewChoose}>
+              {selectedImage ? (
+                <Image
+                  source={{ uri: selectedImage }}
+                  style={styles.imageLarge}
+                />
+              ) : (
+                <Next setSelectedImage={setSelectedImage} />
+              )}
+              <Text></Text>
+            </View>
+            <View style={styles.viewAdd}>
+              <View style={styles.rowContainer}>
+                {selectedImage1 ? (
+                  <Image
+                    source={{ uri: selectedImage1 }}
+                    style={styles.imageMedium}
+                  />
+                ) : (
+                  <Next setSelectedImage1={setSelectedImage1} />
+                )}
+                <Text></Text>
+              </View>
+              <View style={styles.rowContainer}>
+                {selectedImage2 ? (
+                  <Image
+                    source={{ uri: selectedImage2 }}
+                    style={styles.imageMedium}
+                  />
+                ) : (
+                  <Next setSelectedImage2={setSelectedImage2} />
+                )}
+                <Text></Text>
+              </View>
+              <View style={styles.rowContainer}>
+                {selectedImage3 ? (
+                  <Image
+                    source={{ uri: selectedImage3 }}
+                    style={styles.imageMedium}
+                  />
+                ) : (
+                  <Next setSelectedImage3={setSelectedImage3} />
+                )}
+                <Text></Text>
+              </View>
             </View>
           </View>
           <View style={styles.inputContainer}>
@@ -226,6 +232,9 @@ export default function UpdateChallenge() {
   )
 }
 
+
+export default UpdateChallenge;
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -239,7 +248,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    paddingTop: 20,
+    padding: 15,
   },
   title: {
     fontSize: 24,
@@ -269,7 +278,7 @@ const styles = StyleSheet.create({
     height: 100,
   },
   mediaContainer: {
-    marginBottom: 20,
+    marginBottom: 8,
   },
   viewChoose: {
     width: 320,
