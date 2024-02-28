@@ -29,6 +29,7 @@ const SeeAllLive = ({ navigation }: NavigateType) => {
           contentContainerStyle={{ flexGrow: 1 }}
           renderItem={({ item, index }) => (
             <ListCard
+              id={item.id}
               Days={item.Days}
               title={item.title}
               Address={item.Address}

@@ -3,7 +3,6 @@ import react, { useEffect, useState, useRef } from 'react';
 
 
 import { NavigateType } from '../models/Navigations';
-import useGetAllChallenges from '../hooks/useChallenge';
 import Swiper from 'react-native-swiper';
 
 import ButtonDetaiChallenge from '../components/ButtonDetailChallenge';

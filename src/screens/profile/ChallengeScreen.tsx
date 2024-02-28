@@ -1,7 +1,9 @@
 import React from 'react';
-import {View, Text, Image, StyleSheet, ScrollView} from 'react-native';
+import { View, Text, Image, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
+import { NavigateType } from '../../models/Navigations';
 
-export default function ChallengeScreen() {
+export default function ChallengeScreen({navigation}: NavigateType) {
+
   return (
     <View style={styles.container}>
       <ScrollView style={styles.listItems}>
@@ -14,6 +16,9 @@ export default function ChallengeScreen() {
             <Text style={styles.time}>May- Sat -2:00 PM</Text>
             <Text style={styles.detail}>A virtual evening of smooth jazz</Text>
           </View>
+          <TouchableOpacity onPress={() => navigation.navigate('UpdateChallenge')}>
+            <Image style={styles.icon_edit} source={require('../../assets/icons/edit.png')} />
+          </TouchableOpacity>
         </View>
         {/*<View style={styles.item}>
           <Image
@@ -87,13 +92,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     height: 100,
     borderRadius: 15,
+    position:"relative"
   },
   detailItems: {
     backgroundColor: 'red',
     width: 260,
     paddingLeft: 20,
   },
-  image: {width: 50, height: 50},
+  image: { width: 50, height: 50 },
   time: {
     color: '#216C53',
     fontSize: 14,
@@ -105,4 +111,8 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     width: '90%',
   },
+  icon_edit: {
+    position:"absolute",
+    right:10
+  }
 });
