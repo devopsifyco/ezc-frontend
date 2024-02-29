@@ -16,7 +16,9 @@ import ChallengeDetail from './ChallengeDetail';
 
 import {Welcome, Welcome2, Welcome3} from './Welcome';
 import RatingScreen from './RatingScreen';
+import ChatScreen from './ChatScreen';
 import NotificationScreen from './Notification';
+import GroupScreen from './GroupScreen';
 
 const Stack = createNativeStackNavigator();
 
@@ -43,6 +45,8 @@ export default function EZChallenge() {
         <Stack.Screen name="SeeAllChallange" component={SeeAllChallenges} />
         <Stack.Screen name="SeeAllLive" component={SeeAllLive} />
         <Stack.Screen name="RatingScreen" component={RatingScreen} />
+        <Stack.Screen name="ChatScreen" component={ChatScreen} />
+        <Stack.Screen name="GroupScreen" component={GroupScreen} />
         <Stack.Screen name='NotificationScreen' component={NotificationScreen} />
       </Stack.Group>
       
@@ -50,5 +54,5 @@ export default function EZChallenge() {
         <Stack.Screen name="ChallengeDetail" component={ChallengeDetail} />
       </Stack.Group>
     </Stack.Navigator>
-  );
+  );            
 }
