@@ -13,6 +13,9 @@ import ListCard from '../components/ListCard';
 import Slides from '../components/Slides';
 
 import { NavigateType } from '../models/Navigations';
+import { Challenge } from '../models/InfChallenge';
+import NotificationScreen from './Notification';
+
 import useGetAllChallenges from '../hooks/useChallenge';
 
 
@@ -20,6 +23,11 @@ import useGetAllChallenges from '../hooks/useChallenge';
 const HomeScreen: React.FC<NavigateType> = ({ navigation }) => {
 
   const { data: challenges, mutate } = useGetAllChallenges();
+
+  const handleNotificationPress = () => {
+    navigation.navigate('NotificationScreen');
+  };
+  
 
   useEffect(() => {
     mutate();
@@ -31,7 +39,9 @@ const HomeScreen: React.FC<NavigateType> = ({ navigation }) => {
       <View style={styles.header}>
         <Image source={require('../assets/logoEZC.png')} />
         <Text style={styles.titles}>Home</Text>
-        <Image source={require('../assets/icons/notification.png')} />
+        <TouchableOpacity onPress={handleNotificationPress}>
+          <Image source={require('../assets/icons/notification.png')} />
+        </TouchableOpacity>
       </View>
 
       <View style={{ height: 150 }}>
@@ -62,6 +72,7 @@ const HomeScreen: React.FC<NavigateType> = ({ navigation }) => {
               Address={item.Address}
               images_path={item.images_path}
               isLive={item.isLive}
+              onPress={() => navigation.navigate('ChallengeDetail')}
             />
           )}
         />
@@ -76,7 +87,7 @@ const HomeScreen: React.FC<NavigateType> = ({ navigation }) => {
           <Image source={require('../assets/icons/iconSeeAll.png')} />
         </TouchableOpacity>
       </View>
-      <View>
+      <View style={{flex:1}}>
         <FlatList
           data={challenges}
           showsVerticalScrollIndicator={false}
@@ -90,6 +101,7 @@ const HomeScreen: React.FC<NavigateType> = ({ navigation }) => {
               Address={item.Address}
               images_path={item.images_path}
               isLive={item.isLive}
+              onPress={() => navigation.navigate('ChallengeDetail')}
             />
           )}
         />
@@ -134,4 +146,4 @@ const styles = StyleSheet.create({
     fontWeight: '500',
     color: '#120D26',
   },
-});
+})

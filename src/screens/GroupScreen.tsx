@@ -1,21 +1,17 @@
 import React, { useState } from 'react';
 import { View, StyleSheet, Text, TouchableOpacity, Image, FlatList } from 'react-native';
-import { NavigateType } from '../models/Navigations';
 
-export default function ChatScreen({ navigation }: NavigateType) {
-  const [selectedOption, setSelectedOption] = useState('Chats');
+export default function GroupScreen() {
+  const [selectedOption, setSelectedOption] = useState('Group');
 
   const handleOptionPress = ({ option }: any) => {
     setSelectedOption(option);
   };
 
-  const [data] = useState([
-    { id: 1, avatar: require('../assets/images/group-img.jpg'), memberNames: ['Mua', 'Tra'], messsage: 'You: Hello everyone, how are you today?', time:'2:14 PM' },
+  const [data, setData] = useState([
+    { id: 1, avatar: require('../assets/images/group-img.jpg'), memberNames: ['Mua', 'Tra','Tran','Nai'], messsage: 'You: Hello everyone, how are you today?', time:'2:14 PM' },
     { id: 2, avatar: require('../assets/images/group-avatar.png'), memberNames: ['Tien', 'Ty','Tuyen','Hoang'], messsage: 'You: Hi guy!!!', time: '4:24 PM' },
-    { id: 3, avatar: require('../assets/profile/noti-avatar1.png'), memberNames: 'Thu', messsage: 'You: I will go to the market...', time: 'Friday' },
-    { id: 4, avatar: require('../assets/profile/noti-avatar2.png'), memberNames: 'Tuyen', messsage: 'You: I will go to the market...', time: 'Tuesday' },
-    { id: 5, avatar: require('../assets/profile/noti-avatar3.png'), memberNames: 'Tu', messsage: 'You: I will go to the market...', time: 'Monday' },
-    { id: 6, avatar: require('../assets/profile/noti-avatar4.png'), memberNames: 'Ty', messsage: 'You: I will go to the market...', time: 'Monday' },
+    { id: 3, avatar: require('../assets/images/group-avatar.png'), memberNames: ['Joe', 'Jeny','Jiso','Lisa'], messsage: 'You: I will go to the market...', time: 'Friday' },
   ]);
 
   return (
@@ -26,19 +22,13 @@ export default function ChatScreen({ navigation }: NavigateType) {
       <View style={styles.optionButton}>
         <TouchableOpacity
           style={[styles.button, selectedOption === 'Chats' && styles.selectedButton]}
-          onPress={() => {
-            handleOptionPress('Chats');
-            navigation.navigate('ChatScreen'); 
-          }}>
+          onPress={() => handleOptionPress('Chats')}>
           <Text style={[styles.buttonText, selectedOption === 'Chats' && styles.selectedButtonText]}>Chats</Text>
         </TouchableOpacity>
 
         <TouchableOpacity
           style={[styles.button, selectedOption === 'Group' && styles.selectedButton]}
-          onPress={() => {
-            handleOptionPress('Group');
-            navigation.navigate('GroupScreen'); 
-          }}>
+          onPress={() => handleOptionPress('Group')}>
           <Text style={[styles.buttonText, selectedOption === 'Group' && styles.selectedButtonText]}>Group</Text>
         </TouchableOpacity>
       </View>
@@ -51,7 +41,7 @@ export default function ChatScreen({ navigation }: NavigateType) {
               <View style={styles.InfoDetail}>
                 <Image source={item.avatar} style={styles.avatar} />
                 <View>
-                  <Text style={styles.memberName}>{item.memberNames}</Text>
+                  <Text style={styles.memberName}>{item.memberNames.join(', ')}</Text>
                     <Text style={styles.message}>{item.messsage}</Text>                   
                 </View>
                 <Text style={styles.time}>{item.time}</Text>
@@ -60,7 +50,6 @@ export default function ChatScreen({ navigation }: NavigateType) {
           </View>
         )}
       />
-       <View style={styles.bottomLine} />
     </View>
   );
 }
@@ -145,10 +134,5 @@ const styles = StyleSheet.create({
     top: 0,
     right: 0,
     alignSelf: 'flex-end',
-  },
-  bottomLine:{
-    height:1,
-    color:"pink",
-    backgroundColor:"#808080"
   }
 });

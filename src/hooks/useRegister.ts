@@ -2,8 +2,9 @@ import {useMutation} from '@tanstack/react-query';
 import axios from 'axios';
 import {RegistrationData} from '../models/Register';
 import {Alert} from 'react-native';
+import {EZCHALLENG_API} from '../api/endPoint';
 
-const API_REGISTER = `http://${process.env.IP_COMPUTER}:4000/api/sign-up`;
+const API_REGISTER = `${EZCHALLENG_API}/sign-up`;
 
 export default function useRegister() {
   const register = useMutation({
@@ -13,12 +14,12 @@ export default function useRegister() {
       return res.data;
     },
     onSuccess: async data => {
-      console.log(data.message)
+      console.log(data.message);
     },
     onError: error => {
       console.log(error?.response.data.message);
       Alert.alert(error?.response.data.message);
-    }
+    },
   });
 
   return {...register};
