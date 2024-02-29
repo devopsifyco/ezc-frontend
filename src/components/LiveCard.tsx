@@ -6,7 +6,7 @@ import { Challenge } from '../models/InfChallenge';
 
 
 
-const LiveCard: FC<Challenge> = ({  Days, title, Address, images_path, isLive }) => {
+const LiveCard: FC<Challenge> = ({  Days, title, Address, images_path, isLive, onPress }) => {
 
     return (
         <View style={{
@@ -21,7 +21,7 @@ const LiveCard: FC<Challenge> = ({  Days, title, Address, images_path, isLive })
             shadowColor: 'rgba(80, 85, 136, 0.6)',
             marginBottom: 5
         }}>
-            <TouchableOpacity>
+            <TouchableOpacity onPress={onPress}>
                 <View style={{
                     position: 'relative',
                 }}>

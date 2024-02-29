@@ -4,7 +4,7 @@ import Moment from 'moment';
 import { Challenge } from '../models/InfChallenge';
 
 
-const ListCard: React.FC<Challenge> = ({  Days, title, Address, images_path, isLive }) => {
+const ListCard: React.FC<Challenge> = ({  Days, title, Address, images_path, isLive,onPress }) => {
 
   return (
     <View
@@ -19,6 +19,7 @@ const ListCard: React.FC<Challenge> = ({  Days, title, Address, images_path, isL
         marginBottom: 5,
       }}>
       <TouchableOpacity
+        onPress={onPress}
         style={{
           flexDirection: 'row',
         }}>

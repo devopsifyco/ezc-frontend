@@ -39,7 +39,9 @@ export default function ProfileScreen({navigation}: NavigateType) {
     Alert.alert('Oke m');
   };
   const [selectedTab, setSelectedTab] = useState('ABOUT');
-
+  const handleMessage = () => {
+    navigation.navigate('ChatScreen');
+  };
   return (
     <View style={styles.container}>
       <View style={styles.header}>
@@ -49,6 +51,7 @@ export default function ProfileScreen({navigation}: NavigateType) {
           <Image source={require('../../assets/profile/menu-toggle.png')} />
         </TouchableOpacity>
       </View>
+      
       <View style={styles.profile}>
         <Image source={DATA.image} style={styles.profileImage} />
         <Text style={styles.profileName}>{DATA.name}</Text>
@@ -73,7 +76,7 @@ export default function ProfileScreen({navigation}: NavigateType) {
         <ButtonProfile2
           title="Message"
           icon={require('../../assets/profile/message.png')}
-          onPress={handleFllow}
+          onPress={handleMessage}
         />
       </View>
       <View style={styles.listActions}>
