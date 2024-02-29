@@ -20,7 +20,7 @@ import ChatScreen from './ChatScreen';
 import NotificationScreen from './Notification';
 import GroupScreen from './GroupScreen';
 
-import UpdateChallenge from './challenge/UpdateChallenge';
+// import UpdateChallenge from './challenge/UpdateChallenge';
 
 
 const Stack = createNativeStackNavigator();
@@ -52,7 +52,7 @@ export default function EZChallenge() {
         <Stack.Screen name="GroupScreen" component={GroupScreen} />
         <Stack.Screen name='NotificationScreen' component={NotificationScreen} />
         <Stack.Screen name="ChallengeDetail" component={ChallengeDetail} />
-        <Stack.Screen name="UpdateChallenge" component={UpdateChallenge} />
+        {/* <Stack.Screen name="UpdateChallenge" component={UpdateChallenge} /> */}
       </Stack.Group>
       
     </Stack.Navigator>
