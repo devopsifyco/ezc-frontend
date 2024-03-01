@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 import {
   View,
   Text,
@@ -8,15 +8,15 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
-import {DataPropsType} from './ProfileScreen';
+import { DataPropsType } from './ProfileScreen';
 
 export default function EditProfile({
   route,
 }: {
-  route: {params: {DATA: DataPropsType}};
+  route: { params: { DATA: DataPropsType } };
 }) {
-  const {DATA} = route.params;
-  const [newValues, setNewValues] = useState({...DATA});
+  const { DATA } = route.params;
+  const [newValues, setNewValues] = useState({ ...DATA });
 
   const handleUpdate = () => {
     console.log('Update:', newValues);
@@ -34,7 +34,7 @@ export default function EditProfile({
             style={styles.input}
             value={newValues.name}
             onChangeText={text =>
-              setNewValues(prev => ({...prev, userName: text}))
+              setNewValues(prev => ({ ...prev, userName: text }))
             }
           />
         </View>
@@ -44,7 +44,7 @@ export default function EditProfile({
             style={styles.input}
             value={newValues.location}
             onChangeText={text =>
-              setNewValues(prev => ({...prev, location: text}))
+              setNewValues(prev => ({ ...prev, location: text }))
             }
           />
         </View>
@@ -54,7 +54,7 @@ export default function EditProfile({
             style={styles.input}
             value={newValues.title}
             onChangeText={text =>
-              setNewValues(prev => ({...prev, aboutMe: text}))
+              setNewValues(prev => ({ ...prev, aboutMe: text }))
             }
             multiline
           />
@@ -62,8 +62,8 @@ export default function EditProfile({
         <View style={styles.displayCenter}>
           <LinearGradient
             colors={['#FF0A00', '#FF890B']}
-            start={{x: 0.0, y: 0.5}}
-            end={{x: 2.0, y: 0.5}}
+            start={{ x: 0.0, y: 0.5 }}
+            end={{ x: 2.0, y: 0.5 }}
             style={styles.button}>
             <TouchableOpacity onPress={handleUpdate}>
               <Text style={styles.textButton}>Update</Text>

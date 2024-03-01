@@ -24,14 +24,15 @@ const HomeScreen: React.FC<NavigateType> = ({ navigation }) => {
 
   const { data: challenges, mutate } = useGetAllChallenges();
 
-  const handleNotificationPress = () => {
-    navigation.navigate('NotificationScreen');
-  };
-  
 
   useEffect(() => {
     mutate();
   }, [mutate]);
+  
+  const handleNotificationPress = () => {
+    navigation.navigate('NotificationScreen');
+  };
+  
 
 
   return (
@@ -66,6 +67,7 @@ const HomeScreen: React.FC<NavigateType> = ({ navigation }) => {
           keyExtractor={(item, index) => index.toString()}
           renderItem={({ item, index }) => (
             <LiveCard
+              id={item.id}
               key={item.id ? item.id.toString() : index.toString()}
               Days={item.Days}
               title={item.title}
@@ -95,6 +97,7 @@ const HomeScreen: React.FC<NavigateType> = ({ navigation }) => {
           contentContainerStyle={{ flexGrow: 1 }}
           renderItem={({ item, index }) => (
             <ListCard
+              id={item.id}
               key={item.id ? item.id.toString() : index.toString()}
               Days={item.Days}
               title={item.title}

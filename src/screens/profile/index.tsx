@@ -14,7 +14,6 @@ import HeaderProfile from '../../components/HeaderProfile';
 import {NavigateType} from '../../models/Navigations';
 import AboutScreen from './AboutScreen';
 import ChallengeScreen from './ChallengeScreen';
-import ReviewScreen from './ReviewScreen';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { DataProfile } from '../../models/Profile';
 import axios from 'axios';
@@ -65,6 +64,7 @@ export default function ProfileScreen({ navigation }: NavigateType) {
           <Image source={require('../../assets/profile/menu-toggle.png')} />
         </TouchableOpacity>
       </View>
+      
       <View style={styles.profile}>
         <Image source={DATA?.avatar} style={styles.profileImage} />
         <Text style={styles.profileName}>{DATA?.username}</Text>
@@ -89,7 +89,7 @@ export default function ProfileScreen({ navigation }: NavigateType) {
         <ButtonProfile2
           title="Message"
           icon={require('../../assets/profile/message.png')}
-          onPress={handleFllow}
+          onPress={handleMessage}
         />
       </View>
       <View style={styles.listActions}>
@@ -106,16 +106,16 @@ export default function ProfileScreen({ navigation }: NavigateType) {
           ]}>
           <Text style={styles.titleLarge}>CHALLENGE</Text>
         </TouchableOpacity>
-        <TouchableOpacity
+        {/* <TouchableOpacity
           onPress={() => setSelectedTab('REVIEWS')}
           style={[styles.tab, selectedTab === 'REVIEWS' && styles.selectedTab]}>
           <Text style={styles.titleLarge}>REVIEWS</Text>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
       </View>
 
       {selectedTab === 'ABOUT' && <AboutScreen data={DATA?.about_me} />}
       {selectedTab === 'CHALLENGE' && <ChallengeScreen />}
-      {selectedTab === 'REVIEWS' && <ReviewScreen />}
+      {/* {selectedTab === 'REVIEWS' && <ReviewScreen />} */}
     </View>
   );
 }
@@ -123,12 +123,13 @@ export default function ProfileScreen({ navigation }: NavigateType) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingHorizontal: 20,
+    paddingHorizontal: 5,
     paddingTop: 20,
   },
   header: {
     flexDirection: 'row',
     justifyContent: 'space-between',
+    paddingHorizontal: 20,
   },
   profile: {
     alignItems: 'center',
@@ -188,10 +189,14 @@ const styles = StyleSheet.create({
   listActions: {
     flexDirection: 'row',
     justifyContent: 'space-around',
+    paddingHorizontal: 20,
+    
   },
   actionInteraction: {
     flexDirection: 'row',
     justifyContent: 'space-around',
+    paddingHorizontal: 20,
+
   },
   tab: {
     flex: 1,

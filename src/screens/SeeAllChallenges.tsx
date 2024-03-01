@@ -37,7 +37,8 @@ const SeeAllChallenges = ({ navigation }: NavigateType) => {
               Address={item.Address}
               images_path={item.images_path}
               isLive={item.isLive}
-              
+              onPress={() => navigation.navigate('ChallengeDetail')}
+
             />
           )}
         />

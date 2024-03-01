@@ -35,6 +35,7 @@ const SeeAllLive = ({ navigation }: NavigateType) => {
               images_path={item.images_path}
               isLive={item.isLive}
               key={item.id ? item.id.toString() : index.toString()}
+              onPress={() => navigation.navigate('ChallengeDetail')}
             />
           )}
         />
