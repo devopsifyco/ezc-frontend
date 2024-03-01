@@ -45,6 +45,8 @@ export default function LoginScreen({navigation}: NavigateType) {
         const jsonString = JSON.stringify(fromData);
         AsyncStorage.setItem('userdata', jsonString);
         AsyncStorage.setItem('welcomeCompleted', 'true');
+        const emailString = JSON.stringify(fromData.email);
+        AsyncStorage.setItem('email', emailString);
 
         navigation.dispatch(
           CommonActions.reset({

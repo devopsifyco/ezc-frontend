@@ -7,22 +7,13 @@ import ButtonProfile from '../../components/ButtonProfile';
 import ButtonProfile2 from '../../components/ButtonProfile2';
 import HeaderProfile from '../../components/HeaderProfile';
 import {NavigateType} from '../../models/Navigations';
-
-export interface DataPropsType {
-  name: string;
-  image: any;
-  location: string;
-  fllowing: number;
-  fllower: number;
-  title: string;
-  interested: string[];
-}
+import { DataProfile } from '../../models/Profile';
 
 export default function SubProfileScreen({
   route,
   navigation,
 }: {
-  route: {params: {DATA: DataPropsType}};
+  route: {params: {DATA: DataProfile}};
   navigation: NavigateType;
 }) {
   const {DATA} = route.params;
@@ -47,16 +38,16 @@ export default function SubProfileScreen({
         <HeaderProfile navigation={navigation} />
       </View>
       <View style={styles.profile}>
-        <Image source={DATA.image} style={styles.profileImage} />
-        <Text style={styles.profileName}>{DATA.name}</Text>
+        <Image source={DATA.avatar} style={styles.profileImage} />
+        <Text style={styles.profileName}>{DATA.username}</Text>
         <View style={styles.numberStatus}>
           <View style={styles.itemfllowing}>
-            <Text style={styles.itemNumber}>{DATA.fllowing}</Text>
+            <Text style={styles.itemNumber}>22</Text>
             <Text style={styles.titleMedium}>Following</Text>
           </View>
           <View style={styles.arrowMiddle} />
           <View style={styles.itemfllower}>
-            <Text style={styles.itemNumber}>{DATA.fllower}</Text>
+            <Text style={styles.itemNumber}>176</Text>
             <Text style={styles.titleMedium}>Followers</Text>
           </View>
         </View>
@@ -74,20 +65,13 @@ export default function SubProfileScreen({
         />
       </View>
       <Text style={styles.titleLarge}>About me</Text>
-      <Text style={styles.titleMedium}>{DATA.title}</Text>
+      <Text style={styles.titleMedium}>{DATA.about_me}</Text>
       <View style={styles.displayRow2}>
         <Text style={styles.titleLarge}>Intersted</Text>
         <TouchableOpacity style={styles.displayRow}>
           <Image source={require('../../assets/profile/change.png')} />
           <Text style={styles.titleActionChange}>CHANGE</Text>
         </TouchableOpacity>
-      </View>
-      <View style={styles.listInterest}>
-        {DATA.interested.map((interest, index) => (
-          <View key={index} style={styles.interestItem}>
-            <Text style={styles.titleIntersted}>{interest}</Text>
-          </View>
-        ))}
       </View>
       <Modal isVisible={isModalVisible}>
         <View style={styles.formBackground}>
@@ -183,19 +167,6 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginBottom: 8,
     color: '#120D26',
-  },
-  listInterest: {
-    flexDirection: 'row',
-    gap: 10,
-    top: 10,
-    flexWrap: 'wrap',
-  },
-  interestItem: {
-    backgroundColor: 'tomato',
-    borderRadius: 15,
-    height: 40,
-    justifyContent: 'center',
-    paddingHorizontal: 10,
   },
   titleMedium: {
     fontSize: 14,

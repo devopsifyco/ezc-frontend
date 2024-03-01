@@ -1,4 +1,5 @@
-import React, {useState} from 'react';
+import { EZCHALLENG_API } from '../../api/endPoint';
+import React, { useState, useEffect } from 'react';
 import {
   Text,
   View,
@@ -14,52 +15,67 @@ import {NavigateType} from '../../models/Navigations';
 import AboutScreen from './AboutScreen';
 import ChallengeScreen from './ChallengeScreen';
 import ReviewScreen from './ReviewScreen';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { DataProfile } from '../../models/Profile';
+import axios from 'axios';
+const USER_API = `${EZCHALLENG_API}/user`;
 
-const DATA = {
-  name: 'A Tien',
-  image: require('../../assets/profile/atien.jpg'),
-  location: '101B Le Huu Trac',
-  fllowing: 345,
-  fllower: 55,
-  title:
-    'Em sống vì cộng đồng nên là thằng nào có tiền thì donate cho tao. Ít thì 5 quả trứng nhiều thì 1 quả tên lửa. Chúng mày nhớ chưa',
-  interested: [
-    'Game Online',
-    'Concert',
-    'Play Game',
-    'Soccor',
-    'Voleyball',
-    'Reading',
-    'Orther',
-  ],
-};
+export default function ProfileScreen({ navigation }: NavigateType) {
+  const [DATA, setData] = useState<DataProfile | null>(null);
+  const [selectedTab, setSelectedTab] = useState('ABOUT');
 
-export default function ProfileScreen({navigation}: NavigateType) {
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        AsyncStorage.getItem('email').then(async (email) => {
+          const token = await AsyncStorage.getItem('accessToken');
+          const emailUser = email?.slice(1, -1);
+          const res = await axios.post(USER_API, {
+            email: emailUser,
+          }, {
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${token}`
+            }
+          });
+
+          const data = res.data;
+          setData(data);
+        }).catch((error) => {
+          console.error('Error retrieving email:', error);
+        });
+      } catch (error) {
+        console.log('User profile error:', error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
   const handleFllow = () => {
     Alert.alert('Oke m');
   };
-  const [selectedTab, setSelectedTab] = useState('ABOUT');
 
   return (
     <View style={styles.container}>
       <View style={styles.header}>
         <HeaderProfile navigation={navigation} />
         <TouchableOpacity
-          onPress={() => navigation.navigate('SubProfileScreen', {DATA})}>
+          onPress={() => navigation.navigate('SubProfileScreen', { DATA })}>
           <Image source={require('../../assets/profile/menu-toggle.png')} />
         </TouchableOpacity>
       </View>
       <View style={styles.profile}>
-        <Image source={DATA.image} style={styles.profileImage} />
-        <Text style={styles.profileName}>{DATA.name}</Text>
+        <Image source={DATA?.avatar} style={styles.profileImage} />
+        <Text style={styles.profileName}>{DATA?.username}</Text>
         <View style={styles.numberStatus}>
           <View style={styles.itemfllowing}>
-            <Text style={styles.itemNumber}>{DATA.fllowing}</Text>
+            <Text style={styles.itemNumber}>23</Text>
             <Text style={styles.titleMedium}>Following</Text>
           </View>
           <View style={styles.arrowMiddle} />
           <View style={styles.itemfllower}>
-            <Text style={styles.itemNumber}>{DATA.fllower}</Text>
+            <Text style={styles.itemNumber}>161</Text>
             <Text style={styles.titleMedium}>Followers</Text>
           </View>
         </View>
@@ -97,7 +113,7 @@ export default function ProfileScreen({navigation}: NavigateType) {
         </TouchableOpacity>
       </View>
 
-      {selectedTab === 'ABOUT' && <AboutScreen data={DATA} />}
+      {selectedTab === 'ABOUT' && <AboutScreen data={DATA?.about_me} />}
       {selectedTab === 'CHALLENGE' && <ChallengeScreen />}
       {selectedTab === 'REVIEWS' && <ReviewScreen />}
     </View>

@@ -50,7 +50,7 @@ const HomeScreen: React.FC<NavigateType> = ({ navigation }) => {
 
 
       <View style={styles.section}>
-        <Text style={styles.sectionName}>Live right now</Text>
+        <Text style={styles.sectionName}>Processing</Text>
         <TouchableOpacity style={styles.seeAll}>
           <Text
             onPress={() => navigation.navigate('SeeAllLive')}
