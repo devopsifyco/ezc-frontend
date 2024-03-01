@@ -106,16 +106,10 @@ export default function ProfileScreen({ navigation }: NavigateType) {
           ]}>
           <Text style={styles.titleLarge}>CHALLENGE</Text>
         </TouchableOpacity>
-        {/* <TouchableOpacity
-          onPress={() => setSelectedTab('REVIEWS')}
-          style={[styles.tab, selectedTab === 'REVIEWS' && styles.selectedTab]}>
-          <Text style={styles.titleLarge}>REVIEWS</Text>
-        </TouchableOpacity> */}
       </View>
 
       {selectedTab === 'ABOUT' && <AboutScreen data={DATA?.about_me} />}
       {selectedTab === 'CHALLENGE' && <ChallengeScreen />}
-      {/* {selectedTab === 'REVIEWS' && <ReviewScreen />} */}
     </View>
   );
 }
