@@ -1,12 +1,27 @@
 import React, {useState} from 'react';
 import {View, Text, TextInput, TouchableOpacity} from 'react-native';
-import {useForm, Controller} from 'react-hook-form';
-import {styles} from '.';
+import {useForm, Controller, SubmitHandler} from 'react-hook-form';
 import DateTimePicker from '@react-native-community/datetimepicker';
-import {useNavigation} from '@react-navigation/native';
+import {useNavigation, useRoute} from '@react-navigation/native';
 import Button from '../../../components/Button';
+import {styles} from '.';
+
+type Input = {
+  startDate: Date;
+  endDate: Date;
+  startTime: Date;
+  endTime: Date;
+  address: string;
+};
+
+const useCombinedData = () => {
+  const route = useRoute();
+  const dataFromStepOne = route.params?.dataFromStepOne || {};
+  return dataFromStepOne;
+};
 
 const StepTwoScreen = () => {
+  const dataFromStepOne = useCombinedData();
   const navigation = useNavigation();
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(new Date());
@@ -15,25 +30,30 @@ const StepTwoScreen = () => {
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [showTimePicker, setShowTimePicker] = useState(false);
   const [pickerMode, setPickerMode] = useState<
-    'date' | 'endDate' | 'startTime' | 'endTime'
-  >('date');
-  const [selectedDate, setSelectedDate] = useState(new Date());
+    'startDate' | 'endDate' | 'startTime' | 'endTime'
+  >('startDate');
 
   const {
     control,
     handleSubmit,
     setValue,
     formState: {errors},
-  } = useForm({
+  } = useForm<Input>({
     defaultValues: {
-      startDate: '',
-      endDate: '',
+      startDate: new Date(),
+      endDate: new Date(),
+      startTime: new Date(),
+      endTime: new Date(),
+      address: '',
     },
   });
 
-  const showPicker = (mode: 'date' | 'endDate' | 'startTime' | 'endTime') => {
+  const showPicker = (
+    mode: 'startDate' | 'endDate' | 'startTime' | 'endTime',
+  ) => {
     setPickerMode(mode);
     setShowDatePicker(true);
+    setShowTimePicker(mode === 'startTime' || mode === 'endTime');
   };
 
   const hidePicker = () => {
@@ -41,58 +61,51 @@ const StepTwoScreen = () => {
     setShowTimePicker(false);
   };
 
-  const handleTimeChange = (event, selectedDate) => {
+  const handleDateChange = ({selectedDate}: any) => {
     hidePicker();
-    if (selectedDate !== undefined) {
-      setPickerMode(null);
-      if (pickerMode === 'startTime') {
-        setStartTime(selectedDate);
-        setValue('startTime', selectedDate);
-      } else if (pickerMode === 'endTime') {
-        setEndTime(selectedDate);
-        setValue('endTime', selectedDate);
-      }
+    if (pickerMode === 'startDate') {
+      setStartDate(selectedDate || new Date());
+      setValue('startDate', selectedDate || new Date());
+    } else if (pickerMode === 'endDate') {
+      setEndDate(selectedDate || new Date());
+      setValue('endDate', selectedDate || new Date());
     }
   };
 
-  const validate = async values => {
-    const errors = {};
-
-    // Add your validation logic here
-    const startDate = new Date(values.startDate);
-    const endDate = new Date(values.endDate);
-    const startTime = new Date(values.startTime);
-    const endTime = new Date(values.endTime);
-
-    const oneWeekLater = new Date();
-    oneWeekLater.setDate(oneWeekLater.getDate() + 7);
-
-    const threeDaysLater = new Date();
-    threeDaysLater.setDate(threeDaysLater.getDate() + 3);
-
-    if (endDate < oneWeekLater) {
-      errors.endDate = 'End date must be at least 1 week from today.';
+  const handleTimeChange = ({selectedTime}: any) => {
+    hidePicker();
+    if (pickerMode === 'startTime') {
+      setStartTime(selectedTime || new Date());
+      setValue('startTime', selectedTime || new Date());
+    } else if (pickerMode === 'endTime') {
+      setEndTime(selectedTime || new Date());
+      setValue('endTime', selectedTime || new Date());
     }
-
-    if (startDate < threeDaysLater) {
-      errors.startDate = 'Start date must be at least 3 days from today.';
-    }
-
-    if (endTime <= startTime) {
-      errors.endTime = 'End time must be after start time.';
-    }
-
-    return errors;
   };
+
+  const validateStartDate = (value: Date) => {
+    const currentTime = new Date();
+    const minStartDate = new Date(
+      currentTime.getTime() + 3 * 24 * 60 * 60 * 1000,
+    );
+    return value >= minStartDate || 'At least 3 days from today!';
+  };
+
+  const validateEndDate = (value: Date) => {
+    const minEndDate = new Date(startDate.getTime() + 7 * 24 * 60 * 60 * 1000);
+    return value >= minEndDate || 'At least 7 days from start!';
+  };
+
   const backScreen = () => {
     navigation.navigate('CreateChallenges', {step: 1});
   };
 
-  const onSubmit = data => {
-    navigation.navigate('CreateChallenges', {
-      step: 3,
-      dataFromStepOne: data,
-    });
+  const onSubmit: SubmitHandler<Input> = data => {
+    const combinedData = {...dataFromStepOne, ...data};
+
+    // Gửi dữ liệu lên API
+    console.log('Combined Data:', combinedData);
+    // Gọi API ở đây và sử dụng combinedData
   };
 
   return (
@@ -100,77 +113,132 @@ const StepTwoScreen = () => {
       <View style={styles.mediaContainer}>
         <Text style={styles.titleMedium}>Challenges Date, Time & Venue</Text>
       </View>
-      <View style={styles.rowContainer1}>
-        <View style={styles.formContainerDateTime}>
-          <Text style={styles.titleMedium}>Start Date</Text>
-          <TouchableOpacity
-            style={styles.formInputTime}
-            onPress={() => showPicker('startDate')}>
-            <Text style={styles.titleSmall}>{startDate.toDateString()}</Text>
-          </TouchableOpacity>
-        </View>
-        <View style={styles.formContainerDateTime}>
-          <Text style={styles.titleMedium}>End Date</Text>
-          <TouchableOpacity
-            style={styles.formInputTime}
-            onPress={() => showPicker('endDate')}>
-            <Text style={styles.titleSmall}>{endDate.toDateString()}</Text>
-          </TouchableOpacity>
-        </View>
+
+      <Controller
+        control={control}
+        render={({field}) => (
+          <View style={styles.formContainerDateTime}>
+            <Text style={styles.titleMedium}>Start Date</Text>
+            <TouchableOpacity
+              style={styles.formInputTime}
+              onPress={() => showPicker('startDate')}>
+              <Text style={styles.titleSmall}>
+                {field.value?.toDateString() || 'MM/DD/YYYY'}
+              </Text>
+            </TouchableOpacity>
+            {errors.startDate && (
+              <Text style={styles.errorText}>{errors.startDate.message}</Text>
+            )}
+          </View>
+        )}
+        name="startDate"
+        rules={{validate: validateStartDate}}
+      />
+
+      <Controller
+        control={control}
+        render={({field}) => (
+          <View style={styles.formContainerDateTime}>
+            <Text style={styles.titleMedium}>End Date</Text>
+            <TouchableOpacity
+              style={styles.formInputTime}
+              onPress={() => showPicker('endDate')}>
+              <Text style={styles.titleSmall}>
+                {field.value?.toDateString() || 'MM/DD/YYYY'}
+              </Text>
+            </TouchableOpacity>
+            {errors.endDate && (
+              <Text style={styles.errorText}>{errors.endDate?.message}</Text>
+            )}
+          </View>
+        )}
+        name="endDate"
+        rules={{validate: validateEndDate}}
+      />
+
+      {showDatePicker &&
+        (pickerMode === 'startDate' || pickerMode === 'endDate') && (
+          <DateTimePicker
+            value={pickerMode === 'startDate' ? startDate : endDate}
+            onChange={(_event, selectedDate) => {
+              handleDateChange({selectedDate});
+            }}
+            mode="date"
+            display="default"
+            onCancel={hidePicker}
+            onConfirm={hidePicker}
+          />
+        )}
+
+      <View style={styles.formContainerDateTime}>
+        <Text style={styles.titleMedium}>Start Time</Text>
+        <TouchableOpacity
+          style={styles.formInputTime}
+          onPress={() => showPicker('startTime')}>
+          <Text style={styles.titleSmall}>
+            {startTime instanceof Date
+              ? startTime.toTimeString().slice(0, 5)
+              : 'HH:MM'}
+          </Text>
+        </TouchableOpacity>
+        {errors.startTime && (
+          <Text style={styles.errorText}>{errors.startTime.message}</Text>
+        )}
       </View>
-      <View style={styles.rowContainer1}>
-        <View style={styles.formContainerDateTime}>
-          <Text style={styles.titleMedium}>Start Time</Text>
-          <TouchableOpacity
-            style={styles.formInputTime}
-            onPress={() => showPicker('startTime')}>
-            <Text style={styles.titleSmall}>
-              {startTime.toTimeString().slice(0, 5)}
-            </Text>
-          </TouchableOpacity>
-        </View>
-        <View style={styles.formContainerDateTime}>
-          <Text style={styles.titleMedium}>End Time</Text>
-          <TouchableOpacity
-            style={styles.formInputTime}
-            onPress={() => showPicker('endTime')}>
-            <Text style={styles.titleSmall}>
-              {endTime.toTimeString().slice(0, 5)}
-            </Text>
-          </TouchableOpacity>
-        </View>
+      <View style={styles.formContainerDateTime}>
+        <Text style={styles.titleMedium}>End Time</Text>
+        <TouchableOpacity
+          style={styles.formInputTime}
+          onPress={() => showPicker('endTime')}>
+          <Text style={styles.titleSmall}>
+            {endTime instanceof Date
+              ? endTime.toTimeString().slice(0, 5)
+              : 'HH:MM'}
+          </Text>
+        </TouchableOpacity>
+        {errors.endTime && (
+          <Text style={styles.errorText}>{errors.endTime.message}</Text>
+        )}
       </View>
-      {showDatePicker && (
-        <DateTimePicker
-          value={pickerMode === 'startDate' ? startDate : endDate}
-          onChange={handleDateChange}
-          mode="date"
-          display="default"
-          onCancel={hidePicker}
-          onConfirm={hidePicker}
-        />
-      )}
+
+      {showTimePicker &&
+        (pickerMode === 'startTime' || pickerMode === 'endTime') && (
+          <DateTimePicker
+            value={pickerMode === 'startTime' ? startTime : endTime}
+            onChange={(_event, selectedTime) => {
+              handleTimeChange({selectedTime});
+            }}
+            mode="time"
+            display="default"
+            onCancel={hidePicker}
+            onConfirm={hidePicker}
+          />
+        )}
+
       <View style={styles.inputContainer}>
         <View style={styles.displayError}>
           <Text style={styles.titleMedium}>Address</Text>
-          {errors.title && (
-            <Text style={styles.errorText}>{errors.title.message}</Text>
+          {errors.address && (
+            <Text style={styles.errorText}>{errors.address.message}</Text>
           )}
         </View>
+
         <Controller
           control={control}
           render={({field}) => (
-            <TextInput
-              style={styles.input}
-              placeholder="Enter the challenges address"
-              placeholderTextColor="#BDBDBD"
-              onChangeText={text => field.onChange(text)}
-              value={field.value}
-            />
+            <>
+              <TextInput
+                style={styles.input}
+                placeholder="Enter the challenges address"
+                placeholderTextColor="#BDBDBD"
+                onChangeText={text => field.onChange(text)}
+                value={field.value}
+              />
+            </>
           )}
           name="address"
           defaultValue=""
-          rules={{required: 'is required *'}}
+          rules={{required: ' *'}}
         />
       </View>
       <View style={styles.actionButton}>
@@ -178,7 +246,7 @@ const StepTwoScreen = () => {
           <Button title="Back" onPress={backScreen} />
         </View>
         <View style={styles.button}>
-          <Button title="Next" onPress={handleSubmit(onSubmit)} />
+          <Button title="Create" onPress={handleSubmit(onSubmit)} />
         </View>
       </View>
     </View>

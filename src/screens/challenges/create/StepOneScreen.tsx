@@ -23,7 +23,12 @@ const StepOneScreen = () => {
     watch,
     formState: {errors},
   } = useForm<Input>();
+
   const selectedImages = watch('images', []);
+
+  const validateImages = (value: string[]) => {
+    return value.length > 0 || ' *';
+  };
 
   const onSubmit: SubmitHandler<Input> = data => {
     console.log(data);
@@ -34,20 +39,40 @@ const StepOneScreen = () => {
     <>
       <View style={styles.container}>
         <View style={styles.mediaContainer}>
-          <Text style={styles.titleLarge}>Attached Photos or Videos</Text>
+          <View style={styles.displayError}>
+            <Text style={styles.titleLarge}>Attached Photos or Videos</Text>
+            {errors.images && (
+              <Text style={styles.errorText}>{errors.images.message}</Text>
+            )}
+          </View>
         </View>
-        <SelectedImages
-          imageList={selectedImages}
-          setSelectedImage={(index: number, uri: string) => {
-            const updatedImages = [...selectedImages];
-            updatedImages[index] = uri;
-            setValue(
-              'images',
-              updatedImages.filter(image => image !== ''),
-            );
-          }}
+        <Controller
+          control={control}
+          render={() => (
+            <SelectedImages
+              imageList={selectedImages}
+              setSelectedImage={(index: number, uri: string) => {
+                const updatedImages = [...selectedImages];
+                updatedImages[index] = uri;
+                setValue(
+                  'images',
+                  updatedImages.filter(image => image !== ''),
+                );
+              }}
+              removeImage={(index: number) => {
+                const updatedImages = [...selectedImages];
+                updatedImages.splice(index, 1);
+                setValue('images', updatedImages);
+              }}
+              clearImages={() => setValue('images', [])}
+            />
+          )}
+          name="images"
+          defaultValue={[]}
+          rules={{validate: validateImages}}
         />
       </View>
+
       <View style={styles.inputContainer}>
         <Text style={[styles.titleLarge, styles.titleDetail]}>Details</Text>
         <View style={styles.displayError}>

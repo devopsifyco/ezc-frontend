@@ -9,11 +9,15 @@ import {
 export interface SelectedImagesProps {
   imageList: string[];
   setSelectedImage: (index: number, uri: string) => void;
+  removeImage?: (index: number) => void;
+  clearImages?: () => void;
 }
 
 const SelectedImages: React.FC<SelectedImagesProps> = ({
   imageList,
   setSelectedImage,
+  removeImage,
+  clearImages,
 }) => {
   const imagePickerHandler = () => {
     let options: ImageLibraryOptions = {
@@ -37,6 +41,12 @@ const SelectedImages: React.FC<SelectedImagesProps> = ({
     });
   };
 
+  const handleClearImages = () => {
+    if (clearImages) {
+      clearImages();
+    }
+  };
+
   return (
     <>
       {imageList.length > 0 && (
@@ -44,23 +54,53 @@ const SelectedImages: React.FC<SelectedImagesProps> = ({
           style={styles.fullWidthContainer}
           onPress={() => setSelectedImage(0, imageList[0])}>
           <Image source={{uri: imageList[0]}} style={styles.fullWidthImage} />
+          {removeImage && (
+            <TouchableOpacity
+              style={styles.removeButtonFull}
+              onPress={() => removeImage(0)}>
+              <Image
+                source={require('../../../assets/icons/delete.png')}
+                style={styles.iconRemove}
+              />
+            </TouchableOpacity>
+          )}
         </TouchableOpacity>
       )}
 
       <View style={styles.viewAdd}>
         {imageList.slice(1).map((image, index) => (
-          <TouchableOpacity
-            style={styles.rowContainer}
-            key={index}
-            onPress={() => setSelectedImage(index + 1, image)}>
-            <Image source={{uri: image}} style={styles.smallImage} />
-          </TouchableOpacity>
+          <View key={index + 1}>
+            <TouchableOpacity
+              onPress={() => setSelectedImage(index + 1, image)}>
+              <Image source={{uri: image}} style={styles.smallImage} />
+            </TouchableOpacity>
+            {removeImage && (
+              <TouchableOpacity
+                style={styles.removeButton}
+                onPress={() => removeImage(index + 1)}>
+                <Image
+                  source={require('../../../assets/icons/delete.png')}
+                  style={styles.iconRemove}
+                />
+              </TouchableOpacity>
+            )}
+          </View>
         ))}
       </View>
-
-      <TouchableOpacity onPress={imagePickerHandler}>
-        <Text style={styles.text}>Add Image</Text>
-      </TouchableOpacity>
+      <View style={styles.displayCenter}>
+        <TouchableOpacity
+          onPress={imagePickerHandler}
+          style={styles.addImageButton}>
+          <Text style={styles.text}>Add files</Text>
+          <Image
+            source={require('../../../assets/icons/1.png')}
+            style={styles.iconPlus}
+          />
+        </TouchableOpacity>
+        <TouchableOpacity onPress={handleClearImages}>
+          <Text style={styles.text}>Clear Images</Text>
+        </TouchableOpacity>
+      </View>
     </>
   );
 };
@@ -75,27 +115,63 @@ const styles = StyleSheet.create({
   fullWidthImage: {
     width: '100%',
     height: 200,
+    borderRadius: 10,
   },
   viewAdd: {
     flexDirection: 'row',
     flexWrap: 'wrap',
     justifyContent: 'center',
     marginBottom: 10,
-    gap: 10,
-  },
-  rowContainer: {
-    alignItems: 'center',
-    marginBottom: 10,
+    gap: 8.5,
   },
   smallImage: {
     width: 100,
     aspectRatio: 1,
-    marginBottom: 5,
+    borderRadius: 6.5,
   },
   text: {
-    paddingTop: 10,
     fontSize: 16,
     color: '#216C53',
     fontWeight: 'bold',
+  },
+  addImageButton: {
+    flexDirection: 'row',
+    gap: 10,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#363636',
+    width: 135,
+    height: 30,
+    borderRadius: 10,
+  },
+  iconPlus: {
+    height: 20,
+    width: 20,
+    tintColor: '#216C53',
+  },
+  displayCenter: {
+    paddingTop: 10,
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+  },
+  removeButton: {
+    position: 'absolute',
+    zIndex: 10,
+    top: '2%',
+    left: '80%',
+    paddingTop: 5,
+  },
+  iconRemove: {
+    height: 15,
+    width: 15,
+    tintColor: 'red',
+  },
+  removeButtonFull: {
+    position: 'absolute',
+    zIndex: 10,
+    top: '5%',
+    left: '90%',
+    paddingTop: 5,
   },
 });

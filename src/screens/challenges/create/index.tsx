@@ -172,12 +172,6 @@ export const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
   },
-  rowContainer1: {
-    width: '100%',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginBottom: 20,
-  },
   titleSmall: {
     fontSize: 14,
     color: '#4F4F4F',
@@ -232,6 +226,8 @@ export const styles = StyleSheet.create({
   },
   formContainerDateTime: {
     gap: 5,
+    paddingTop: 10,
+    paddingBottom: 20,
   },
   errorText: {
     color: 'red',
