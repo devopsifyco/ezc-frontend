@@ -16,8 +16,8 @@ export default function useChallengeCreate() {
       return res.data;
     },
     onSuccess: () => {
-      //Invalidate and refretch the challenge list query when a new challenge is created
-      queryClient.invalidateQueries(['challngeList']);
+      //Refresh list challenges
+      queryClient.invalidateQueries({queryKey: ['challengesList']});
     },
   });
   return {...challengeCreate};
