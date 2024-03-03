@@ -1,27 +1,59 @@
 import React, { useState } from 'react';
-import { View, Text, Image, TouchableOpacity, StyleSheet, FlatList } from 'react-native';
+import NotificationPopup from './NotificationPopup';
+import {
+  View,
+  Text,
+  Image,
+  TouchableOpacity,
+  StyleSheet,
+  FlatList,
+  ScrollView,
+} from 'react-native';
 
 const NotificationScreen = () => {
+  const [isPopupVisible, setIsPopupVisible] = useState(false);
+  const [selectedNotification, setSelectedNotification] = useState(null);
   const [selectedTab, setSelectedTab] = useState('All');
   const [showIndexedList, setShowIndexedList] = useState(true);
 
   const [data, setData] = useState([
-    { id: 1, avatar: require('../assets/profile/noti-avatar2.png'), content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.', time: '1m ago', index: 2 },
-    { id: 2, avatar: require('../assets/profile/noti-avatar1.png'), content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.', time: '1m ago', index: 5 },
-    { id: 3, avatar: require('../assets/profile/noti-avatar3.png'), content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.', time: '1m ago', index: 1 },
-    { id: 4, avatar: require('../assets/profile/noti-avatar4.png'), content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.', time: '1m ago', index: null },
-    { id: 5, avatar: require('../assets/profile/noti-avatar2.png'), content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.', time: '1m ago', index: 3 },
-    { id: 6, avatar: require('../assets/profile/noti-avatar1.png'), content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.', time: '1m ago', index: null },
-    { id: 7, avatar: require('../assets/profile/noti-avatar3.png'), content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.', time: '1m ago', index: null },
+    { id: 1, avatar: require('../assets/profile/noti-avatar2.png'), content: 'Thu became an excellent member when participating in 50 challenges. Please continue to maintain your form!', time: '1m ago', read: false },
+    { id: 2, avatar: require('../assets/profile/noti-avatar1.png'), content: 'Joe has joined your group', time: '1m ago', read: false },
+    { id: 3, avatar: require('../assets/profile/noti-avatar3.png'), content: 'Jino donated to the app', time: '1m ago', read: false },
+    { id: 4, avatar: require('../assets/profile/noti-avatar4.png'), content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.', time: '1m ago', read: false },
+    { id: 5, avatar: require('../assets/profile/noti-avatar2.png'), content: 'An went to see your challenge', time: '1m ago', read: false },
+    { id: 6, avatar: require('../assets/profile/noti-avatar1.png'), content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.', time: '1m ago', read: false },
+    { id: 7, avatar: require('../assets/profile/noti-avatar3.png'), content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.', time: '1m ago', read: false },
   ]);
 
+  const [unreadCount, setUnreadCount] = useState(data.filter(item => !item.read).length);
   const dataOrDefault = data || [];
   const filteredData = showIndexedList
-    ? dataOrDefault.filter(item => item.index !== null)
-    : (selectedTab === 'Read' ? dataOrDefault.filter(item => item.index === null) : dataOrDefault);
-  const totalIndex = data.reduce((sum, item) => (item.index !== null ? sum + item.index : sum), 0);
+    ? dataOrDefault.filter(item => item.read === false)
+    : selectedTab === 'Read'
+    ? dataOrDefault.filter(item => item.read === true)
+    : dataOrDefault;
+  const totalIndex = data.length;
 
-  const handleTabPress = (tabName:any) => {
+  const handleNotificationPress = (item) => {
+    setSelectedNotification(item);
+    setIsPopupVisible(true);
+
+    if (!item.read) {
+      setUnreadCount((prevCount) => prevCount - 1);
+      const updatedData = data.map((notification) =>
+        notification.id === item.id ? { ...notification, read: true } : notification
+      );
+      setData(updatedData);
+    }
+  };
+
+  const handleClosePopup = () => {
+    setIsPopupVisible(false);
+    setSelectedNotification(null);
+  };
+
+  const handleTabPress = (tabName) => {
     setSelectedTab(tabName);
 
     if (tabName === 'UnRead') {
@@ -30,31 +62,33 @@ const NotificationScreen = () => {
       setShowIndexedList(false);
     }
   };
+
   const markAllAsRead = () => {
-    const updatedData = data.map(item => ({ ...item, index: null }));
+    const updatedData = data.map((item) => ({ ...item, read: true }));
     setData(updatedData);
+    setUnreadCount(0);
   };
-  
+
+  const truncateText = (text, limit) => {
+    const words = text.split(' ');
+    const truncated = words.slice(0, limit).join(' ');
+    if (words.length > limit) {
+      return `${truncated} ...`;
+    }
+    return truncated;
+  };
+
   return (
     <View style={styles.container}>
-      <Image
-        source={require('../assets/images/background-noti.png')}
-        style={styles.backgroundImage}
-      />
-      <Image
-        source={require('../assets/images/ellipse-noti.png')}
-        style={styles.foregroundImage}
-      />
+      <Image source={require('../assets/images/background-noti.png')} style={styles.backgroundImage} />
+      <Image source={require('../assets/images/ellipse-noti.png')} style={styles.foregroundImage} />
       <View style={styles.contentContainer}>
         <View style={styles.notiGroup}>
           <Text style={styles.titleNoti}>Notifications</Text>
           <View style={styles.numCount}>
-            <Text style={styles.num}>{totalIndex}</Text>
+            <Text style={styles.num}>{unreadCount}</Text>
           </View>
-          <TouchableOpacity
-            style={styles.markAllButton}
-            onPress={markAllAsRead}
-          >
+          <TouchableOpacity style={styles.markAllButton} onPress={markAllAsRead}>
             <Text style={styles.markAllText}>Mark all as read</Text>
           </TouchableOpacity>
         </View>
@@ -90,31 +124,45 @@ const NotificationScreen = () => {
           data={filteredData}
           keyExtractor={(item) => item.id.toString()}
           renderItem={({ item }) => (
-            <View style={styles.listNoti}>
-              <View style={styles.itemNoti}>
-                <View style={styles.InfoDetail}>
-                  <Image
-                    source={item.avatar}
-                    style={styles.avatar}
-                  />
-                  <View>
-                    <Text style={styles.notiContent}>{item.content}</Text>
-                    <Text style={styles.time}>{item.time}</Text>
+            <TouchableOpacity
+              style={[
+                styles.status,
+                {
+                  backgroundColor: item.read ? '#fff' : 'rgba(204, 204, 204, 0.5)',
+                },
+              ]}
+              onPress={() => handleNotificationPress(item)}
+            >
+              <ScrollView style={styles.listNoti}>
+                <View style={styles.itemNoti}>
+                  <View style={styles.InfoDetail}>
+                    <Image source={item.avatar} style={styles.avatar} />
+                    <View>
+                      <View style={styles.unreadGroup}>
+                        <Text style={styles.notiContent}>
+                          {truncateText(item.content, 10)}
+                        </Text>
+                        {!item.read && <View style={styles.pointUnread}></View>}
+                      </View>
+                      <Text style={styles.time}>{item.time}</Text>
+                    </View>
                   </View>
                 </View>
-                {item.index !== null && (
-                  <View style={styles.circularContainer}>
-                    <Text style={styles.index}>{item.index}</Text>
-                  </View>
-                )}
-              </View>
-            </View>
+              </ScrollView>
+            </TouchableOpacity>
           )}
+        />
+        <NotificationPopup
+          isVisible={isPopupVisible}
+          onClose={handleClosePopup}
+          content={selectedNotification?.content}
+          time={selectedNotification?.time}
         />
       </View>
     </View>
   );
 };
+
 
 const styles = StyleSheet.create({
   container: {
@@ -163,12 +211,14 @@ const styles = StyleSheet.create({
     borderWidth:1,
     borderColor:"#216C53",
     borderRadius:10,
-    marginLeft:50
+    display:"flex",
+    alignSelf: 'flex-end',
   },
   markAllText:{
     fontSize:16,
     fontWeight:"700",
-    padding:5
+    padding:5,
+    color:"#808080"
   },
   tabBar:{
     marginTop:30,
@@ -186,7 +236,8 @@ const styles = StyleSheet.create({
   },
   tabText: {
     fontSize:16,
-    fontWeight:"bold"
+    fontWeight:"bold",
+    color:"#808080"
   },
   tabButton: {
     paddingVertical: 10,
@@ -206,6 +257,11 @@ const styles = StyleSheet.create({
     height: 1, 
     backgroundColor: '#000',
   },
+  status:{
+    marginTop:10,
+    borderRadius:10,
+    marginHorizontal:10
+  },
   listNoti: {
     marginTop:15,
   },
@@ -215,22 +271,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     padding: 10,
   },
-  circularContainer: {
-    width: 25,
-    height: 25,
-    borderRadius: 20,
-    display:"flex",
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderWidth:1,
-    backgroundColor:"#216C53",
-    marginRight: 10,
-  },
-  index: {
-    color: '#FFF',
-    fontWeight: 'bold',
-    fontSize: 16,
-  },
   name: {
     fontWeight: 'bold',
     color:"#000",
@@ -239,7 +279,8 @@ const styles = StyleSheet.create({
   InfoDetail: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap:20
+    flex: 1,
+    gap:10
   },
   titleContent: {
     flex: 1,
@@ -247,14 +288,29 @@ const styles = StyleSheet.create({
   title: {
     paddingBottom: 16,
   },
+  unreadGroup:{
+    display:"flex",
+    flexDirection:"row",
+  },
   notiContent: {
     color:"#000",
     fontSize:14,
     fontWeight:"600",
-    width:250
+    display:"flex",
+    flexWrap: 'wrap',
+    maxWidth:'85%',
   },
   time: {
     fontSize:14,
+    color:"#808080"
+  },
+  pointUnread:{
+    width:10,
+    height:10,
+    backgroundColor:"#FF0A00",
+    borderRadius:20,
+    marginTop:8,
+    marginLeft:20
   },
   message: {
 
