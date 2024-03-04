@@ -16,8 +16,7 @@ import { NavigateType } from '../models/Navigations';
 import { Challenge } from '../models/InfChallenge';
 import NotificationScreen from './Notification';
 
-import useGetAllChallenges from '../hooks/useChallenge';
-
+import { useGetAllChallenges, useOneChallenges } from '../hooks/useChallenge';
 
 
 const HomeScreen: React.FC<NavigateType> = ({ navigation }) => {
