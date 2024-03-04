@@ -5,8 +5,8 @@ import { NavigateType } from '../../../models/Navigations';
 import { useOneChallenges, useUpdateChallenges } from '../../../hooks/useChallenge';
 import ButtonChallenge from '../../../components/ButtonChallenge';
 import { Challenge } from '../../../models/InfChallenge';
-import Next from '../create/Next';
-import DateTimePicker from '@react-native-community/datetimepicker';
+
+import DateTimePicker, { DateTimePickerEvent } from '@react-native-community/datetimepicker';
 
 
 
@@ -45,13 +45,6 @@ const UpdateChallenges = ({ navigation, route }: NavigateType) => {
   };
 
 
-  const [selectedImage, setSelectedImage] = useState(null);
-  const [selectedImage1, setSelectedImage1] = useState(null);
-  const [selectedImage2, setSelectedImage2] = useState(null);
-  const [selectedImage3, setSelectedImage3] = useState(null);
-
-
-
 
   const {
     title,
@@ -76,36 +69,34 @@ const UpdateChallenges = ({ navigation, route }: NavigateType) => {
     });
   };
 
-
-  const [startTime, setStartTime] = useState(new Date());
-  const [endTime, setEndTime] = useState(new Date());
+  const [startTime, setStartTime] = useState<Date>(new Date());
+  const [endTime, setEndTime] = useState<Date>(new Date());
   const [showDatePicker, setShowDatePicker] = useState(false);
-  const [pickerMode, setPickerMode] = useState('date');
-  const [selectedDate, setSelectedDate] = useState(new Date());
+  const [pickerMode, setPickerMode] = useState<'date' | 'endDate' | 'startTime' | 'endTime'>('date');
+  const [selectedDate, setSelectedDate] = useState<Date>(new Date());
 
-  const showPicker = mode => {
+  const showPicker = (mode: 'date' | 'endDate' | 'startTime' | 'endTime') => {
     setPickerMode(mode);
     setShowDatePicker(true);
   };
 
   const hidePicker = () => {
     setShowDatePicker(false);
-    setShowTimePicker(false);
   };
 
-  const handleDateChange = (event, selectedDate) => {
+  const handleDateChange = (event: DateTimePickerEvent, selectedDate?: Date) => {
     hidePicker();
     if (selectedDate !== undefined) {
       setSelectedDate(selectedDate);
       if (pickerMode === 'date') {
-        setStartDate(selectedDate);
+        setStartTime(selectedDate);
       } else if (pickerMode === 'endDate') {
-        setEndDate(selectedDate);
+        setEndTime(selectedDate);
       }
     }
   };
 
-  const handleTimeChange = (event, selectedDate) => {
+  const handleTimeChange = (event: DateTimePickerEvent, selectedDate?: Date) => {
     hidePicker();
     if (selectedDate !== undefined) {
       setSelectedDate(selectedDate);
@@ -116,6 +107,7 @@ const UpdateChallenges = ({ navigation, route }: NavigateType) => {
       }
     }
   };
+
 
   return (
     <View style={styles.container}>
@@ -133,48 +125,6 @@ const UpdateChallenges = ({ navigation, route }: NavigateType) => {
           <View style={styles.container}>
             <View style={styles.mediaContainer}>
               <Text style={styles.titleMedium}>Attached Photos and Videos</Text>
-            </View>
-            <View style={styles.viewChoose}>
-              {selectedImage ? (
-                <Image source={{ uri: selectedImage }} style={styles.imageLarge} />
-              ) : (
-                <Next setSelectedImage={setSelectedImage} />
-              )}
-              <Text></Text>
-            </View>
-            <View style={styles.viewAdd}>
-              <View style={styles.rowContainer}>
-                {selectedImage1 ? (
-                  <Image
-                    source={{ uri: selectedImage1 }}
-                    style={styles.imageMedium}
-                  />
-                ) : (
-                  <Next setSelectedImage1={setSelectedImage1} />
-                )}
-                <Text></Text>
-              </View>
-              <View style={styles.rowContainer}>
-                {selectedImage2 ? (
-                  <Image
-                    source={{ uri: selectedImage2 }}
-                    style={styles.imageMedium}
-                  />
-                ) : (
-                  <Next setSelectedImage2={setSelectedImage2} />
-                )}
-              </View>
-              <View style={styles.rowContainer}>
-                {selectedImage3 ? (
-                  <Image
-                    source={{ uri: selectedImage3 }}
-                    style={styles.imageMedium}
-                  />
-                ) : (
-                  <Next setSelectedImage3={setSelectedImage3} />
-                )}
-                <Text></Text>
-              </View>
             </View>
           </View>
 
@@ -281,8 +231,8 @@ const UpdateChallenges = ({ navigation, route }: NavigateType) => {
               pickerMode === 'date' || pickerMode === 'endDate' ? 'date' : 'time'
             }
             display="default"
-            onCancel={hidePicker}
-            onConfirm={hidePicker}
+            onCancel={() => hidePicker()}
+            onConfirm={() => hidePicker()}
           />
         )}
         <View style={styles.inputContainer}>
@@ -291,7 +241,7 @@ const UpdateChallenges = ({ navigation, route }: NavigateType) => {
             style={styles.input}
             placeholder="Enter the challenges addreess"
             placeholderTextColor="#BDBDBD"
-            onChangeText={text => setChallengeAddress(text)}
+            onChangeText={(text) => handleInputChange('address', text)}
             defaultValue={address}
           />
         </View>
@@ -355,7 +305,7 @@ export const styles = StyleSheet.create({
     height: 100,
   },
   mediaContainer: {
-    marginBottom: 20,
+    marginVertical:20
   },
   viewChoose: {
     width: 320,
