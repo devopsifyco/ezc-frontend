@@ -4,8 +4,7 @@ import react, { useEffect, useState, useRef } from 'react';
 
 import { NavigateType } from '../models/Navigations';
 import Swiper from 'react-native-swiper';
-
-import ButtonDetaiChallenge from '../components/ButtonDetailChallenge';
+import ButtonChallenge from '../components/ButtonChallenge';
 
 
 const slideData = [
@@ -87,12 +86,12 @@ const ChallengeDetail = ({ navigation }: NavigateType) => {
           </View>
         </View>
         <View style={styles.wrapped_button}>
-          <ButtonDetaiChallenge
+          <ButtonChallenge
             onPress={handlePress}
             title="Donate"
             buttonStyle={{ width: 120 }}
           />
-          <ButtonDetaiChallenge
+          <ButtonChallenge
             onPress={handlePress}
             title="Join"
             buttonStyle={{ width: 120 }}

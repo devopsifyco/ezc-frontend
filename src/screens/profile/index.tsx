@@ -101,7 +101,7 @@ export default function ProfileScreen({navigation}: NavigateType) {
       </View>
 
       {selectedTab === 'ABOUT' && <AboutScreen data={DATA} />}
-      {selectedTab === 'CHALLENGE' && <ChallengeScreen />}
+      {selectedTab === 'CHALLENGE' && <ChallengeScreen navigation={navigation}/>}
       {selectedTab === 'REVIEWS' && <ReviewScreen />}
     </View>
   );

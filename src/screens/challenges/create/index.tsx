@@ -18,9 +18,9 @@ const CreateChallenges = () => {
     <View style={styles.container}>
       <ScrollView contentContainerStyle={styles.formContainer}>
         <View style={styles.header}>
-          <Image source={require('../../../assets/icons/home.png')} />
+          {/* <Image source={require('../../../assets/icons/home.png')} /> */}
           <Text style={styles.titleLarge}>Create Challenges</Text>
-          <Image source={require('../../../assets/icons/notifications.png')} />
+          <Image source={require('../../../assets/icons/notification.png')} />
         </View>
         <View style={styles.formBackground}>
           <Stepper

@@ -3,7 +3,7 @@ import {StyleSheet, Text, TouchableOpacity} from 'react-native';
 import {CustomButtonProps} from '../models/Button';
 import LinearGradient from 'react-native-linear-gradient';
 
-const ButtonDetaiChallenge = ({
+const ButtonChallenge = ({
     onPress,
     title,
     colors = ['#FF0A00', '#FF890B'],
@@ -41,4 +41,4 @@ const styles = StyleSheet.create({
   
 });
 
-export default ButtonDetaiChallenge;
+export default ButtonChallenge;

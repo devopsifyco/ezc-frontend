@@ -2,7 +2,7 @@ import { StyleSheet, Text, View, Image, TouchableOpacity, FlatList } from 'react
 import react, { useEffect, useState } from 'react';
 import { NavigateType } from '../models/Navigations';
 import ListCard from '../components/ListCard';
-import useGetAllChallenges from '../hooks/useChallenge';
+import { useGetAllChallenges } from '../hooks/useChallenge';
 
 const SeeAllChallenges = ({ navigation }: NavigateType) => {
 
@@ -35,10 +35,11 @@ const SeeAllChallenges = ({ navigation }: NavigateType) => {
               Days={item.Days}
               title={item.title}
               Address={item.Address}
+              description={item.description}
               images_path={item.images_path}
               isLive={item.isLive}
               onPress={() => navigation.navigate('ChallengeDetail')}
-              id={item.id}
+              _id={item.id}
             />
           )}
         />

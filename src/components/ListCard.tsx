@@ -4,7 +4,7 @@ import Moment from 'moment';
 import { Challenge } from '../models/InfChallenge';
 
 
-const ListCard: React.FC<Challenge> = ({  Days, title, Address, images_path, isLive,onPress }) => {
+const ListCard: React.FC<Challenge> = ({  Days, title, Address, images_path, isLive, onPress }) => {
 
   return (
     <View

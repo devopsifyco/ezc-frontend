@@ -13,17 +13,12 @@ import ListCard from '../components/ListCard';
 import Slides from '../components/Slides';
 
 import { NavigateType } from '../models/Navigations';
-import { Challenge } from '../models/InfChallenge';
-import NotificationScreen from './Notification';
-
-import useGetAllChallenges from '../hooks/useChallenge';
-
+import { useGetAllChallenges } from '../hooks/useChallenge';
 
 
 const HomeScreen: React.FC<NavigateType> = ({ navigation }) => {
 
   const { data: challenges, mutate } = useGetAllChallenges();
-
 
   useEffect(() => {
     mutate();
@@ -67,9 +62,10 @@ const HomeScreen: React.FC<NavigateType> = ({ navigation }) => {
           keyExtractor={(item, index) => index.toString()}
           renderItem={({ item, index }) => (
             <LiveCard
-              id={item.id}
+              _id={item.id}
               key={item.id ? item.id.toString() : index.toString()}
               Days={item.Days}
+              description={item.description}
               title={item.title}
               Address={item.Address}
               images_path={item.images_path}
@@ -97,7 +93,8 @@ const HomeScreen: React.FC<NavigateType> = ({ navigation }) => {
           contentContainerStyle={{ flexGrow: 1 }}
           renderItem={({ item, index }) => (
             <ListCard
-              id={item.id}
+              _id={item.id}
+              description={item.description}
               key={item.id ? item.id.toString() : index.toString()}
               Days={item.Days}
               title={item.title}
