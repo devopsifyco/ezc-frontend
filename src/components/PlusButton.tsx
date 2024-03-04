@@ -120,7 +120,13 @@ export default function PlusButton() {
           'RatingScreen',
         )}
       {isExpanded &&
-        renderSecondaryButton(faPen, timeX, timeY, 'Create', 'ListGift')}
+        renderSecondaryButton(
+          faPen,
+          timeX,
+          timeY,
+          'Create',
+          'CreateChallenges',
+        )}
       {isExpanded &&
         renderSecondaryButton(faGift, pulseX, pulseY, 'Gift', 'ExchangeGifts')}
 
