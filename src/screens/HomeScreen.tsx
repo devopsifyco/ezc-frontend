@@ -16,7 +16,7 @@ import { NavigateType } from '../models/Navigations';
 import { Challenge } from '../models/InfChallenge';
 import NotificationScreen from './Notification';
 
-import { useGetAllChallenges, useOneChallenges } from '../hooks/useChallenge';
+import { useGetAllChallenges} from '../hooks/useChallenge';
 
 
 const HomeScreen: React.FC<NavigateType> = ({ navigation }) => {
@@ -33,6 +33,9 @@ const HomeScreen: React.FC<NavigateType> = ({ navigation }) => {
   };
   
 
+  const handlePress = (id: string) => {
+    navigation.navigate('ChallengeDetail', { id });
+  };
 
   return (
     <View style={styles.container}>
@@ -47,7 +50,6 @@ const HomeScreen: React.FC<NavigateType> = ({ navigation }) => {
       <View style={{ height: 150 }}>
         <Slides />
       </View>
-
 
       <View style={styles.section}>
         <Text style={styles.sectionName}>Processing</Text>
@@ -66,14 +68,19 @@ const HomeScreen: React.FC<NavigateType> = ({ navigation }) => {
           keyExtractor={(item, index) => index.toString()}
           renderItem={({ item, index }) => (
             <LiveCard
-              id={item.id}
+              id={item._id}
               key={item.id ? item.id.toString() : index.toString()}
-              Days={item.Days}
+              start_time={item.start_time}
+              end_time={item.end_time}
               title={item.title}
+              company={item.company}
               Address={item.Address}
               images_path={item.images_path}
               isLive={item.isLive}
-              onPress={() => navigation.navigate('ChallengeDetail')}
+              points_reward={item.points_reward}
+              description={item.description}
+              onPress={() => handlePress(item._id)}
+              
             />
           )}
         />
@@ -96,14 +103,14 @@ const HomeScreen: React.FC<NavigateType> = ({ navigation }) => {
           contentContainerStyle={{ flexGrow: 1 }}
           renderItem={({ item, index }) => (
             <ListCard
-              id={item.id}
+              id={item._id}
               key={item.id ? item.id.toString() : index.toString()}
               Days={item.Days}
               title={item.title}
               Address={item.Address}
               images_path={item.images_path}
               isLive={item.isLive}
-              onPress={() => navigation.navigate('ChallengeDetail')}
+              onPress={() => navigation.navigate('ChallengeDetail', {id})}
             />
           )}
         />

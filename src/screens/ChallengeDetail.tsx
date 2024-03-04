@@ -1,12 +1,12 @@
-import { StyleSheet, Text, View, Image, TouchableOpacity, ScrollView } from 'react-native'
+import { StyleSheet, Text, View, Image, TouchableOpacity, ScrollView, ActivityIndicator } from 'react-native'
 import react, { useEffect, useState, useRef } from 'react';
 
 
 import { NavigateType } from '../models/Navigations';
-import useGetAllChallenges from '../hooks/useChallenge';
 import Swiper from 'react-native-swiper';
-
+import { useOneChallenges } from '../hooks/useChallenge';
 import ButtonDetaiChallenge from '../components/ButtonDetailChallenge';
+import Moment from 'moment';
 
 
 const slideData = [
@@ -16,8 +16,27 @@ const slideData = [
 ];
 
 
+const ChallengeDetail = ({ navigation, route }: NavigateType) => {
 
-const ChallengeDetail = ({ navigation }: NavigateType) => {
+  const { id } = route.params;
+
+  const { data: Challenge, isError, isPending, mutate } = useOneChallenges(id);
+
+
+  useEffect(() => {
+    mutate();
+  }, [id, mutate]);
+
+  const {
+    title,
+    images_path,
+    description,
+    points_reward,
+    company,
+    start_time,
+    end_time,
+    address
+  } = Challenge || {}
 
   const swiperRef = useRef<Swiper>(null);
 
@@ -25,15 +44,13 @@ const ChallengeDetail = ({ navigation }: NavigateType) => {
     console.log('Button pressed!');
   };
 
+
   // read more content
   const [showFullContent, setShowFullContent] = useState(false);
 
   // The number of lines you want to display
   const numberOfLinesToShow = 4;
 
-  const content = `Ngày môi trường của Tổ chức môi trường thế giới.Bạn luôn thắc mắc ngày môi trường thế giới là ngày nào sau đây, ngày môi trường thế giới là ngày. Nên là thằng nào có tiền thì donate cho tao. Ít thì năm... quả trứng, 
-  nhiều thì một quả tên lửa, chúng mày nhớ chưa, 
-  chúng mày giúp anh, sau này anh sẽ giúp lại chúng mày`;
 
 
   return (
@@ -44,30 +61,37 @@ const ChallengeDetail = ({ navigation }: NavigateType) => {
             <Image source={require('../assets/icons/arrow-left.png')} />
           </TouchableOpacity>
         </View>
+
         <View style={styles.wrapped_slide}>
-          <Swiper
-            ref={swiperRef}
-            autoplay
-            showsPagination={false}
-            removeClippedSubviews={false}
-          >
-            {slideData.map((item) => (
-              <View
-                key={item.id}
-                style={styles.slide}
-              >
-                <Image
-                  style={{ height: 220, width: 380, }}
-                  source={item.imageUrl}
-                  resizeMode='cover'
-                />
-              </View>
-            ))}
-          </Swiper>
+          {isPending ? (
+            <View style={styles.activityIndicatorContainer}>
+              <ActivityIndicator size="large" color="#0000ff" />
+            </View>
+          ) : Challenge && images_path && Array.isArray(images_path) && images_path.length > 0 ? (
+            <Swiper
+              ref={swiperRef}
+              autoplay
+              showsPagination={false}
+              removeClippedSubviews={false}
+            >
+              {images_path.map((item: { downloadLink: string, _id: string }, index: number) => (
+                <View key={index} style={styles.slide}>
+                  <Image
+                    style={{ height: 220, width: '100%' }}
+                    source={{ uri: item?.downloadLink }}
+                    resizeMode='cover'
+                  />
+                </View>
+              ))}
+            </Swiper>
+          ) : (
+            <Text>No images available</Text>
+          )}
         </View>
 
+
         <View style={styles.wrapped_title}>
-          <Text style={{ fontSize: 20, color: "#363636" }}>Trồng cây xanh ngày  môi trường</Text>
+          <Text style={{ fontSize: 20, color: "#363636" }}>{title}</Text>
         </View>
         <View style={styles.wrapped_times}>
           <View style={styles.times_group}>
@@ -76,7 +100,9 @@ const ChallengeDetail = ({ navigation }: NavigateType) => {
               fontSize: 16,
               marginLeft: 5,
               color: "#363636"
-            }}>Wed, Apr 28 • 8:30 - 11:30 AM</Text>
+            }}>
+              {Moment(start_time).format('ddd, MMM DD • HH:mm')} - {Moment(end_time).format('LT')}
+            </Text>
           </View>
           <View style={styles.times_group}>
             <Image source={require('../assets/icons/locationdetail.png')} />
@@ -84,7 +110,7 @@ const ChallengeDetail = ({ navigation }: NavigateType) => {
               fontSize: 16,
               marginLeft: 5,
               color: "#363636"
-            }}>Phuoc My • Son Tra • Da Nang</Text>
+            }}>{address}</Text>
           </View>
         </View>
         <View style={styles.wrapped_button}>
@@ -107,8 +133,8 @@ const ChallengeDetail = ({ navigation }: NavigateType) => {
           </View>
         </View>
         <View style={{ marginBottom: showFullContent ? 10 : 0 }}>
-          <Text numberOfLines={showFullContent ? undefined : numberOfLinesToShow} style={{ textAlign: 'left', fontSize: 16, color: "#363636",  }}>
-            {content}
+          <Text numberOfLines={showFullContent ? undefined : numberOfLinesToShow} style={{ textAlign: 'left', fontSize: 16, color: "#363636", }}>
+            {description}
           </Text>
           {!showFullContent && (
             <TouchableOpacity
@@ -146,7 +172,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
   },
   wrapped_slide: {
-    height:210,
+    height: 210,
     borderWidth: 0.5,
     borderColor: '#BDBDBD',
     marginTop: 20,
@@ -195,8 +221,11 @@ const styles = StyleSheet.create({
   },
   arrowImage: {
     marginTop: 3,
-  }
-
-
+  },
+  activityIndicatorContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
 
 })

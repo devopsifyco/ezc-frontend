@@ -31,13 +31,13 @@ export function useGetAllChallenges() {
 }
 
 
-export function useOneChallenges(_id: string) {
+export function useOneChallenges(id: string) {
   const getOneChallenge = useMutation({
-    mutationKey: ['getOneChallenge', _id], 
+    mutationKey: ['getOneChallenge', id], 
     mutationFn: async () => {
       try {
         const token = await AsyncStorage.getItem('accessToken');
-        const res = await axios.get(`${API_CHALLENGES}/${_id}`, {
+        const res = await axios.get(`${API_CHALLENGES}/${id}`, {
           headers: {
             'Content-Type': 'application/json',
             Authorization: `Bearer ${token}`,
