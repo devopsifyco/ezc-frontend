@@ -38,11 +38,9 @@ export default function LoginScreen({navigation}: NavigateType) {
     setShowPassword(prev => !prev);
   };
 
-  const {mutate, isPending} = useLogin();
+  const {mutate, status} = useLogin();
 
   const handleLogin = (fromData: any) => {
-    isPending === false && <Progress.Bar progress={0.3} width={200} />;
-
     mutate(fromData, {
       onSuccess: () => {
         const jsonString = JSON.stringify(fromData);
@@ -67,6 +65,11 @@ export default function LoginScreen({navigation}: NavigateType) {
 
   return (
     <View style={styles.container}>
+      {status === 'pending' && (
+        <View style={styles.displayLoading}>
+          <Progress.CircleSnail color={'white'} size={65} />
+        </View>
+      )}
       <Image
         style={styles.logo}
         source={require('../assets/signin_signup/logo.png')}

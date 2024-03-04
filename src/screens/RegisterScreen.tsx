@@ -38,9 +38,6 @@ export default function RegisterScreen({navigation}: NavigateType) {
         onSuccess: async () => {
           AsyncStorage.setItem('email', data.email);
           try {
-            isPending === false && (
-              <Progress.CircleSnail color={['red', 'green', 'blue']} />
-            );
             await axios.post(
               `${EZCHALLENG_API}/send-verification-code`,
               {
@@ -80,6 +77,11 @@ export default function RegisterScreen({navigation}: NavigateType) {
 
   return (
     <View style={styles.container}>
+      {isPending && (
+        <View style={styles.displayLoading}>
+          <Progress.CircleSnail color={'white'} size={65} />
+        </View>
+      )}
       <Image
         style={styles.logo}
         source={require('../assets/signin_signup/logo.png')}
