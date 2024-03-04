@@ -13,7 +13,9 @@ import ListCard from '../components/ListCard';
 import Slides from '../components/Slides';
 
 import { NavigateType } from '../models/Navigations';
-import { useGetAllChallenges } from '../hooks/useChallenge';
+
+
+import { useGetAllChallenges} from '../hooks/useChallenge';
 
 
 const HomeScreen: React.FC<NavigateType> = ({ navigation }) => {
@@ -23,12 +25,15 @@ const HomeScreen: React.FC<NavigateType> = ({ navigation }) => {
   useEffect(() => {
     mutate();
   }, [mutate]);
-  
+
   const handleNotificationPress = () => {
     navigation.navigate('NotificationScreen');
   };
-  
 
+
+  const handlePress = (id: string) => {
+    navigation.navigate('ChallengeDetail', { id });
+  };
 
   return (
     <View style={styles.container}>
@@ -44,9 +49,8 @@ const HomeScreen: React.FC<NavigateType> = ({ navigation }) => {
         <Slides />
       </View>
 
-
       <View style={styles.section}>
-        <Text style={styles.sectionName}>Live right now</Text>
+        <Text style={styles.sectionName}>Processing</Text>
         <TouchableOpacity style={styles.seeAll}>
           <Text
             onPress={() => navigation.navigate('SeeAllLive')}
@@ -62,15 +66,19 @@ const HomeScreen: React.FC<NavigateType> = ({ navigation }) => {
           keyExtractor={(item, index) => index.toString()}
           renderItem={({ item, index }) => (
             <LiveCard
-              _id={item.id}
+              id={item._id}
               key={item.id ? item.id.toString() : index.toString()}
-              Days={item.Days}
-              description={item.description}
+              start_time={item.start_time}
+              end_time={item.end_time}
               title={item.title}
+              company={item.company}
               Address={item.Address}
               images_path={item.images_path}
               isLive={item.isLive}
-              onPress={() => navigation.navigate('ChallengeDetail')}
+              points_reward={item.points_reward}
+              description={item.description}
+              onPress={() => handlePress(item._id)}
+
             />
           )}
         />
@@ -85,7 +93,7 @@ const HomeScreen: React.FC<NavigateType> = ({ navigation }) => {
           <Image source={require('../assets/icons/iconSeeAll.png')} />
         </TouchableOpacity>
       </View>
-      <View style={{flex:1}}>
+      <View style={{ flex: 1 }}>
         <FlatList
           data={challenges}
           showsVerticalScrollIndicator={false}
@@ -93,7 +101,7 @@ const HomeScreen: React.FC<NavigateType> = ({ navigation }) => {
           contentContainerStyle={{ flexGrow: 1 }}
           renderItem={({ item, index }) => (
             <ListCard
-              _id={item.id}
+              id={item._id}
               description={item.description}
               key={item.id ? item.id.toString() : index.toString()}
               Days={item.Days}
@@ -101,7 +109,7 @@ const HomeScreen: React.FC<NavigateType> = ({ navigation }) => {
               Address={item.Address}
               images_path={item.images_path}
               isLive={item.isLive}
-              onPress={() => navigation.navigate('ChallengeDetail')}
+              onPress={() => handlePress(item._id)}
             />
           )}
         />

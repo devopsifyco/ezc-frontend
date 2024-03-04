@@ -41,8 +41,6 @@ export default function EZChallenge() {
         <Stack.Screen name="ListGift" component={ListGift} />
         <Stack.Screen name="GiftDetail" component={GiftDetail} />
         <Stack.Screen name="ExchangeGifts" component={ExchangeGifts} />
-
-        
         <Stack.Screen name="EZChallenge" component={BottomTabs} />
         <Stack.Screen name="SubProfileScreen" component={SubProfileScreen} />
         <Stack.Screen name="EditProfile" component={EditProfile} />

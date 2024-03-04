@@ -18,7 +18,7 @@ const SeeAllLive = ({ navigation }: NavigateType) => {
         <TouchableOpacity onPress={() => navigation.goBack()} >
           <Image source={require('../assets/icons/arrow-left.png')} />
         </TouchableOpacity>
-        <Text style={styles.titles}>Live right now</Text>
+        <Text style={styles.titles}>Processing</Text>
       </View>
 
       <View style={styles.content}>

@@ -1,4 +1,5 @@
-import React, {useState} from 'react';
+import { EZCHALLENG_API } from '../../api/endPoint';
+import React, { useState, useEffect } from 'react';
 import {
   Text,
   View,
@@ -13,71 +14,69 @@ import HeaderProfile from '../../components/HeaderProfile';
 import {NavigateType} from '../../models/Navigations';
 import AboutScreen from './AboutScreen';
 import ChallengeScreen from './ChallengeScreen';
-// import ReviewScreen from './ReviewScreen';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { DataProfile } from '../../models/Profile';
+import axios from 'axios';
+const USER_API = `${EZCHALLENG_API}/user`;
 
-const DATA = {
-  name: 'A Tien',
-  image: require('../../assets/profile/atien.jpg'),
-  location: '101B Le Huu Trac',
-  fllowing: 345,
-  fllower: 55,
-  title:
-    'Em sống vì cộng đồng nên là thằng nào có tiền thì donate cho tao. Ít thì 5 quả trứng nhiều thì 1 quả tên lửa. Chúng mày nhớ chưa',
-  interested: [
-    'Game Online',
-    'Concert',
-    'Play Game',
-    'Soccor',
-    'Voleyball',
-    'Reading',
-    'Orther',
-  ],
-};
-
-export default function ProfileScreen({navigation}: NavigateType) {
-  const handleFllow = () => {
-    Alert.alert('Oke m');
-  };
+export default function ProfileScreen({ navigation }: NavigateType) {
+  const [DATA, setData] = useState<DataProfile | null>(null);
   const [selectedTab, setSelectedTab] = useState('ABOUT');
-  const handleMessage = () => {
-    navigation.navigate('ChatScreen');
-  };
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        AsyncStorage.getItem('email').then(async (email) => {
+          const token = await AsyncStorage.getItem('accessToken');
+          const emailUser = email?.slice(1, -1);
+          const res = await axios.post(USER_API, {
+            email: emailUser,
+          }, {
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${token}`
+            }
+          });
+
+          const data = res.data;
+          setData(data);
+          // console.log(data);
+        }).catch((error) => {
+          console.error('Error retrieving email:', error.response.data);
+        });
+      } catch (error) {
+        console.log('User profile error:', error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+
   return (
     <View style={styles.container}>
       <View style={styles.header}>
         <HeaderProfile navigation={navigation} />
         <TouchableOpacity
-          onPress={() => navigation.navigate('SubProfileScreen', {DATA})}>
+          onPress={() => navigation.navigate('SubProfileScreen', { DATA })}>
           <Image source={require('../../assets/profile/menu-toggle.png')} />
         </TouchableOpacity>
       </View>
-      
       <View style={styles.profile}>
-        <Image source={DATA.image} style={styles.profileImage} />
-        <Text style={styles.profileName}>{DATA.name}</Text>
+        <Image source={{ uri: DATA?.avatar.downloadLink }} style={styles.profileImage} />
+        <Text style={styles.profileName}>{DATA?.username}</Text>
+        <Text style={styles.profileName}>{DATA?.email}</Text>
         <View style={styles.numberStatus}>
           <View style={styles.itemfllowing}>
-            <Text style={styles.itemNumber}>{DATA.fllowing}</Text>
-            <Text style={styles.titleMedium}>Following</Text>
+            <Text style={styles.itemNumber}>{DATA?.points}</Text>
+            <Text style={styles.titleMedium}>Points</Text>
           </View>
           <View style={styles.arrowMiddle} />
           <View style={styles.itemfllower}>
-            <Text style={styles.itemNumber}>{DATA.fllower}</Text>
-            <Text style={styles.titleMedium}>Followers</Text>
+            <Text style={styles.itemNumber}>{DATA?.challenges ? DATA?.challenges.length : 0}</Text>
+            <Text style={styles.titleMedium}>Challenge</Text>
           </View>
         </View>
-      </View>
-      <View style={styles.actionInteraction}>
-        <ButtonProfile
-          title="Follow"
-          icon={require('../../assets/profile/flower.png')}
-          onPress={handleFllow}
-        />
-        <ButtonProfile2
-          title="Message"
-          icon={require('../../assets/profile/message.png')}
-          onPress={handleMessage}
-        />
       </View>
       <View style={styles.listActions}>
         <TouchableOpacity
@@ -93,11 +92,6 @@ export default function ProfileScreen({navigation}: NavigateType) {
           ]}>
           <Text style={styles.titleLarge}>CHALLENGE</Text>
         </TouchableOpacity>
-        {/* <TouchableOpacity
-          onPress={() => setSelectedTab('REVIEWS')}
-          style={[styles.tab, selectedTab === 'REVIEWS' && styles.selectedTab]}>
-          <Text style={styles.titleLarge}>REVIEWS</Text>
-        </TouchableOpacity> */}
       </View>
 
       {selectedTab === 'ABOUT' && <AboutScreen data={DATA} />}
