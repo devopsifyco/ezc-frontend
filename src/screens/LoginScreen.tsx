@@ -1,5 +1,6 @@
 import React, {useRef, useState} from 'react';
 import {CommonActions} from '@react-navigation/native';
+import * as Progress from 'react-native-progress';
 
 import {
   Image,
@@ -37,9 +38,11 @@ export default function LoginScreen({navigation}: NavigateType) {
     setShowPassword(prev => !prev);
   };
 
-  const {mutate} = useLogin();
+  const {mutate, isPending} = useLogin();
 
   const handleLogin = (fromData: any) => {
+    isPending === false && <Progress.Bar progress={0.3} width={200} />;
+
     mutate(fromData, {
       onSuccess: () => {
         const jsonString = JSON.stringify(fromData);

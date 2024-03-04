@@ -9,14 +9,15 @@ import {
   Alert,
 } from 'react-native';
 import Button from '../components/Button';
-import LoginOptions from '../components/LoginOptions';
-import { styles } from '../styles/signin-signup';
-import { NavigateType } from '../models/Navigations';
-import { useForm, Controller } from 'react-hook-form';
-import { RegistrationData } from '../models/Register';
+import {styles} from '../styles/signin-signup';
+import {NavigateType} from '../models/Navigations';
+import {useForm, Controller} from 'react-hook-form';
+import {RegistrationData} from '../models/Register';
 import useRegister from '../hooks/useRegister';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
+import {EZCHALLENG_API} from '../api/endPoint';
+import * as Progress from 'react-native-progress';
 
 export default function RegisterScreen({navigation}: NavigateType) {
   const userNameRef = useRef<TextInput>(null);
@@ -29,40 +30,45 @@ export default function RegisterScreen({navigation}: NavigateType) {
 
   const moveLogin = () => navigation.goBack();
 
-  const { mutate } = useRegister();
-
+  const {mutate, isPending} = useRegister();
 
   const onSubmit = (data: RegistrationData) => {
     if (data.password === data.confirmPassword) {
       mutate(data, {
         onSuccess: async () => {
           AsyncStorage.setItem('email', data.email);
-          console.log("data ne: ", data);
           try {
-            await axios.post(`http://${process.env.IP_COMPUTER}:4000/api/send-verification-code`, {
-              "email": data.email
-            }, {
-              headers: {
-                'Content-Type': 'application/json'
-              }
-            });
+            isPending === false && (
+              <Progress.CircleSnail color={['red', 'green', 'blue']} />
+            );
+            await axios.post(
+              `${EZCHALLENG_API}/send-verification-code`,
+              {
+                email: data.email,
+              },
+              {
+                headers: {
+                  'Content-Type': 'application/json',
+                },
+              },
+            );
           } catch (error) {
-            console.log("data ne: ", data);
-            console.log("verification error");
+            console.log('data ne: ', data);
+            console.log('verification error');
             console.log(error);
           }
           navigation.navigate('VerifyRegisterScreen');
         },
-      })
+      });
     } else {
-      Alert.alert("Confirm password does not match with password")
+      Alert.alert('Confirm password does not match with password');
     }
   };
 
   const {
     control,
     handleSubmit,
-    formState: { errors },
+    formState: {errors},
   } = useForm({
     defaultValues: {
       email: '',
@@ -98,7 +104,7 @@ export default function RegisterScreen({navigation}: NavigateType) {
               />
               <Controller
                 control={control}
-                render={({ field: { onChange, onBlur, value } }) => (
+                render={({field: {onChange, onBlur, value}}) => (
                   <TextInput
                     style={styles.input}
                     placeholder="Enter your email"
@@ -135,7 +141,7 @@ export default function RegisterScreen({navigation}: NavigateType) {
               />
               <Controller
                 control={control}
-                render={({ field: { onChange, onBlur, value } }) => (
+                render={({field: {onChange, onBlur, value}}) => (
                   <TextInput
                     ref={userNameRef}
                     style={styles.input}
@@ -149,7 +155,7 @@ export default function RegisterScreen({navigation}: NavigateType) {
                   />
                 )}
                 name="username"
-                rules={{ required: 'User name is require!' }}
+                rules={{required: 'User name is require!'}}
               />
             </View>
           </View>
@@ -167,7 +173,7 @@ export default function RegisterScreen({navigation}: NavigateType) {
               />
               <Controller
                 control={control}
-                render={({ field: { onChange, onBlur, value } }) => (
+                render={({field: {onChange, onBlur, value}}) => (
                   <TextInput
                     ref={passwordRegisterRef}
                     style={styles.input}
@@ -215,7 +221,7 @@ export default function RegisterScreen({navigation}: NavigateType) {
               />
               <Controller
                 control={control}
-                render={({ field: { onChange, onBlur, value } }) => (
+                render={({field: {onChange, onBlur, value}}) => (
                   <TextInput
                     ref={confirmPasswordRef}
                     style={styles.input}
@@ -228,7 +234,7 @@ export default function RegisterScreen({navigation}: NavigateType) {
                   />
                 )}
                 name="confirmPassword"
-                rules={{ required: 'Confirm Password is required!' }}
+                rules={{required: 'Confirm Password is required!'}}
               />
               <TouchableOpacity onPress={togglePasswordVisibility}>
                 <Image
@@ -241,6 +247,7 @@ export default function RegisterScreen({navigation}: NavigateType) {
               </TouchableOpacity>
             </View>
           </View>
+          <Button onPress={handleSubmit(onSubmit)} title="Next step" />
           <View style={[styles.options, styles.setCenter]}>
             <Text style={[styles.titleSmall, styles.tileWhiteColor]}>
               Already have you an account?{' '}
@@ -256,8 +263,6 @@ export default function RegisterScreen({navigation}: NavigateType) {
               </TouchableOpacity>
             </Text>
           </View>
-          <Button onPress={handleSubmit(onSubmit)} title="Next step" />
-          <LoginOptions />
         </View>
       </ScrollView>
     </View>
