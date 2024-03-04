@@ -1,38 +1,53 @@
-import React from 'react';
-import {View, Text, ScrollView, StyleSheet, Image, Alert} from 'react-native';
-import Stepper from 'react-native-stepper-ui';
+import React, {useState, useEffect} from 'react';
+import {
+  View,
+  Text,
+  ScrollView,
+  StyleSheet,
+  Image,
+  TouchableOpacity,
+} from 'react-native';
 import StepOneScreen from './StepOneScreen';
 import StepTwoScreen from './StepTwoScreen';
 import FinalStep from './FinalStep';
+import {useNavigation} from '@react-navigation/native';
 
-const CreateChallenges = () => {
-  const [active, setActive] = React.useState(0);
+const CreateChallenges = ({route}: any) => {
+  const navigation = useNavigation();
+  const [currentStep, setCurrentStep] = useState(1);
 
-  const challengeSteps = [
-    <StepOneScreen key={0} />,
-    <StepTwoScreen key={1} />,
-    <FinalStep key={2} />,
-  ];
+  // useEffect(() => {
+  //   const stepParam = route.params?.step;
+  //   if (stepParam) {
+  //     setCurrentStep(stepParam);
+  //   }
+  // }, [route.params]);
+
+  const renderStep = () => {
+    switch (currentStep) {
+      case 1:
+        return <StepOneScreen />;
+      case 2:
+        return <StepTwoScreen />;
+      case 3:
+        return <FinalStep />;
+      default:
+        return null;
+    }
+  };
 
   return (
     <View style={styles.container}>
       <ScrollView contentContainerStyle={styles.formContainer}>
         <View style={styles.header}>
-          {/* <Image source={require('../../../assets/icons/home.png')} /> */}
-          <Text style={styles.titleLarge}>Create Challenges</Text>
-          <Image source={require('../../../assets/icons/notification.png')} />
+          <TouchableOpacity onPress={() => navigation.goBack()}>
+            <Image source={require('../../../assets/icons/home.png')} />
+          </TouchableOpacity>
+          <View>
+            <Text style={styles.titleLarge}>Create Challenges</Text>
+          </View>
         </View>
-        <View style={styles.formBackground}>
-          <Stepper
-            buttonStyle={styles.buttonStep}
-            buttonTextStyle={styles.textStep}
-            active={active}
-            content={challengeSteps}
-            onBack={() => setActive(prev => prev - 1)}
-            onFinish={() => Alert.alert('Finish')}
-            onNext={() => setActive(prev => prev + 1)}
-          />
-        </View>
+        <View style={styles.formBackground}>{renderStep()}</View>
       </ScrollView>
     </View>
   );
@@ -42,7 +57,11 @@ export const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#FFFFFF',
-    justifyContent: 'center',
+  },
+  displayError: {
+    flexDirection: 'row',
+    gap: 5,
+    alignItems: 'center',
   },
   formContainer: {
     paddingHorizontal: 20,
@@ -51,11 +70,14 @@ export const styles = StyleSheet.create({
   formBackground: {
     top: 20,
   },
+  stepContainer: {
+    alignItems: 'center',
+  },
   header: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
     alignItems: 'center',
     paddingTop: 20,
+    gap: 50,
   },
   title: {
     fontSize: 24,
@@ -73,9 +95,8 @@ export const styles = StyleSheet.create({
     marginTop: 20,
   },
   input: {
-    borderWidth: 1,
+    borderBottomWidth: 2,
     borderColor: '#ccc',
-    borderRadius: 15,
     padding: 10,
     fontSize: 16,
     color: '#363636',
@@ -85,7 +106,8 @@ export const styles = StyleSheet.create({
     height: 100,
   },
   mediaContainer: {
-    marginBottom: 20,
+    paddingTop: 10,
+    paddingBottom: 10,
   },
   viewChoose: {
     width: 320,
@@ -101,7 +123,7 @@ export const styles = StyleSheet.create({
 
   button: {
     borderRadius: 25,
-    width: '48%',
+    width: '45%',
   },
   gradient: {
     padding: 10,
@@ -149,12 +171,6 @@ export const styles = StyleSheet.create({
     borderStyle: 'dotted',
     flexDirection: 'row',
     justifyContent: 'space-between',
-  },
-  rowContainer1: {
-    width: '100%',
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginBottom: 20,
   },
   titleSmall: {
     fontSize: 14,
@@ -210,6 +226,16 @@ export const styles = StyleSheet.create({
   },
   formContainerDateTime: {
     gap: 5,
+    paddingTop: 10,
+    paddingBottom: 20,
+  },
+  errorText: {
+    color: 'red',
+    fontSize: 16,
+  },
+  actionButton: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
   },
 });
 
