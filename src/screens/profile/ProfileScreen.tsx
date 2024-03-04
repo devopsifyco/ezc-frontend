@@ -39,17 +39,19 @@ export default function SubProfileScreen({
       </View>
 
       <View style={styles.profile}>
-        <Image source={DATA.avatar} style={styles.profileImage} />
+      <Image source={{ uri: DATA?.avatar.downloadLink }} style={styles.profileImage} />
         <Text style={styles.profileName}>{DATA.username}</Text>
+        <Text style={styles.email}>{DATA.email}</Text>
+
         <View style={styles.numberStatus}>
           <View style={styles.itemfllowing}>
-            <Text style={styles.itemNumber}>22</Text>
-            <Text style={styles.titleMedium}>Following</Text>
+            <Text style={styles.itemNumber}>{DATA?.points}</Text>
+            <Text style={styles.titleMedium}>{DATA?.challenges.length>0 ? "Points" : "Point"}</Text>
           </View>
           <View style={styles.arrowMiddle} />
           <View style={styles.itemfllower}>
-            <Text style={styles.itemNumber}>176</Text>
-            <Text style={styles.titleMedium}>Followers</Text>
+            <Text style={styles.itemNumber}>{DATA?.challenges ? DATA?.challenges.length : 0}</Text>
+            <Text style={styles.titleMedium}>{DATA?.challenges.length>0 ? "Challenges" : "Challenge"}</Text>
           </View>
         </View>
       </View>
@@ -68,13 +70,6 @@ export default function SubProfileScreen({
       </View>
       <Text style={styles.titleLarge}>About me</Text>
       <Text style={styles.titleMedium}>{DATA.about_me}</Text>
-      <View style={styles.displayRow2}>
-        <Text style={styles.titleLarge}>Intersted</Text>
-        <TouchableOpacity style={styles.displayRow}>
-          <Image source={require('../../assets/profile/change.png')} />
-          <Text style={styles.titleActionChange}>CHANGE</Text>
-        </TouchableOpacity>
-      </View>
       <Modal isVisible={isModalVisible}>
         <View style={styles.formBackground}>
           <Text style={styles.titleLogout}>Logout</Text>
@@ -127,6 +122,11 @@ const styles = StyleSheet.create({
   profileName: {
     fontSize: 18,
     fontWeight: 'bold',
+    marginVertical: 8,
+    color: '#120D26',
+  },
+  email: {
+    fontSize: 18,
     marginVertical: 8,
     color: '#120D26',
   },

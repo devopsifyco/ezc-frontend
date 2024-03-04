@@ -40,8 +40,9 @@ export default function ProfileScreen({ navigation }: NavigateType) {
 
           const data = res.data;
           setData(data);
+          // console.log(data);
         }).catch((error) => {
-          console.error('Error retrieving email:', error);
+          console.error('Error retrieving email:', error.response.data);
         });
       } catch (error) {
         console.log('User profile error:', error);
@@ -51,9 +52,6 @@ export default function ProfileScreen({ navigation }: NavigateType) {
     fetchData();
   }, []);
 
-  const handleFllow = () => {
-    Alert.alert('Oke m');
-  };
 
   return (
     <View style={styles.container}>
@@ -64,33 +62,21 @@ export default function ProfileScreen({ navigation }: NavigateType) {
           <Image source={require('../../assets/profile/menu-toggle.png')} />
         </TouchableOpacity>
       </View>
-      
       <View style={styles.profile}>
-        <Image source={DATA?.avatar} style={styles.profileImage} />
+        <Image source={{ uri: DATA?.avatar.downloadLink }} style={styles.profileImage} />
         <Text style={styles.profileName}>{DATA?.username}</Text>
+        <Text style={styles.profileName}>{DATA?.email}</Text>
         <View style={styles.numberStatus}>
           <View style={styles.itemfllowing}>
-            <Text style={styles.itemNumber}>23</Text>
-            <Text style={styles.titleMedium}>Following</Text>
+            <Text style={styles.itemNumber}>{DATA?.points}</Text>
+            <Text style={styles.titleMedium}>Points</Text>
           </View>
           <View style={styles.arrowMiddle} />
           <View style={styles.itemfllower}>
-            <Text style={styles.itemNumber}>161</Text>
-            <Text style={styles.titleMedium}>Followers</Text>
+            <Text style={styles.itemNumber}>{DATA?.challenges ? DATA?.challenges.length : 0}</Text>
+            <Text style={styles.titleMedium}>Challenge</Text>
           </View>
         </View>
-      </View>
-      <View style={styles.actionInteraction}>
-        <ButtonProfile
-          title="Follow"
-          icon={require('../../assets/profile/flower.png')}
-          onPress={handleFllow}
-        />
-        <ButtonProfile2
-          title="Message"
-          icon={require('../../assets/profile/message.png')}
-          onPress={handleMessage}
-        />
       </View>
       <View style={styles.listActions}>
         <TouchableOpacity
@@ -108,7 +94,7 @@ export default function ProfileScreen({ navigation }: NavigateType) {
         </TouchableOpacity>
       </View>
 
-      {selectedTab === 'ABOUT' && <AboutScreen data={DATA?.about_me} />}
+      {selectedTab === 'ABOUT' && <AboutScreen data={DATA} />}
       {selectedTab === 'CHALLENGE' && <ChallengeScreen />}
     </View>
   );

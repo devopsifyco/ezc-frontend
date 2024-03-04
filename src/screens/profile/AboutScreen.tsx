@@ -2,10 +2,14 @@ import React from 'react';
 import {View, Text, StyleSheet} from 'react-native';
 import { DataProfile } from '../../models/Profile';
 
-export default function AboutScreen({data}: {data: DataProfile}) {
+export default function AboutScreen({ data }: { data: DataProfile | null }) {
   return (
     <View style={styles.container}>
-      <Text style={styles.description}>{data.about_me}</Text>
+      {data && data.about_me ? (
+        <Text style={styles.description}>{data.about_me}</Text>
+      ) : (
+        <Text style={styles.description}>No information available</Text>
+      )}
     </View>
   );
 }
