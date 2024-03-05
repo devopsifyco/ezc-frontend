@@ -3,7 +3,7 @@ export interface DataProfile {
     email: string;
     points: number;
     challenges: [];
-    avatar: { name: string, downloadLink: string };
+    image: { name: string, downloadLink: string };
     about_me: string;
     location: string;
 }

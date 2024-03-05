@@ -1,29 +1,28 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation } from '@tanstack/react-query';
 import axios from 'axios';
 import { EZCHALLENG_API } from '../api/endPoint';
-
-const API_ALLCHALLENGE = `${EZCHALLENG_API}/user/update/update`;
+import { Alert } from 'react-native';
 
 export function useUpdateUserProfile() {
   const getUpdateUserProfile = useMutation({
-    mutationKey: ['user/update/update'],
+    mutationKey: ['user'],
     mutationFn: async () => {
-      try {
-        const token = await AsyncStorage.getItem('accessToken');
-        const res = await axios.get(API_ALLCHALLENGE, {
-          headers: {
-            'Content-Type': `application/json`,
-            Authorization: `Bearer ${token}`,
-          },
-        });
-        return res.data;
-      } catch (error) {
-        console.error('Error fetching challenges:', error);
-        throw error;
-      }
+
+      const token = await AsyncStorage.getItem('accessToken');
+      console.log(token);
+      const res = await axios.put(`${EZCHALLENG_API}/user/update`, {
+        headers: {
+          'Content-Type': `application/json`,
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      return res.data;
+
     },
-    onSuccess: () => console.log('Request successful'),
+    onSuccess: () => console.log('Edit successfully'),
+    onError: (error) => Alert.alert(error.message)
+
   });
 
   return { ...getUpdateUserProfile };
