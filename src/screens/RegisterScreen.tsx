@@ -9,7 +9,6 @@ import {
   Alert,
 } from 'react-native';
 import Button from '../components/Button';
-import LoginOptions from '../components/LoginOptions';
 import {styles} from '../styles/signin-signup';
 import {NavigateType} from '../models/Navigations';
 import {useForm, Controller} from 'react-hook-form';
@@ -18,6 +17,7 @@ import useRegister from '../hooks/useRegister';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
 import {EZCHALLENG_API} from '../api/endPoint';
+import * as Progress from 'react-native-progress';
 
 export default function RegisterScreen({navigation}: NavigateType) {
   const userNameRef = useRef<TextInput>(null);
@@ -30,14 +30,15 @@ export default function RegisterScreen({navigation}: NavigateType) {
 
   const moveLogin = () => navigation.goBack();
 
-  const {mutate} = useRegister();
+  const { mutate } = useRegister();
+
 
   const onSubmit = (data: RegistrationData) => {
     if (data.password === data.confirmPassword) {
       mutate(data, {
         onSuccess: async () => {
           AsyncStorage.setItem('email', data.email);
-          console.log('data ne: ', data);
+          console.log("data ne: ", data);
           try {
             await axios.post(
               `${EZCHALLENG_API}/send-verification-code`,
@@ -78,6 +79,11 @@ export default function RegisterScreen({navigation}: NavigateType) {
 
   return (
     <View style={styles.container}>
+      {isPending && (
+        <View style={styles.displayLoading}>
+          <Progress.CircleSnail color={'white'} size={65} />
+        </View>
+      )}
       <Image
         style={styles.logo}
         source={require('../assets/signin_signup/logo.png')}
@@ -245,6 +251,7 @@ export default function RegisterScreen({navigation}: NavigateType) {
               </TouchableOpacity>
             </View>
           </View>
+          <Button onPress={handleSubmit(onSubmit)} title="Next step" />
           <View style={[styles.options, styles.setCenter]}>
             <Text style={[styles.titleSmall, styles.tileWhiteColor]}>
               Already have you an account?{' '}
@@ -260,8 +267,6 @@ export default function RegisterScreen({navigation}: NavigateType) {
               </TouchableOpacity>
             </Text>
           </View>
-          <Button onPress={handleSubmit(onSubmit)} title="Next step" />
-          <LoginOptions />
         </View>
       </ScrollView>
     </View>

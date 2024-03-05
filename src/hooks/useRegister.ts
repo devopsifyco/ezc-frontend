@@ -16,7 +16,7 @@ export default function useRegister() {
     onSuccess: async data => {
       console.log(data.message);
     },
-    onError: error => {
+    onError: (error: any) => {
       console.log(error?.response.data.message);
       Alert.alert(error?.response.data.message);
     },
