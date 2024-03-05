@@ -1,17 +1,16 @@
 import React from 'react';
 import { View, Text, Image, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
+import { NavigateType } from '../../models/Navigations';
 
 
-export default function ChallengeScreen() {
+export default function ChallengeScreen({navigation}: NavigateType) {
   return (
     <View style={styles.container}>
       <ScrollView style={styles.listItems}>
         <View style={styles.section}>
           <Text style={styles.sectionName}>Pending</Text>
-          <TouchableOpacity style={styles.seeAll}>
-            <Text
-              onPress={() => navigation.navigate('SeeAllLive')}
-            >See All</Text>
+          <TouchableOpacity style={styles.seeAll}   onPress={() => navigation.navigate('Status',{value: 'Pending'})}>
+            <Text>See All</Text>
             <Image source={require('../../assets/icons/iconSeeAll.png')} />
           </TouchableOpacity>
         </View>
@@ -36,6 +35,7 @@ export default function ChallengeScreen() {
                 </View>
                 <View style={styles.displayCenter}>
                   <Image source={require('../../assets/icons/Shape.png')} style={styles.editGroup} />
+                  <Image source={require('../../assets/icons/delete.png')} style={styles.editGroup} />
                 </View>
               </View>
 
@@ -62,6 +62,7 @@ export default function ChallengeScreen() {
                 </View>
                 <View style={styles.displayCenter}>
                   <Image source={require('../../assets/icons/Shape.png')} style={styles.editGroup} />
+                  <Image source={require('../../assets/icons/delete.png')} style={styles.editGroup} />
                 </View>
               </View>
 
@@ -88,6 +89,7 @@ export default function ChallengeScreen() {
                 </View>
                 <View style={styles.displayCenter}>
                   <Image source={require('../../assets/icons/Shape.png')} style={styles.editGroup} />
+                  <Image source={require('../../assets/icons/delete.png')} style={styles.editGroup} />
                 </View>
               </View>
 
@@ -96,10 +98,8 @@ export default function ChallengeScreen() {
           </View>
           <View style={styles.section}>
             <Text style={styles.sectionName}>Approve</Text>
-            <TouchableOpacity style={styles.seeAll}>
-              <Text
-                onPress={() => navigation.navigate('SeeAllLive')}
-              >See All</Text>
+            <TouchableOpacity style={styles.seeAll} onPress={() => navigation.navigate('Status',{value: 'Approve'})}>
+              <Text>See All</Text>
               <Image source={require('../../assets/icons/iconSeeAll.png')} />
             </TouchableOpacity>
           </View>
@@ -150,10 +150,8 @@ export default function ChallengeScreen() {
           
           <View style={styles.section}>
             <Text style={styles.sectionName}>Reject</Text>
-            <TouchableOpacity style={styles.seeAll}>
-              <Text
-                onPress={() => navigation.navigate('SeeAllLive')}
-              >See All</Text>
+            <TouchableOpacity style={styles.seeAll} onPress={() => navigation.navigate('Status',{value: 'Reject'})}>
+              <Text>See All</Text>
               <Image source={require('../../assets/icons/iconSeeAll.png')} />
             </TouchableOpacity>
           </View>
@@ -216,6 +214,8 @@ const styles = StyleSheet.create({
     rowGap: 5,
   },
   displayCenter: {
+    gap: 10,
+    flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
   },

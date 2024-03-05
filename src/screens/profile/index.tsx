@@ -19,7 +19,6 @@ const DATA = {
   name: 'A Tien',
   image: require('../../assets/profile/atien.jpg'),
   location: '101B Le Huu Trac',
-  fllowing: 345,
   fllower: 55,
   title:
     'Em sống vì cộng đồng nên là thằng nào có tiền thì donate cho tao. Ít thì 5 quả trứng nhiều thì 1 quả tên lửa. Chúng mày nhớ chưa',
@@ -56,10 +55,10 @@ export default function ProfileScreen({navigation}: NavigateType) {
         <Image source={DATA.image} style={styles.profileImage} />
         <Text style={styles.profileName}>{DATA.name}</Text>
         <View style={styles.numberStatus}>
-          <View style={styles.itemfllowing}>
+          {/* <View style={styles.itemfllowing}>
             <Text style={styles.itemNumber}>{DATA.fllowing}</Text>
             <Text style={styles.titleMedium}>Following</Text>
-          </View>
+          </View> */}
           <View style={styles.arrowMiddle} />
           <View style={styles.itemfllower}>
             <Text style={styles.itemNumber}>{DATA.fllower}</Text>
@@ -101,7 +100,7 @@ export default function ProfileScreen({navigation}: NavigateType) {
       </View>
 
       {selectedTab === 'ABOUT' && <AboutScreen data={DATA} />}
-      {selectedTab === 'CHALLENGE' && <ChallengeScreen />}
+      {selectedTab === 'CHALLENGE' && <ChallengeScreen navigation={navigation}/>}
       {/* {selectedTab === 'REVIEWS' && <ReviewScreen />} */}
     </View>
   );

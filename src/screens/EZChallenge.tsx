@@ -19,6 +19,8 @@ import RatingScreen from './RatingScreen';
 import ChatScreen from './ChatScreen';
 import NotificationScreen from './Notification';
 import GroupScreen from './GroupScreen';
+import PendingScreen from './Status/PendingScreen';
+import Status from './Status';
 
 const Stack = createNativeStackNavigator();
 
@@ -40,6 +42,7 @@ export default function EZChallenge() {
         <Stack.Screen name="GiftDetail" component={GiftDetail} />
         <Stack.Screen name="ExchangeGifts" component={ExchangeGifts} /> */}
         <Stack.Screen name="EZChallenge" component={BottomTabs} />
+        <Stack.Screen name="Status" component={Status} />
         <Stack.Screen name="SubProfileScreen" component={SubProfileScreen} />
         <Stack.Screen name="EditProfile" component={EditProfile} />
         <Stack.Screen name="SeeAllChallange" component={SeeAllChallenges} />
