@@ -1,17 +1,15 @@
 import React from 'react';
 import {View, Text, StyleSheet} from 'react-native';
-interface DataProps {
-  name: string;
-  image: any;
-  fllowing: number;
-  fllower: number;
-  title: string;
-}
+import { DataProfile } from '../../models/Profile';
 
-export default function AboutScreen({data}: {data: DataProps}) {
+export default function AboutScreen({ data }: { data: DataProfile | null }) {
   return (
     <View style={styles.container}>
-      <Text style={styles.description}>{data.title}</Text>
+      {data && data.about_me ? (
+        <Text style={styles.description}>{data.about_me}</Text>
+      ) : (
+        <Text style={styles.description}>No information available</Text>
+      )}
     </View>
   );
 }

@@ -7,22 +7,13 @@ import ButtonProfile from '../../components/ButtonProfile';
 import ButtonProfile2 from '../../components/ButtonProfile2';
 import HeaderProfile from '../../components/HeaderProfile';
 import {NavigateType} from '../../models/Navigations';
-
-export interface DataPropsType {
-  name: string;
-  image: any;
-  location: string;
-  fllowing: number;
-  fllower: number;
-  title: string;
-  interested: string[];
-}
+import { DataProfile } from '../../models/Profile';
 
 export default function SubProfileScreen({
   route,
   navigation,
 }: {
-  route: {params: {DATA: DataPropsType}};
+  route: {params: {DATA: DataProfile}};
   navigation: NavigateType;
 }) {
   const {DATA} = route.params;
@@ -48,17 +39,19 @@ export default function SubProfileScreen({
       </View>
 
       <View style={styles.profile}>
-        <Image source={DATA.image} style={styles.profileImage} />
-        <Text style={styles.profileName}>{DATA.name}</Text>
+      <Image source={{ uri: DATA?.avatar.downloadLink }} style={styles.profileImage} />
+        <Text style={styles.profileName}>{DATA.username}</Text>
+        <Text style={styles.email}>{DATA.email}</Text>
+
         <View style={styles.numberStatus}>
           <View style={styles.itemfllowing}>
-            <Text style={styles.itemNumber}>{DATA.fllowing}</Text>
-            <Text style={styles.titleMedium}>Following</Text>
+            <Text style={styles.itemNumber}>{DATA?.points}</Text>
+            <Text style={styles.titleMedium}>{DATA?.challenges.length>0 ? "Points" : "Point"}</Text>
           </View>
           <View style={styles.arrowMiddle} />
           <View style={styles.itemfllower}>
-            <Text style={styles.itemNumber}>{DATA.fllower}</Text>
-            <Text style={styles.titleMedium}>Followers</Text>
+            <Text style={styles.itemNumber}>{DATA?.challenges ? DATA?.challenges.length : 0}</Text>
+            <Text style={styles.titleMedium}>{DATA?.challenges.length>0 ? "Challenges" : "Challenge"}</Text>
           </View>
         </View>
       </View>
@@ -76,21 +69,7 @@ export default function SubProfileScreen({
         />
       </View>
       <Text style={styles.titleLarge}>About me</Text>
-      <Text style={styles.titleMedium}>{DATA.title}</Text>
-      <View style={styles.displayRow2}>
-        <Text style={styles.titleLarge}>Intersted</Text>
-        <TouchableOpacity style={styles.displayRow}>
-          <Image source={require('../../assets/profile/change.png')} />
-          <Text style={styles.titleActionChange}>CHANGE</Text>
-        </TouchableOpacity>
-      </View>
-      <View style={styles.listInterest}>
-        {DATA.interested.map((interest, index) => (
-          <View key={index} style={styles.interestItem}>
-            <Text style={styles.titleIntersted}>{interest}</Text>
-          </View>
-        ))}
-      </View>
+      <Text style={styles.titleMedium}>{DATA.about_me}</Text>
       <Modal isVisible={isModalVisible}>
         <View style={styles.formBackground}>
           <Text style={styles.titleLogout}>Logout</Text>
@@ -146,6 +125,11 @@ const styles = StyleSheet.create({
     marginVertical: 8,
     color: '#120D26',
   },
+  email: {
+    fontSize: 18,
+    marginVertical: 8,
+    color: '#120D26',
+  },
   numberStatus: {
     flexDirection: 'row',
     justifyContent: 'space-around',
@@ -185,19 +169,6 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginBottom: 8,
     color: '#120D26',
-  },
-  listInterest: {
-    flexDirection: 'row',
-    gap: 10,
-    top: 10,
-    flexWrap: 'wrap',
-  },
-  interestItem: {
-    backgroundColor: 'tomato',
-    borderRadius: 15,
-    height: 40,
-    justifyContent: 'center',
-    paddingHorizontal: 10,
   },
   titleMedium: {
     fontSize: 14,
