@@ -1,5 +1,5 @@
 import React from 'react';
-import {createNativeStackNavigator} from '@react-navigation/native-stack';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import LoginScreen from './LoginScreen';
 import RegisterScreen from './RegisterScreen';
 import VerifyRegisterScreen from './VerifyRegisterScreen';
@@ -14,20 +14,21 @@ import SubProfileScreen from './profile/ProfileScreen';
 import EditProfile from './profile/EditProfile';
 import ChallengeDetail from './ChallengeDetail';
 
-import {Welcome, Welcome2, Welcome3} from './Welcome';
+import { Welcome, Welcome2, Welcome3 } from './Welcome';
 import RatingScreen from './RatingScreen';
 import ChatScreen from './ChatScreen';
 import NotificationScreen from './Notification';
 import GroupScreen from './GroupScreen';
 import PendingScreen from './Status/PendingScreen';
 import Status from './Status';
+import CreateChallenges from './challenges/create';
 
 const Stack = createNativeStackNavigator();
 
 export default function EZChallenge() {
   return (
     <Stack.Navigator>
-      <Stack.Group screenOptions={{headerShown: false}}>
+      <Stack.Group screenOptions={{ headerShown: false }}>
         <Stack.Screen name="Welcome" component={Welcome} />
         <Stack.Screen name="Welcome2" component={Welcome2} />
         <Stack.Screen name="Welcome3" component={Welcome3} />
@@ -57,7 +58,7 @@ export default function EZChallenge() {
         <Stack.Screen name="CreateChallenges" component={CreateChallenges} />
       </Stack.Group>
 
-      <Stack.Group screenOptions={{headerShown: false}}>
+      <Stack.Group screenOptions={{ headerShown: false }}>
         <Stack.Screen name="ChallengeDetail" component={ChallengeDetail} />
       </Stack.Group>
     </Stack.Navigator>
