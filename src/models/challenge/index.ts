@@ -4,9 +4,7 @@ export interface ChallengeCreateDataTypes {
   description: string;
   points: number;
   company: number;
-  startDay: Date;
-  endDate: Date;
-  startTime: Date;
-  endTime: Date;
+  startDateTime: Date;
+  endDendDateTimeate: Date;
   address: string;
 }

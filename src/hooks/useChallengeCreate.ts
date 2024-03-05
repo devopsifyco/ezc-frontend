@@ -1,17 +1,27 @@
 import {useMutation, useQueryClient} from '@tanstack/react-query';
 import {EZCHALLENG_API} from '../api/endPoint';
 import axios from 'axios';
-import {ChallengeCreateDataTypes} from '../models/challenge';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import {Alert} from 'react-native';
 
 export default function useChallengeCreate() {
   const queryClient = useQueryClient();
 
   const challengeCreate = useMutation({
     mutationKey: ['challengeCreate'],
-    mutationFn: async ({challengeData}: ChallengeCreateDataTypes) => {
+    mutationFn: async ({data}: any) => {
+      const tokenUser = await AsyncStorage.getItem('accessToken');
+      console.log(tokenUser);
+
       const res = await axios.post(
-        `${EZCHALLENG_API}/challenge/create`,
-        challengeData,
+        `http://192.168.9.242:4000/api/challenge/create`,
+        data,
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${tokenUser}`,
+          },
+        },
       );
       return res.data;
     },
@@ -19,6 +29,7 @@ export default function useChallengeCreate() {
       //Refresh list challenges
       queryClient.invalidateQueries({queryKey: ['challengesList']});
     },
+    onError: error => Alert.alert(error.message),
   });
   return {...challengeCreate};
 }

@@ -237,6 +237,16 @@ export const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
   },
+  displayLoading: {
+    position: 'absolute',
+    zIndex: 12,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#2C3550',
+    opacity: 0.6,
+    width: '100%',
+    height: '100%',
+  },
 });
 
 export default CreateChallenges;

@@ -7,10 +7,10 @@ import {useNavigation} from '@react-navigation/native';
 import Button from '../../../components/Button';
 
 type Input = {
-  images: string[];
+  images_path: string[];
   title: string;
   description: string;
-  points: string;
+  points_reward: string;
   company: string;
 };
 
@@ -24,14 +24,13 @@ const StepOneScreen = () => {
     formState: {errors},
   } = useForm<Input>();
 
-  const selectedImages = watch('images', []);
+  const selectedImages = watch('images_path', []);
 
   const validateImages = (value: string[]) => {
     return value.length > 0 || ' *';
   };
 
   const onSubmit: SubmitHandler<Input> = data => {
-    console.log(data);
     navigation.navigate('CreateChallenges', {step: 2, dataFromStepOne: data});
   };
 
@@ -41,8 +40,8 @@ const StepOneScreen = () => {
         <View style={styles.mediaContainer}>
           <View style={styles.displayError}>
             <Text style={styles.titleLarge}>Attached Photos or Videos</Text>
-            {errors.images && (
-              <Text style={styles.errorText}>{errors.images.message}</Text>
+            {errors.images_path && (
+              <Text style={styles.errorText}>{errors.images_path.message}</Text>
             )}
           </View>
         </View>
@@ -55,19 +54,19 @@ const StepOneScreen = () => {
                 const updatedImages = [...selectedImages];
                 updatedImages[index] = uri;
                 setValue(
-                  'images',
+                  'images_path',
                   updatedImages.filter(image => image !== ''),
                 );
               }}
               removeImage={(index: number) => {
                 const updatedImages = [...selectedImages];
                 updatedImages.splice(index, 1);
-                setValue('images', updatedImages);
+                setValue('images_path', updatedImages);
               }}
-              clearImages={() => setValue('images', [])}
+              clearImages={() => setValue('images_path', [])}
             />
           )}
-          name="images"
+          name="images_path"
           defaultValue={[]}
           rules={{validate: validateImages}}
         />
@@ -143,7 +142,7 @@ const StepOneScreen = () => {
               keyboardType="numeric"
             />
           )}
-          name="points"
+          name="points_reward"
           defaultValue=""
           rules={{required: ' *'}}
         />
