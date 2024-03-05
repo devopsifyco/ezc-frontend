@@ -2,7 +2,7 @@ import { StyleSheet, Text, View, Image, TouchableOpacity, FlatList } from 'react
 import react, { useEffect, useState } from 'react';
 import { NavigateType } from '../models/Navigations';
 import ListCard from '../components/ListCard';
-import useGetAllChallenges from '../hooks/useChallenge';
+import {useGetAllChallenges} from '../hooks/useChallenge';
 
 const SeeAllChallenges = ({ navigation }: NavigateType) => {
 
