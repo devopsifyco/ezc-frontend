@@ -74,7 +74,7 @@ const HomeScreen: React.FC<NavigateType> = ({ navigation }) => {
               end_time={item.end_time}
               title={item.title}
               company={item.company}
-              Address={item.Address}
+              address={item.address}
               images_path={item.images_path}
               isLive={item.isLive}
               points_reward={item.points_reward}
@@ -107,7 +107,7 @@ const HomeScreen: React.FC<NavigateType> = ({ navigation }) => {
               key={item.id ? item.id.toString() : index.toString()}
               Days={item.Days}
               title={item.title}
-              Address={item.Address}
+              address={item.address}
               images_path={item.images_path}
               isLive={item.isLive}
               onPress={() => navigation.navigate('ChallengeDetail', {id})}
