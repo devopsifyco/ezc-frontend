@@ -1,5 +1,6 @@
 import React, {useRef, useState} from 'react';
 import {CommonActions} from '@react-navigation/native';
+import * as Progress from 'react-native-progress';
 
 import {
   Image,
@@ -37,7 +38,7 @@ export default function LoginScreen({navigation}: NavigateType) {
     setShowPassword(prev => !prev);
   };
 
-  const {mutate} = useLogin();
+  const {mutate, status} = useLogin();
 
   const handleLogin = (fromData: any) => {
     mutate(fromData, {
@@ -64,6 +65,11 @@ export default function LoginScreen({navigation}: NavigateType) {
 
   return (
     <View style={styles.container}>
+      {status === 'pending' && (
+        <View style={styles.displayLoading}>
+          <Progress.CircleSnail color={'white'} size={65} />
+        </View>
+      )}
       <Image
         style={styles.logo}
         source={require('../assets/signin_signup/logo.png')}
