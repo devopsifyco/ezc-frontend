@@ -1,50 +1,41 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, ScrollView, StyleSheet, Image, Alert, TouchableOpacity, TextInput } from 'react-native';
-
+import { useForm, SubmitHandler, Controller } from 'react-hook-form';
+import { View, Text, ScrollView, StyleSheet, Image, Alert, TouchableOpacity, TextInput, ActivityIndicator } from 'react-native';
 import { NavigateType } from '../../../models/Navigations';
 import { useOneChallenges, useUpdateChallenges } from '../../../hooks/useChallenge';
 import ButtonChallenge from '../../../components/ButtonChallenge';
 import { Challenge } from '../../../models/InfChallenge';
+import SelectedImages from './ImageUpdate';
+
 
 import DateTimePicker, { DateTimePickerEvent } from '@react-native-community/datetimepicker';
-
-
 
 const UpdateChallenges = ({ navigation, route }: NavigateType) => {
   const { id } = route.params;
   const { data: Challenge, mutate } = useOneChallenges(id);
-  const { mutate: updateMutate } = useUpdateChallenges(id);
+  const { mutate: updateMutate } = useUpdateChallenges();
 
-  const [editedChallenge, setEditedChallenge] = useState<Challenge | undefined>(Challenge);
+  const [editedChallenge, setEditedChallenge] = useState<Challenge>(Challenge);
 
   useEffect(() => {
     mutate();
   }, [id, mutate]);
 
 
-
   const handleUpdate = async () => {
     try {
-      await updateMutate({
-        ...Challenge,
-        title,
-        description,
-        address,
-        images_path,
-        company,
-        start_time,
-        end_time,
-        points_reward
-      });
+      if (editedChallenge) {
+        await updateMutate({
+          ...editedChallenge,
+          id,
+        });
 
-
-      mutate();
+        mutate();
+      }
     } catch (error) {
       console.error('Error updating data:', error);
     }
   };
-
-
 
   const {
     title,
@@ -57,23 +48,40 @@ const UpdateChallenges = ({ navigation, route }: NavigateType) => {
     address
   } = Challenge || editedChallenge || {};
 
+
+
   const handleInputChange = (name: string, value: string) => {
-    setEditedChallenge((prevState: Challenge | undefined) => {
-      if (!prevState) {
-        return prevState;
-      }
-      return {
-        ...prevState,
-        [name]: value,
-      };
-    });
+    setEditedChallenge((prevState: any) => ({
+      ...prevState,
+      [name]: value,
+    }));
+
+    console.log("Updated Challenge:", editedChallenge);
   };
 
-  const [startTime, setStartTime] = useState<Date>(new Date());
-  const [endTime, setEndTime] = useState<Date>(new Date());
+
+  const {
+    control,
+    handleSubmit,
+    setValue,
+    watch,
+    formState: { errors },
+    
+  } = useForm<Challenge>({});
+
+  const selectedImages = watch('images_path');
+
+  const validateImages = (value: { name: string; downloadLink: string }[]) => {
+    return value.length > 0 || ' *';
+  };
+
+
+  const [startTime, setStartTime] = useState<Date>(new Date(start_time || 0));
+  const [endTime, setEndTime] = useState<Date>(new Date(end_time || 0));
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [pickerMode, setPickerMode] = useState<'date' | 'endDate' | 'startTime' | 'endTime'>('date');
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
+
 
   const showPicker = (mode: 'date' | 'endDate' | 'startTime' | 'endTime') => {
     setPickerMode(mode);
@@ -87,26 +95,28 @@ const UpdateChallenges = ({ navigation, route }: NavigateType) => {
   const handleDateChange = (event: DateTimePickerEvent, selectedDate?: Date) => {
     hidePicker();
     if (selectedDate !== undefined) {
-      setSelectedDate(selectedDate);
       if (pickerMode === 'date') {
-        setStartTime(selectedDate);
+        handleInputChange('start_time', selectedDate.toISOString());
       } else if (pickerMode === 'endDate') {
-        setEndTime(selectedDate);
+        handleInputChange('end_time', selectedDate.toISOString());
       }
     }
   };
+
 
   const handleTimeChange = (event: DateTimePickerEvent, selectedDate?: Date) => {
     hidePicker();
     if (selectedDate !== undefined) {
       setSelectedDate(selectedDate);
+      let updatedTime = selectedDate.toISOString().split('T')[1];
       if (pickerMode === 'startTime') {
-        setStartTime(selectedDate);
+        handleInputChange('start_time', `${start_time.split('T')[0]}T${updatedTime}`);
       } else if (pickerMode === 'endTime') {
-        setEndTime(selectedDate);
+        handleInputChange('end_time', `${end_time.split('T')[0]}T${updatedTime}`);
       }
     }
   };
+
 
 
   return (
@@ -126,6 +136,29 @@ const UpdateChallenges = ({ navigation, route }: NavigateType) => {
             <View style={styles.mediaContainer}>
               <Text style={styles.titleMedium}>Attached Photos and Videos</Text>
             </View>
+            <Controller
+              control={control}
+              render={({ field }) => (
+                <SelectedImages
+                  imageList={images_path}
+                  setSelectedImage={(index: number, uri: string) => {
+                    const updatedImages = [...selectedImages];
+                    updatedImages[index] = { name: 'NewName', downloadLink: uri };
+                    setValue('images_path', updatedImages);
+                  }}
+                  removeImage={(index: number) => {
+                    const updatedImages = [...selectedImages];
+                    updatedImages.splice(index, 1);
+                    setValue('images_path', updatedImages);
+                  }}
+                  clearImages={() => setValue('images_path', [])}
+                  loadingComponent={<ActivityIndicator />} 
+                />
+              )}
+              name="images_path"
+              defaultValue={[]}
+              rules={{ validate: validateImages }}
+            />
           </View>
 
           <View style={styles.inputContainer}>
@@ -158,6 +191,8 @@ const UpdateChallenges = ({ navigation, route }: NavigateType) => {
               placeholderTextColor={'#BDBDBD'}
               placeholder="Enter the challenges points"
               defaultValue={`${points_reward}`}
+              onChangeText={(value) => handleInputChange('points_reward', value)}
+
             />
           </View>
           <View style={styles.inputContainer}>
@@ -167,6 +202,7 @@ const UpdateChallenges = ({ navigation, route }: NavigateType) => {
               placeholder="Enter the challenges company"
               placeholderTextColor={'#BDBDBD'}
               defaultValue={company}
+              onChangeText={(value) => handleInputChange('company', value)}
             />
           </View>
         </View>
@@ -182,7 +218,7 @@ const UpdateChallenges = ({ navigation, route }: NavigateType) => {
               style={styles.formInputTime}
               onPress={() => showPicker('date')}>
               <Text style={styles.titleSmall}>
-                {new Date(start_time).toDateString()}
+                {new Date(editedChallenge?.start_time || start_time).toDateString()}
               </Text>
             </TouchableOpacity>
           </View>
@@ -192,19 +228,29 @@ const UpdateChallenges = ({ navigation, route }: NavigateType) => {
               style={styles.formInputTime}
               onPress={() => showPicker('endDate')}>
               <Text style={styles.titleSmall}>
-                {new Date(end_time).toDateString()}
+                {new Date(editedChallenge?.end_time || end_time).toDateString()}
               </Text>
             </TouchableOpacity>
           </View>
         </View>
+
+        {/* ---------------Time---------- */}
         <View style={styles.rowContainer1}>
           <View style={styles.formContainerDateTime}>
             <Text style={styles.titleMedium}>Start Time</Text>
             <TouchableOpacity
               style={styles.formInputTime}
-              onPress={() => showPicker('startTime')}>
+              onPress={() => {
+                console.log('Showing Start Time picker');
+                showPicker('startTime');
+              }}>
               <Text style={styles.titleSmall}>
-                {startTime.toTimeString().slice(0, 5)}
+                {new Date(editedChallenge?.start_time || startTime).toLocaleTimeString([], {
+                  hour: '2-digit',
+                  minute: '2-digit',
+                  hour12: false, // Use 24-hour format
+                  timeZone: 'Asia/Ho_Chi_Minh', // Set the time zone to Vietnam
+                })}
               </Text>
             </TouchableOpacity>
           </View>
@@ -212,37 +258,42 @@ const UpdateChallenges = ({ navigation, route }: NavigateType) => {
             <Text style={styles.titleMedium}>End Time</Text>
             <TouchableOpacity
               style={styles.formInputTime}
-              onPress={() => showPicker('endTime')}>
+              onPress={() => {
+                console.log('Showing End Time picker');
+                showPicker('endTime');
+              }}>
               <Text style={styles.titleSmall}>
-                {endTime.toTimeString().slice(0, 5)}
+                {new Date(editedChallenge?.start_time || startTime).toLocaleTimeString([], {
+                  hour: '2-digit',
+                  minute: '2-digit',
+                  hour12: false, // Use 24-hour format
+                  timeZone: 'Asia/Ho_Chi_Minh', // Set the time zone to Vietnam
+                })}
               </Text>
             </TouchableOpacity>
           </View>
         </View>
+
         {showDatePicker && (
           <DateTimePicker
             value={selectedDate}
-            onChange={
-              pickerMode === 'date' || pickerMode === 'endDate'
-                ? handleDateChange
-                : handleTimeChange
-            }
-            mode={
-              pickerMode === 'date' || pickerMode === 'endDate' ? 'date' : 'time'
-            }
+            onChange={pickerMode === 'date' || pickerMode === 'endDate' ? handleDateChange : handleTimeChange}
+            mode={pickerMode === 'date' || pickerMode === 'endDate' ? 'date' : 'time'}
             display="default"
             onCancel={() => hidePicker()}
             onConfirm={() => hidePicker()}
           />
         )}
+
         <View style={styles.inputContainer}>
           <Text style={styles.titleMedium}>Addreess Line</Text>
           <TextInput
             style={styles.input}
             placeholder="Enter the challenges addreess"
             placeholderTextColor="#BDBDBD"
-            onChangeText={(text) => handleInputChange('address', text)}
+            onChangeText={(value) => handleInputChange('address', value)}
             defaultValue={address}
+
           />
         </View>
 
@@ -305,7 +356,7 @@ export const styles = StyleSheet.create({
     height: 100,
   },
   mediaContainer: {
-    marginVertical:20
+    marginVertical: 20
   },
   viewChoose: {
     width: 320,

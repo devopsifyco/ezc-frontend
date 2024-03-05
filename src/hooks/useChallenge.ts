@@ -6,7 +6,6 @@ import { Challenge } from '../models/InfChallenge';
 
 const API_ALLCHALLENGE = `${EZCHALLENG_API}/challenges`;
 const API_CHALLENGES = `${EZCHALLENG_API}/challenge`;
-const API_UPDATECHALLENS = `${EZCHALLENG_API}/infor`
 
 export function useGetAllChallenges() {
   const getAllChallenges = useMutation({
@@ -82,15 +81,13 @@ export function useOneChallenges(_id: string) {
   return { ...getOneChallenge };
 }
 
-export function useUpdateChallenges(_id: string) {
-  const queryClient = useQueryClient();
-  
+export function useUpdateChallenges( ) {
   const getUpdateChallenge = useMutation({
     mutationKey: ['UpdateChallenge'], 
     mutationFn: async (params: Challenge) => {
       try {
         const token = await AsyncStorage.getItem('accessToken');
-        const res = await axios.put(`${API_UPDATECHALLENS}?id=${_id}`, params, {
+        const res = await axios.put(`${API_CHALLENGES}/update`, params, {
           headers: {
             'Content-Type': 'application/json',
             Authorization: `Bearer ${token}`,
@@ -98,6 +95,7 @@ export function useUpdateChallenges(_id: string) {
         });
         return res.data;
       } catch (error) {
+        console.error('Error updating challenge:', error);
         throw error;
       }
     },
