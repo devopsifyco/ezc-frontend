@@ -5,25 +5,28 @@ import { EZCHALLENG_API } from '../api/endPoint';
 import { Alert } from 'react-native';
 
 export function useUpdateUserProfile() {
-  const getUpdateUserProfile = useMutation({
+  const updateUserProfile = useMutation({
     mutationKey: ['user'],
-    mutationFn: async () => {
+    mutationFn: async (newData) => {
+      try {
+        const token = await AsyncStorage.getItem('accessToken');
+        console.log(token);
 
-      const token = await AsyncStorage.getItem('accessToken');
-      console.log(token);
-      const res = await axios.put(`${EZCHALLENG_API}/user/update`, {
-        headers: {
-          'Content-Type': `application/json`,
-          Authorization: `Bearer ${token}`,
-        },
-      });
-      return res.data;
+        const res = await axios.put(`${EZCHALLENG_API}/user/update`, newData, {
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+        });
 
+        return res.data;
+      } catch (error) {
+        throw new Error('Failed to update user profile');
+      }
     },
     onSuccess: () => console.log('Edit successfully'),
-    onError: (error) => Alert.alert(error.message)
-
+    onError: (error) => Alert.alert('Error', error.message),
   });
 
-  return { ...getUpdateUserProfile };
+  return { ...updateUserProfile };
 }

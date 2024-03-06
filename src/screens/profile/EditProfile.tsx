@@ -7,7 +7,8 @@ import {
   Image,
   TouchableOpacity,
 } from 'react-native';
-import {launchImageLibrary, ImageLibraryOptions} from 'react-native-image-picker';
+import { Alert, ActivityIndicator } from 'react-native';
+import { launchImageLibrary} from 'react-native-image-picker';
 import LinearGradient from 'react-native-linear-gradient';
 import { useUpdateUserProfile } from '../../hooks/useUser';
 import { DataProfile } from '../../models/Profile';
@@ -15,6 +16,7 @@ import { NavigateType } from '../../models/Navigations';
 
 export default function EditProfile({
   route,
+  navigation,
 }: {
   route: { params: { DATA: DataProfile } };
   navigation: NavigateType;
@@ -26,9 +28,10 @@ export default function EditProfile({
     location: DATA.location,
     about_me: DATA.about_me,
     email: DATA.email,
-    image: { downloadLink: DATA.image || '' },
+    image: DATA.image || '',
   });
-  const { mutate } = useUpdateUserProfile();
+  const { mutate, isLoading } = useUpdateUserProfile();
+
   const handleImagePicker = () => {
     const options = {
       title: 'Select Avatar',
@@ -37,29 +40,36 @@ export default function EditProfile({
         path: 'images',
       },
     };
-  
+
     launchImageLibrary(options, (response) => {
       console.log('ImagePicker Response: ', response);
-  
+
       if (response.assets && response.assets.length > 0) {
         const selectedUri = response.assets[0].uri;
-        setNewData((prev) => ({ ...prev, avatar: { downloadLink: selectedUri } }));
+        setNewData((prev) => ({ ...prev, image: selectedUri }));
       } else {
         console.log('User cancelled image picker or there was an error');
       }
     });
   };
-  const handleUpdate = () => {
-    console.log(newData);
 
-    mutate(newData);
+  const handleUpdate = async () => {
+    console.log("Data to be sent to the server:", newData);
+    try {
+      await mutate(newData);
+      console.log('Update successful');
+      // navigation.goBack();
+    } catch (error) {
+      console.error('Update failed', error);
+      Alert.alert('Error', 'Failed to update user profile');
+    }
   };
 
   return (
     <View style={styles.container}>
       <View style={styles.formInput}>
         <View style={styles.displayCenter}>
-          <Image source={{ uri: newData.image.downloadLink }} style={styles.profileImage} />
+          <Image source={{ uri: newData.image || DATA?.avatar.downloadLink }} style={styles.profileImage} />
           <TouchableOpacity onPress={handleImagePicker}>
             <Image
               source={require('../../assets/icons/edit-profile.png')}
@@ -108,7 +118,11 @@ export default function EditProfile({
             style={styles.button}
           >
             <TouchableOpacity onPress={handleUpdate}>
-              <Text style={styles.textButton}>Update</Text>
+              {isLoading ? (
+                <ActivityIndicator color="#fff" />
+              ) : (
+                <Text style={styles.textButton}>Update</Text>
+              )}
             </TouchableOpacity>
           </LinearGradient>
         </View>

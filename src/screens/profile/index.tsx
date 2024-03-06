@@ -63,7 +63,7 @@ export default function ProfileScreen({ navigation }: NavigateType) {
         </TouchableOpacity>
       </View>
       <View style={styles.profile}>
-        <Image source={{ uri: DATA?.avatar.downloadLink }} style={styles.profileImage} />
+      <Image source={{ uri: DATA?.avatar.downloadLink }} style={styles.profileImage} />
         <Text style={styles.profileName}>{DATA?.username}</Text>
         <Text style={styles.profileName}>{DATA?.email}</Text>
         <View style={styles.numberStatus}>
