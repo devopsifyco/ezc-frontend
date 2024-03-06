@@ -16,6 +16,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+      - name: create-appcenter-config
+        id: create-appcenter-config
+        uses: jsdaniell/create-json@v1.2.3
+        with:
+          name: "appcenter-config.json"
+          json: ${{ secrets.APP_CENTER_APP_SECRET }}
+          dir: 'android/app/src/main/assets/'
+
       - name: Install Java
         uses: actions/setup-java@v4
         with:
@@ -44,11 +52,11 @@ jobs:
       #     SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
       #     SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
 
-      - name: Upload Artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: Debug Apk
-          path: android/app/build/outputs/apk/debug/app-debug.apk
+      # - name: Upload Artifact
+      #   uses: actions/upload-artifact@v4
+      #   with:
+      #     name: Debug Apk
+      #     path: android/app/build/outputs/apk/debug/app-debug.apk
 
       - name: upload Artifact to App Center
         uses: wzieba/AppCenter-Github-Action@v1
