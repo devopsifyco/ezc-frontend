@@ -7,15 +7,17 @@ import { Challenge } from '../models/InfChallenge';
 const API_ALLCHALLENGE = `${EZCHALLENG_API}/challenges`;
 const API_CHALLENGES = `${EZCHALLENG_API}/challenge`;
 
+
+//  --------------get all list challenge ----------------------
 export function useGetAllChallenges() {
   const getAllChallenges = useMutation({
-    mutationKey: ['challenges'],
+    mutationKey: ['challengesList'],
     mutationFn: async () => {
       try {
         const token = await AsyncStorage.getItem('accessToken');
         const res = await axios.get(API_ALLCHALLENGE, {
           headers: {
-            'Content-Type': `application/json`,
+            'Content-Type': 'application/json',
             Authorization: `Bearer ${token}`,
           },
         });
@@ -25,11 +27,14 @@ export function useGetAllChallenges() {
         throw error;
       }
     },
-    onSuccess: () => console.log('Request successful'),
+    onSuccess: () => console.log('Get all challenge successful'),
   });
 
   return { ...getAllChallenges };
 }
+
+
+//  -----------get all list challenge pending ---------------------
 
 export function useGetAllChallengesPending() {
   const getAllChallengesPending = useMutation({
@@ -49,11 +54,70 @@ export function useGetAllChallengesPending() {
         throw error;
       }
     },
-    onSuccess: () => console.log('Request successful'),
+    onSuccess: () => console.log('Get challenge pending successful'),
   });
 
   return { ...getAllChallengesPending };
 }
+
+
+//  -----------get all list challenge approve -------------------
+
+
+export function useGetAllChallengesApproved() {
+  const getAllChallengesApproved = useMutation({
+    mutationKey: ['challengesApproved'],
+    mutationFn: async () => {
+      try {
+        const token = await AsyncStorage.getItem('accessToken');
+        const res = await axios.get(`${API_CHALLENGES}/status/approved`, {
+          headers: {
+            'Content-Type': `application/json`,
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        return res.data;
+      } catch (error) {
+        console.error('Error fetching challenges approved:', error);
+        throw error;
+      }
+    },
+    onSuccess: () => console.log('Get challenge approved successful'),
+  });
+
+  return { ...getAllChallengesApproved };
+}
+
+
+//  -----------get all list challenge rejected -----------------
+
+
+export function useGetAllChallengesRejected() {
+  const getAllChallengesRejected = useMutation({
+    mutationKey: ['challengesRejected'],
+    mutationFn: async () => {
+      try {
+        const token = await AsyncStorage.getItem('accessToken');
+        const res = await axios.get(`${API_CHALLENGES}/status/rejected`, {
+          headers: {
+            'Content-Type': `application/json`,
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        return res.data;
+      } catch (error) {
+        console.error('Error fetching challenges rejected:', error);
+        throw error;
+      }
+    },
+    onSuccess: () => console.log('Get challenge rejected successful'),
+  });
+
+  return { ...getAllChallengesRejected };
+}
+
+//  -----------get one challenge ---------------------
+
 
 
 export function useOneChallenges(_id: string) {
@@ -114,6 +178,7 @@ export function useUpdateChallenges( ) {
 export default { 
   useGetAllChallenges, 
   useGetAllChallengesPending,
+  useGetAllChallengesApproved,
   useOneChallenges,
   useUpdateChallenges
 

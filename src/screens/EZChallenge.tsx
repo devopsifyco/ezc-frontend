@@ -57,7 +57,6 @@ export default function EZChallenge() {
         <Stack.Screen name="UpdateChallenge" component={UpdateChallenges} />
         <Stack.Screen name="CreateChallenges" component={CreateChallenges} />
       </Stack.Group>
-      
     </Stack.Navigator>
   );
 }

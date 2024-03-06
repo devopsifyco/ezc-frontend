@@ -1,79 +1,65 @@
-import React, { useState } from 'react';
-import { View, StyleSheet, Text, TouchableOpacity, Image, FlatList } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { View, StyleSheet, Text, TouchableOpacity, Image, FlatList, ScrollView, ActivityIndicator } from 'react-native';
 import { NavigateType } from '../../models/Navigations';
+import Moment from 'moment';
+import { useGetAllChallengesRejected } from '../../hooks/useChallenge';
+import { Challenge } from '../../models/InfChallenge';
 
 export default function RejectScreen({ navigation }: NavigateType) {
 
+  const { data: challengesRejected, mutate: mutateRejected, isPending: loadingRejected } = useGetAllChallengesRejected();
+
+  useEffect(() => {
+    mutateRejected();
+  }, [mutateRejected]);
+
+  const handlePress = (id: string) => {
+    navigation.navigate('ChallengeDetail', { id });
+  };
+
+
   return (
     <View style={styles.container}>
-      <View style={styles.listItems}>
-      <View style={styles.item}>
-            <Image
-              style={styles.image}
-              source={require('../../assets/profile/Sa.jpg')}
-            />
-            <View style={styles.detailItems}>
-              <Text style={styles.time}>Wed, Apr 30 •8:30AM - 17:30 PM</Text>
-              <View style={styles.times_group}>
-                <Text style={{ fontSize: 14, marginLeft: 5, color: "#363636" }}>
-                  <Text style={styles.detail}>Challenge: Racing event</Text>
-                </Text>
-              </View>
-              <View style={styles.times_group}>
-                    <Image source={require('../../assets/icons/locationdetail.png')} />
-                    <Text style={{
-                      fontSize: 12,
-                      color: "#363636"
-                    }}>Vo Van Kiet • Son Tra • Da Nang</Text>
+      {loadingRejected ? (
+        <ActivityIndicator size="large" color="#0000ff" />
+      ) : (
+        <ScrollView style={styles.listItems}>
+          <View style={styles.listItems}>
+            {challengesRejected?.map((challenge: Challenge, index: number) => (
+              <TouchableOpacity style={styles.item} key={index} onPress={() => handlePress(challenge._id)}>
+                <Image
+                  style={styles.image}
+                  source={{ uri: challenge.images_path[0].downloadLink }}
+                />
+                <View style={styles.detailItems}>
+                  <Text style={styles.time}>
+                    {Moment(challenge.start_time).format('ddd, MMM DD • LT')} - {Moment(challenge.end_time).format('LT')}
+                  </Text>
+                  <View style={styles.times_group}>
+                    <View style={styles.listItemDetail}>
+                      <Text style={styles.detail}>Challenge: {challenge.title}</Text>
+                      <View style={styles.times_group}>
+                        <Image source={require('../../assets/icons/locationdetail.png')} />
+                        <Text style={{
+                          fontSize: 12,
+                          color: "#363636"
+                        }}>{challenge.address}</Text>
+                      </View>
+                    </View>
+                    <View style={styles.displayCenter}>
+                      <TouchableOpacity onPress={() => (challenge.id)}>
+                        <Image source={require('../../assets/icons/Shape.png')} style={styles.editGroup} />
+                      </TouchableOpacity>
+                      <Image source={require('../../assets/icons/delete.png')} style={styles.editGroup} />
+                    </View>
                   </View>
-              <Text style={styles.hour}>2m ago.</Text>
-            </View>
+                  <Text style={styles.hour}>1m ago.</Text>
+                </View>
+              </TouchableOpacity>
+            ))}
           </View>
-          <View style={styles.item}>
-            <Image
-              style={styles.image}
-              source={require('../../assets/profile/Sa.jpg')}
-            />
-            <View style={styles.detailItems}>
-              <Text style={styles.time}>Wed, Apr 30 •8:30AM - 17:30 PM</Text>
-              <View style={styles.times_group}>
-                <Text style={{ fontSize: 14, marginLeft: 5, color: "#363636" }}>
-                  <Text style={styles.detail}>Challenge: Racing event</Text>
-                </Text>
-              </View>
-              <View style={styles.times_group}>
-                    <Image source={require('../../assets/icons/locationdetail.png')} />
-                    <Text style={{
-                      fontSize: 12,
-                      color: "#363636"
-                    }}>Vo Van Kiet • Son Tra • Da Nang</Text>
-                  </View>
-              <Text style={styles.hour}>2m ago.</Text>
-            </View>
-          </View>
-          <View style={styles.item}>
-            <Image
-              style={styles.image}
-              source={require('../../assets/profile/Sa.jpg')}
-            />
-            <View style={styles.detailItems}>
-              <Text style={styles.time}>Wed, Apr 30 •8:30AM - 17:30 PM</Text>
-              <View style={styles.times_group}>
-                <Text style={{ fontSize: 14, marginLeft: 5, color: "#363636" }}>
-                  <Text style={styles.detail}>Challenge: Racing event</Text>
-                </Text>
-              </View>
-              <View style={styles.times_group}>
-                    <Image source={require('../../assets/icons/locationdetail.png')} />
-                    <Text style={{
-                      fontSize: 12,
-                      color: "#363636"
-                    }}>Vo Van Kiet • Son Tra • Da Nang</Text>
-                  </View>
-              <Text style={styles.hour}>2m ago.</Text>
-            </View>
-          </View>
-        </View>
+        </ScrollView >
+      )}
     </View>
   );
 }
@@ -145,4 +131,10 @@ const styles = StyleSheet.create({
   listItems: {
     rowGap: 5,
   },
+  displayCenter: {
+    gap: 10,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+  }
 })

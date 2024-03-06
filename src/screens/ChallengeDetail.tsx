@@ -51,6 +51,8 @@ const ChallengeDetail = ({ navigation, route }: NavigateType) => {
   // The number of lines you want to display
   const numberOfLinesToShow = 4;
 
+  console.log("Data", Challenge)
+
 
 
   return (

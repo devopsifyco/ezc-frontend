@@ -12,7 +12,9 @@ const SeeAllChallenges = ({ navigation }: NavigateType) => {
     mutate();
   }, [mutate]);
 
-
+  const handlePress = (id: string) => {
+    navigation.navigate('ChallengeDetail', { id });
+  };
 
   return (
     <View style={styles.container}>
@@ -31,15 +33,18 @@ const SeeAllChallenges = ({ navigation }: NavigateType) => {
           contentContainerStyle={{ flexGrow: 1 }}
           renderItem={({ item, index }) => (
             <ListCard
+              id={item._id}
               key={item.id ? item.id.toString() : index.toString()}
-              Days={item.Days}
+              start_time={item.start_time}
+              end_time={item.end_time}
               title={item.title}
-              Address={item.Address}
-              description={item.description}
+              company={item.company}
+              address={item.address}
               images_path={item.images_path}
               isLive={item.isLive}
-              onPress={() => navigation.navigate('ChallengeDetail')}
-              _id={item.id}
+              points_reward={item.points_reward}
+              description={item.description}
+              onPress={() => handlePress(item._id)}
             />
           )}
         />
