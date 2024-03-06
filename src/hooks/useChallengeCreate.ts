@@ -13,8 +13,8 @@ export default function useChallengeCreate() {
       const tokenUser = await AsyncStorage.getItem('accessToken');
 
       const res = await axios.post(
-        `http://192.168.102.53:4000/api/challenge/create`,
-        // `${EZCHALLENG_API}/challenge/create`,
+        // `http://192.168.102.53:4000/api/challenge/create`,
+        `${EZCHALLENG_API}/challenge/create`,
         data,
         {
           headers: {
