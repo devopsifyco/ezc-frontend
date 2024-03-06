@@ -7,7 +7,7 @@ import {useNavigation} from '@react-navigation/native';
 import Button from '../../../components/Button';
 
 type Input = {
-  images_path: string[];
+  image: string[];
   title: string;
   description: string;
   points_reward: string;
@@ -24,7 +24,7 @@ const StepOneScreen = () => {
     formState: {errors},
   } = useForm<Input>();
 
-  const selectedImages = watch('images_path', []);
+  const selectedImages = watch('image', []);
 
   const validateImages = (value: string[]) => {
     return value.length > 0 || ' *';
@@ -40,8 +40,8 @@ const StepOneScreen = () => {
         <View style={styles.mediaContainer}>
           <View style={styles.displayError}>
             <Text style={styles.titleLarge}>Attached Photos or Videos</Text>
-            {errors.images_path && (
-              <Text style={styles.errorText}>{errors.images_path.message}</Text>
+            {errors.image && (
+              <Text style={styles.errorText}>{errors.image.message}</Text>
             )}
           </View>
         </View>
@@ -50,23 +50,24 @@ const StepOneScreen = () => {
           render={() => (
             <SelectedImages
               imageList={selectedImages}
-              setSelectedImage={(index: number, uri: string) => {
+              setSelectedImage={(index: number, asset: any) => {
                 const updatedImages = [...selectedImages];
-                updatedImages[index] = uri;
+                console.log('asset', asset, asset.constructor.name)
+                updatedImages[index] = asset;
                 setValue(
-                  'images_path',
+                  'image',
                   updatedImages.filter(image => image !== ''),
                 );
               }}
               removeImage={(index: number) => {
                 const updatedImages = [...selectedImages];
                 updatedImages.splice(index, 1);
-                setValue('images_path', updatedImages);
+                setValue('image', updatedImages);
               }}
-              clearImages={() => setValue('images_path', [])}
+              clearImages={() => setValue('image', [])}
             />
           )}
-          name="images_path"
+          name="image"
           defaultValue={[]}
           rules={{validate: validateImages}}
         />

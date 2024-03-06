@@ -9,12 +9,12 @@ export default function useChallengeCreate() {
 
   const challengeCreate = useMutation({
     mutationKey: ['challengeCreate'],
-    mutationFn: async ({data}: any) => {
+    mutationFn: async ({ data }: any) => {    
       const tokenUser = await AsyncStorage.getItem('accessToken');
-      console.log(tokenUser);
 
       const res = await axios.post(
-        `http://192.168.9.242:4000/api/challenge/create`,
+        `http://192.168.102.53:4000/api/challenge/create`,
+        // `${EZCHALLENG_API}/challenge/create`,
         data,
         {
           headers: {
@@ -26,7 +26,7 @@ export default function useChallengeCreate() {
       return res.data;
     },
     onSuccess: () => {
-      //Refresh list challenges
+      Alert.alert("Create challenge successful");
       queryClient.invalidateQueries({queryKey: ['challengesList']});
     },
     onError: error => Alert.alert(error.message),

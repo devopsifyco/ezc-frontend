@@ -187,7 +187,7 @@ export const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   titleDetail: {
-    paddingTop: 10,
+    paddingTop: 100,
   },
   displayCenter: {
     justifyContent: 'center',

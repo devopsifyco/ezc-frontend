@@ -168,7 +168,7 @@ const StepTwoScreen = () => {
     console.log(combinedData);
 
     try {
-      challengeCreate(combinedData);
+      challengeCreate({ data: combinedData });
     } catch (error) {
       console.log(error);
     }
