@@ -53,7 +53,7 @@ jobs:
       - name: upload Artifact to App Center
         uses: wzieba/AppCenter-Github-Action@v1
         with:
-          appName: GreenBee/EzChallenge
+          appName: EzChallenge
           token: ${{secrets.APP_CENTER_TOKEN}}
           group: GreenBee
           file: android/app/build/outputs/apk/debug/app-debug.apk
