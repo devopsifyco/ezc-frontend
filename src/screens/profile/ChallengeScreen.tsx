@@ -68,6 +68,7 @@ export default function ChallengeScreen({ navigation }: NavigateType) {
                 </View>
               </View>
             ))}
+            
 
             {/* ------------------------------------ */}
             <View style={styles.section}>
@@ -78,7 +79,7 @@ export default function ChallengeScreen({ navigation }: NavigateType) {
               </TouchableOpacity>
             </View>
             {challengesApproved?.map((challenge: Challenge, index: number) => (
-              <View style={styles.item}>
+              <View style={styles.item} key={index}>
                 <Image
                   style={styles.image}
                   source={{ uri: challenge.images_path[0].downloadLink }}
@@ -118,7 +119,7 @@ export default function ChallengeScreen({ navigation }: NavigateType) {
               </TouchableOpacity>
             </View>
             {challengesRejected?.map((challenge: Challenge, index: number) => (
-              <View style={styles.item}>
+              <View style={styles.item} key={index}>
                 <Image
                   style={styles.image}
                   source={{ uri: challenge.images_path[0].downloadLink }}
