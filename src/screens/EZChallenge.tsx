@@ -57,7 +57,6 @@ export default function EZChallenge() {
         />
         <Stack.Screen name="CreateChallenges" component={CreateChallenges} />
       </Stack.Group>
-
       <Stack.Group screenOptions={{ headerShown: false }}>
         <Stack.Screen name="ChallengeDetail" component={ChallengeDetail} />
       </Stack.Group>

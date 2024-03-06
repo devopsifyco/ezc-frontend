@@ -58,7 +58,9 @@ export default function ChallengeScreen({ navigation }: NavigateType) {
                       </View>
                     </View>
                     <View style={styles.displayCenter}>
-                      <Image source={require('../../assets/icons/Shape.png')} style={styles.editGroup} />
+                      <TouchableOpacity onPress={() =>(challenge.id)}>
+                        <Image source={require('../../assets/icons/Shape.png')} style={styles.editGroup} />
+                      </TouchableOpacity>
                       <Image source={require('../../assets/icons/delete.png')} style={styles.editGroup} />
                     </View>
                   </View>
