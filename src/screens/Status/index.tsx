@@ -13,6 +13,7 @@ import Approve from './ApproveScreen';
 import Reject from './RejectScreen';
 
 
+
 export default function Status({ navigation, route }: any) {
     const value = route.params;
     const [selectedTab, setSelectedTab] = useState(value);

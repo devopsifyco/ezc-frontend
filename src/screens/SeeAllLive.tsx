@@ -2,7 +2,7 @@ import { StyleSheet, Text, View, Image, TouchableOpacity, FlatList } from 'react
 import react, { useEffect, useState } from 'react';
 import { NavigateType } from '../models/Navigations';
 import ListCard from '../components/ListCard';
-import {useGetAllChallenges} from '../hooks/useChallenge';
+import { useGetAllChallenges } from '../hooks/useChallenge';
 
 const SeeAllLive = ({ navigation }: NavigateType) => {
   const { data: challenges, mutate } = useGetAllChallenges();
@@ -11,6 +11,10 @@ const SeeAllLive = ({ navigation }: NavigateType) => {
     mutate();
   }, [mutate]);
 
+
+  const handlePress = (id: string) => {
+    navigation.navigate('ChallengeDetail', { id });
+  };
 
   return (
     <View style={styles.container}>
@@ -29,13 +33,18 @@ const SeeAllLive = ({ navigation }: NavigateType) => {
           contentContainerStyle={{ flexGrow: 1 }}
           renderItem={({ item, index }) => (
             <ListCard
-              Days={item.Days}
+              id={item._id}
+              key={item.id ? item.id.toString() : index.toString()}
+              start_time={item.start_time}
+              end_time={item.end_time}
               title={item.title}
+              company={item.company}
               address={item.address}
               images_path={item.images_path}
               isLive={item.isLive}
-              key={item.id ? item.id.toString() : index.toString()}
-              onPress={() => navigation.navigate('ChallengeDetail')}
+              points_reward={item.points_reward}
+              description={item.description}
+              onPress={() => handlePress(item._id)}
             />
           )}
         />

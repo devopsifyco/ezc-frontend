@@ -1,101 +1,62 @@
-import React, { useState } from 'react';
-import { View, StyleSheet, Text, TouchableOpacity, Image, FlatList } from 'react-native';
+import React, { useEffect } from 'react';
+import { View, StyleSheet, Text, TouchableOpacity, Image, ScrollView, ActivityIndicator } from 'react-native';
 import { NavigateType } from '../../models/Navigations';
+import { useGetAllChallengesApproved } from '../../hooks/useChallenge';
+import Moment from 'moment';
+import { Challenge } from '../../models/InfChallenge';
 
 export default function ApproveScreen({ navigation }: NavigateType) {
+  
+  const { data: challengesApproved, mutate: mutateApproved, isPending: loadingApproved } = useGetAllChallengesApproved();
+
+  useEffect(() => {
+
+    mutateApproved();
+
+  }, [mutateApproved]);
 
   return (
     <View style={styles.container}>
-      <View style={styles.listItems}>
-      <View style={styles.item}>
-            <Image
-              style={styles.image}
-              source={require('../../assets/images/Green.png')}
-            />
-            <View style={styles.detailItems}>
-              <Text style={styles.time}>Wed, Apr 15 •8:30AM - 17:30 PM</Text>
-              <View style={styles.times_group}>
-                <Text style={{ fontSize: 14, marginLeft: 5, color: "#363636" }}>
-                  <Text style={styles.detail}>Challenge:Protect the green fores...</Text>
-                </Text>
-              </View>
-              <View style={styles.times_group}>
-                    <Image source={require('../../assets/icons/locationdetail.png')} />
-                    <Text style={{
-                      fontSize: 12,
-                      color: "#363636"
-                    }}>Vo Nguyen Giap • Son Tra • Da Nang</Text>
+      {loadingApproved ? (
+        <ActivityIndicator size="large" color="#0000ff" />
+      ) : (
+        <ScrollView style={styles.listItems}>
+          <View style={styles.listItems}>
+            {challengesApproved?.map((challenge: Challenge, index: number) => (
+              <View style={styles.item} key={index}>
+                <Image
+                  style={styles.image}
+                  source={{ uri: challenge.images_path[0].downloadLink }}
+                />
+                <View style={styles.detailItems}>
+                  <Text style={styles.time}>
+                    {Moment(challenge.start_time).format('ddd, MMM DD • LT')} - {Moment(challenge.end_time).format('LT')}
+                  </Text>
+                  <View style={styles.times_group}>
+                    <View style={styles.listItemDetail}>
+                      <Text style={styles.detail}>Challenge: {challenge.title}</Text>
+                      <View style={styles.times_group}>
+                        <Image source={require('../../assets/icons/locationdetail.png')} />
+                        <Text style={{
+                          fontSize: 12,
+                          color: "#363636"
+                        }}>{challenge.address}</Text>
+                      </View>
+                    </View>
+                    <View style={styles.displayCenter}>
+                      <TouchableOpacity onPress={() => (challenge.id)}>
+                        <Image source={require('../../assets/icons/Shape.png')} style={styles.editGroup} />
+                      </TouchableOpacity>
+                      <Image source={require('../../assets/icons/delete.png')} style={styles.editGroup} />
+                    </View>
                   </View>
-              <Text style={styles.hour}>1m ago.</Text>
-            </View>
-          </View>
-          <View style={styles.item}>
-            <Image
-              style={styles.image}
-              source={require('../../assets/images/Green.png')}
-            />
-            <View style={styles.detailItems}>
-              <Text style={styles.time}>Wed, Apr 01 •9:30AM - 17:30 PM</Text>
-              <View style={styles.times_group}>
-                <Text style={{ fontSize: 14, marginLeft: 5, color: "#363636" }}>
-                  <Text style={styles.detail}>Challenge:Protect the green fores...</Text>
-                </Text>
+                  <Text style={styles.hour}>1m ago.</Text>
+                </View>
               </View>
-              <View style={styles.times_group}>
-                    <Image source={require('../../assets/icons/locationdetail.png')} />
-                    <Text style={{
-                      fontSize: 12,
-                      color: "#363636"
-                    }}>Vo Nguyen Giap • Son Tra • Da Nang</Text>
-                  </View>
-              <Text style={styles.hour}>1m ago.</Text>
-            </View>
+            ))}
           </View>
-          <View style={styles.item}>
-            <Image
-              style={styles.image}
-              source={require('../../assets/images/Green.png')}
-            />
-            <View style={styles.detailItems}>
-              <Text style={styles.time}>Wed, Apr 01 •9:30AM - 17:30 PM</Text>
-              <View style={styles.times_group}>
-                <Text style={{ fontSize: 14, marginLeft: 5, color: "#363636" }}>
-                  <Text style={styles.detail}>Challenge:Protect the green fores...</Text>
-                </Text>
-              </View>
-              <View style={styles.times_group}>
-                    <Image source={require('../../assets/icons/locationdetail.png')} />
-                    <Text style={{
-                      fontSize: 12,
-                      color: "#363636"
-                    }}>Vo Nguyen Giap • Son Tra • Da Nang</Text>
-                  </View>
-              <Text style={styles.hour}>1m ago.</Text>
-            </View>
-          </View>
-          <View style={styles.item}>
-            <Image
-              style={styles.image}
-              source={require('../../assets/images/Green.png')}
-            />
-            <View style={styles.detailItems}>
-              <Text style={styles.time}>Wed, Apr 01 •9:30AM - 17:30 PM</Text>
-              <View style={styles.times_group}>
-                <Text style={{ fontSize: 14, marginLeft: 5, color: "#363636" }}>
-                  <Text style={styles.detail}>Challenge:Protect the green fores...</Text>
-                </Text>
-              </View>
-              <View style={styles.times_group}>
-                    <Image source={require('../../assets/icons/locationdetail.png')} />
-                    <Text style={{
-                      fontSize: 12,
-                      color: "#363636"
-                    }}>Vo Nguyen Giap • Son Tra • Da Nang</Text>
-                  </View>
-              <Text style={styles.hour}>1m ago.</Text>
-            </View>
-          </View>
-        </View>
+        </ScrollView >
+      )}
     </View>
   );
 }
@@ -167,4 +128,10 @@ const styles = StyleSheet.create({
   listItems: {
     rowGap: 5,
   },
+  displayCenter: {
+    gap: 10,
+    flexDirection: 'row',
+    justifyContent: 'center',
+    alignItems: 'center',
+  }
 })
