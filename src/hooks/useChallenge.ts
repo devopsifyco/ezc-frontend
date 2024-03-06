@@ -2,6 +2,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import axios from 'axios';
 import { EZCHALLENG_API } from '../api/endPoint';
+import { Challenge } from '../models/InfChallenge';
 
 const API_ALLCHALLENGE = `${EZCHALLENG_API}/challenges`;
 const API_CHALLENGES = `${EZCHALLENG_API}/challenge`;
@@ -143,10 +144,43 @@ export function useOneChallenges(id: string) {
 
 
 
+//  -----------delete challenge  -------------------
+
+
+export function useDeleteChallenges() {
+  const getDeleteChallenge = useMutation({
+    mutationKey: ['DeleteChallenge'], 
+    mutationFn: async (params: {id: string}) => {
+      try {
+        const token = await AsyncStorage.getItem('accessToken');
+        const res = await axios.delete(`${API_CHALLENGES}/delete`,{
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+          data: params,
+        });
+        return res.data;
+      } catch (error) {
+        console.error('Error delete challenge:', error);
+        throw error;
+      }
+    },
+    onSuccess: (data) => {
+      console.log('Delete Successful');
+    },
+  });
+
+  return { ...getDeleteChallenge };
+}
+
+
+
 export default { 
   useGetAllChallenges, 
   useGetAllChallengesPending,
   useGetAllChallengesApproved,
   useOneChallenges,
+  useDeleteChallenges
 
 }

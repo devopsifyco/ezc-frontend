@@ -3,7 +3,12 @@ import { View, Text, Image, StyleSheet, ScrollView, TouchableOpacity, ActivityIn
 
 import { NavigateType } from '../../models/Navigations';
 
-import { useGetAllChallengesPending, useGetAllChallengesApproved, useGetAllChallengesRejected } from '../../hooks/useChallenge';
+import {
+  useGetAllChallengesPending,
+  useGetAllChallengesApproved,
+  useGetAllChallengesRejected,
+  useDeleteChallenges
+} from '../../hooks/useChallenge';
 import { Challenge } from '../../models/InfChallenge';
 import Moment from 'moment';
 
@@ -12,6 +17,9 @@ export default function ChallengeScreen({ navigation }: NavigateType) {
   const { data: challengespending, mutate: mutatePending, isPending: loadingPending } = useGetAllChallengesPending();
   const { data: challengesApproved, mutate: mutateApproved, isPending: loadingApproved } = useGetAllChallengesApproved();
   const { data: challengesRejected, mutate: mutateRejected, isPending: loadingRejected } = useGetAllChallengesRejected();
+  const { mutate: deleteChallenge } = useDeleteChallenges();
+
+
 
 
   useEffect(() => {
@@ -20,10 +28,23 @@ export default function ChallengeScreen({ navigation }: NavigateType) {
     mutateRejected();
   }, [mutatePending, mutateApproved, mutateRejected]);
 
-  
+
   const handlePress = (id: string) => {
     navigation.navigate('ChallengeDetail', { id });
   };
+
+  const handleDelete = async (id: string) => {
+    try {
+      const updatedPendingChallenges = challengespending.filter(challenge => challenge._id !== id);
+  
+      mutatePending(updatedPendingChallenges);
+  
+      await deleteChallenge({ id });
+    } catch (error) {
+      console.error('Error delete challenge:', error);
+    }
+  };
+  
 
   return (
     <View style={styles.container}>
@@ -61,17 +82,20 @@ export default function ChallengeScreen({ navigation }: NavigateType) {
                       </View>
                     </View>
                     <View style={styles.displayCenter}>
-                      <TouchableOpacity onPress={() =>(challenge.id)}>
+                      <TouchableOpacity onPress={() => (challenge.id)}>
                         <Image source={require('../../assets/icons/Shape.png')} style={styles.editGroup} />
                       </TouchableOpacity>
-                      <Image source={require('../../assets/icons/delete.png')} style={styles.editGroup} />
+
+                      <TouchableOpacity onPress={() => handleDelete(challenge._id)}>
+                        <Image source={require('../../assets/icons/delete.png')} style={styles.editGroup} />
+                      </TouchableOpacity>
                     </View>
                   </View>
                   <Text style={styles.hour}>1m ago.</Text>
                 </View>
               </TouchableOpacity>
             ))}
-            
+
 
             {/* ------------------------------------ */}
             <View style={styles.section}>
