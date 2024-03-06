@@ -2,7 +2,7 @@ import { StyleSheet, Text, View, Image, TouchableOpacity, FlatList } from 'react
 import react, { useEffect, useState } from 'react';
 import { NavigateType } from '../models/Navigations';
 import ListCard from '../components/ListCard';
-import useGetAllChallenges from '../hooks/useChallenge';
+import {useGetAllChallenges} from '../hooks/useChallenge';
 
 const SeeAllLive = ({ navigation }: NavigateType) => {
   const { data: challenges, mutate } = useGetAllChallenges();
@@ -31,7 +31,7 @@ const SeeAllLive = ({ navigation }: NavigateType) => {
             <ListCard
               Days={item.Days}
               title={item.title}
-              Address={item.Address}
+              address={item.address}
               images_path={item.images_path}
               isLive={item.isLive}
               key={item.id ? item.id.toString() : index.toString()}
