@@ -20,7 +20,10 @@ export default function ChallengeScreen({ navigation }: NavigateType) {
     mutateRejected();
   }, [mutatePending, mutateApproved, mutateRejected]);
 
-
+  
+  const handlePress = (id: string) => {
+    navigation.navigate('ChallengeDetail', { id });
+  };
 
   return (
     <View style={styles.container}>
@@ -37,7 +40,7 @@ export default function ChallengeScreen({ navigation }: NavigateType) {
           </View>
           <View style={styles.listItems}>
             {challengespending?.map((challenge: Challenge, index: number) => (
-              <View style={styles.item} key={index}>
+              <TouchableOpacity style={styles.item} key={index} onPress={() => handlePress(challenge._id)}>
                 <Image
                   style={styles.image}
                   source={{ uri: challenge.images_path[0].downloadLink }}
@@ -66,8 +69,9 @@ export default function ChallengeScreen({ navigation }: NavigateType) {
                   </View>
                   <Text style={styles.hour}>1m ago.</Text>
                 </View>
-              </View>
+              </TouchableOpacity>
             ))}
+            
 
             {/* ------------------------------------ */}
             <View style={styles.section}>
@@ -78,7 +82,7 @@ export default function ChallengeScreen({ navigation }: NavigateType) {
               </TouchableOpacity>
             </View>
             {challengesApproved?.map((challenge: Challenge, index: number) => (
-              <View style={styles.item}>
+              <TouchableOpacity style={styles.item} key={index} onPress={() => handlePress(challenge._id)}>
                 <Image
                   style={styles.image}
                   source={{ uri: challenge.images_path[0].downloadLink }}
@@ -105,7 +109,7 @@ export default function ChallengeScreen({ navigation }: NavigateType) {
                   </View>
                   <Text style={styles.hour}>1m ago.</Text>
                 </View>
-              </View>
+              </TouchableOpacity>
             ))}
 
 
@@ -118,7 +122,7 @@ export default function ChallengeScreen({ navigation }: NavigateType) {
               </TouchableOpacity>
             </View>
             {challengesRejected?.map((challenge: Challenge, index: number) => (
-              <View style={styles.item}>
+              <TouchableOpacity style={styles.item} key={index} onPress={() => handlePress(challenge._id)}>
                 <Image
                   style={styles.image}
                   source={{ uri: challenge.images_path[0].downloadLink }}
@@ -145,7 +149,7 @@ export default function ChallengeScreen({ navigation }: NavigateType) {
                   </View>
                   <Text style={styles.hour}>1m ago.</Text>
                 </View>
-              </View>
+              </TouchableOpacity>
             ))}
           </View>
         </ScrollView >
