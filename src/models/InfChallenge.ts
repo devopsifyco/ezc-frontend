@@ -3,7 +3,7 @@ export interface Challenge {
     isLive: boolean;
     title: string;
     description: string;
-    Address: string;
+    address: string;
     images_path: { name: string, downloadLink: string}[];
     company:string;
     start_time: Date;
