@@ -13,6 +13,11 @@ export default function RejectScreen({ navigation }: NavigateType) {
     mutateRejected();
   }, [mutateRejected]);
 
+  const handlePress = (id: string) => {
+    navigation.navigate('ChallengeDetail', { id });
+  };
+
+
   return (
     <View style={styles.container}>
       {loadingRejected ? (
@@ -21,7 +26,7 @@ export default function RejectScreen({ navigation }: NavigateType) {
         <ScrollView style={styles.listItems}>
           <View style={styles.listItems}>
             {challengesRejected?.map((challenge: Challenge, index: number) => (
-              <View style={styles.item} key={index}>
+              <TouchableOpacity style={styles.item} key={index} onPress={() => handlePress(challenge._id)}>
                 <Image
                   style={styles.image}
                   source={{ uri: challenge.images_path[0].downloadLink }}
@@ -50,7 +55,7 @@ export default function RejectScreen({ navigation }: NavigateType) {
                   </View>
                   <Text style={styles.hour}>1m ago.</Text>
                 </View>
-              </View>
+              </TouchableOpacity>
             ))}
           </View>
         </ScrollView >
