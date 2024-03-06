@@ -16,6 +16,14 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import {useNavigation} from '@react-navigation/native';
 
+interface DataProps {
+  icon: any, 
+  offsetX: any, 
+  offsetY: any, 
+  text: any, 
+  screen: any
+}
+
 export default function PlusButton() {
   const navigation = useNavigation();
   const [isExpanded, setIsExpanded] = useState(false);
@@ -59,11 +67,36 @@ export default function PlusButton() {
     }
   };
 
+  const closeExpansion = () => {
+    if (isExpanded) {
+      setIsExpanded(false);
+
+      const closingDuration = 200;
+
+      Animated.sequence([
+        Animated.timing(mode, {
+          toValue: 0,
+          duration: closingDuration,
+          useNativeDriver: false,
+        }),
+        Animated.timing(buttonSize, {
+          toValue: 1,
+          duration: closingDuration,
+          useNativeDriver: false,
+        }),
+      ]).start();
+    }
+  };
+
+
   const renderSecondaryButton = (icon, offsetX, offsetY, text, screen) => (
     <Animated.View style={{position: 'absolute', left: offsetX, top: offsetY}}>
       <TouchableOpacity
         style={styles.secondaryButton}
-        onPress={() => navigation.navigate(screen)}>
+        onPress={() => {
+          navigation.navigate(screen);
+          closeExpansion();
+        }}>
         <FontAwesomeIcon icon={icon} color="#FFFFFF" />
         <Text style={styles.buttonText}>{text}</Text>
       </TouchableOpacity>
@@ -77,7 +110,7 @@ export default function PlusButton() {
 
   const thermometerY = mode.interpolate({
     inputRange: [0, 1],
-    outputRange: [-50, -100],
+    outputRange: [-50, -110],
   });
 
   const timeX = mode.interpolate({
@@ -97,7 +130,7 @@ export default function PlusButton() {
 
   const pulseY = mode.interpolate({
     inputRange: [0, 1],
-    outputRange: [-50, -100],
+    outputRange: [-50, -110],
   });
 
   const rotation = mode.interpolate({
@@ -159,13 +192,14 @@ const styles = StyleSheet.create({
     borderColor: '#FFFFFF',
   },
   secondaryButton: {
-    position: 'absolute',
     alignItems: 'center',
     justifyContent: 'center',
     width: 65,
     height: 65,
     borderRadius: 28,
     backgroundColor: '#FF890B',
+    right: 8,
+    
   },
   buttonText: {
     color: '#FFFFFF',

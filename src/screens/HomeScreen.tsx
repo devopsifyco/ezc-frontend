@@ -6,6 +6,7 @@ import {
   Image,
   TouchableOpacity,
   FlatList,
+  ScrollView,
 } from 'react-native';
 
 import LiveCard from '../components/LiveCard';
@@ -46,75 +47,78 @@ const HomeScreen: React.FC<NavigateType> = ({ navigation }) => {
           <Image source={require('../assets/icons/notification.png')} />
         </TouchableOpacity>
       </View>
+      
+      <ScrollView>
 
-      <View style={{ height: 150 }}>
-        <Slides />
-      </View>
+        <View style={{ height: 150 }}>
+          <Slides />
+        </View>
 
-      <View style={styles.section}>
-        <Text style={styles.sectionName}>Processing</Text>
-        <TouchableOpacity style={styles.seeAll}>
-          <Text
-            onPress={() => navigation.navigate('SeeAllLive')}
-          >See All</Text>
-          <Image source={require('../assets/icons/iconSeeAll.png')} />
-        </TouchableOpacity>
-      </View>
-      <View>
-        <FlatList
-          data={challenges}
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          keyExtractor={(item, index) => index.toString()}
-          renderItem={({ item, index }) => (
-            <LiveCard
-              id={item._id}
-              key={item.id ? item.id.toString() : index.toString()}
-              start_time={item.start_time}
-              end_time={item.end_time}
-              title={item.title}
-              company={item.company}
-              Address={item.Address}
-              images_path={item.images_path}
-              isLive={item.isLive}
-              points_reward={item.points_reward}
-              description={item.description}
-              onPress={() => handlePress(item._id)}
-              
-            />
-          )}
-        />
-      </View>
+        <View style={styles.section}>
+          <Text style={styles.sectionName}>Processing</Text>
+          <TouchableOpacity style={styles.seeAll}>
+            <Text
+              onPress={() => navigation.navigate('SeeAllLive')}
+            >See All</Text>
+            <Image source={require('../assets/icons/iconSeeAll.png')} />
+          </TouchableOpacity>
+        </View>
+        <View>
+          <FlatList
+            data={challenges}
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            keyExtractor={(item, index) => index.toString()}
+            renderItem={({ item, index }) => (
+              <LiveCard
+                id={item._id}
+                key={item.id ? item.id.toString() : index.toString()}
+                start_time={item.start_time}
+                end_time={item.end_time}
+                title={item.title}
+                company={item.company}
+                Address={item.Address}
+                images_path={item.images_path}
+                isLive={item.isLive}
+                points_reward={item.points_reward}
+                description={item.description}
+                onPress={() => handlePress(item._id)}
+                
+              />
+            )}
+          />
+        </View>
 
-      <View style={styles.section}>
-        <Text style={styles.sectionName}>Challenges</Text>
-        <TouchableOpacity style={styles.seeAll}>
-          <Text
-            onPress={() => navigation.navigate('SeeAllChallange')}
-          >See All</Text>
-          <Image source={require('../assets/icons/iconSeeAll.png')} />
-        </TouchableOpacity>
-      </View>
-      <View style={{flex:1}}>
-        <FlatList
-          data={challenges}
-          showsVerticalScrollIndicator={false}
-          keyExtractor={(item, index) => index.toString()}
-          contentContainerStyle={{ flexGrow: 1 }}
-          renderItem={({ item, index }) => (
-            <ListCard
-              id={item._id}
-              key={item.id ? item.id.toString() : index.toString()}
-              Days={item.Days}
-              title={item.title}
-              Address={item.Address}
-              images_path={item.images_path}
-              isLive={item.isLive}
-              onPress={() => navigation.navigate('ChallengeDetail', {id})}
-            />
-          )}
-        />
-      </View>
+        <View style={styles.section}>
+          <Text style={styles.sectionName}>Challenges</Text>
+          <TouchableOpacity style={styles.seeAll}>
+            <Text
+              onPress={() => navigation.navigate('SeeAllChallange')}
+            >See All</Text>
+            <Image source={require('../assets/icons/iconSeeAll.png')} />
+          </TouchableOpacity>
+        </View>
+        <View style={{flex:1}}>
+          <FlatList
+            data={challenges}
+            showsVerticalScrollIndicator={false}
+            keyExtractor={(item, index) => index.toString()}
+            contentContainerStyle={{ flexGrow: 1 }}
+            renderItem={({ item, index }) => (
+              <ListCard
+                id={item._id}
+                key={item.id ? item.id.toString() : index.toString()}
+                Days={item.Days}
+                title={item.title}
+                Address={item.Address}
+                images_path={item.images_path}
+                isLive={item.isLive}
+                onPress={() => navigation.navigate('ChallengeDetail', {id})}
+              />
+            )}
+          />
+        </View>
+      </ScrollView>
 
     </View>
 
