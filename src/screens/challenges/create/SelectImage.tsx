@@ -7,8 +7,8 @@ import {
 } from 'react-native-image-picker';
 
 export interface SelectedImagesProps {
-  imageList: string[];
-  setSelectedImage: (index: number, uri: string) => void;
+  imageList: any[];
+  setSelectedImage: (index: number, asset: any) => void;
   removeImage?: (index: number) => void;
   clearImages?: () => void;
 }
@@ -22,19 +22,16 @@ const SelectedImages: React.FC<SelectedImagesProps> = ({
   const imagePickerHandler = () => {
     let options: ImageLibraryOptions = {
       mediaType: 'photo',
-      includeBase64: false,
-      maxHeight: 200,
-      maxWidth: 200,
+      includeBase64: true,
+      maxHeight: 2000,
+      maxWidth: 2000,
     };
 
     launchImageLibrary(options, response => {
       if (response.assets) {
-        const newImages: string[] = response.assets.map(
-          (asset: Asset) => asset.uri,
+        response.assets.forEach( (asset: Asset, index: number) =>
+          setSelectedImage(index + imageList.length, asset)
         );
-        newImages.forEach((uri, index) => {
-          setSelectedImage(index + imageList.length, uri);
-        });
       } else {
         console.log('No images selected.');
       }
@@ -53,7 +50,7 @@ const SelectedImages: React.FC<SelectedImagesProps> = ({
         <TouchableOpacity
           style={styles.fullWidthContainer}
           onPress={() => setSelectedImage(0, imageList[0])}>
-          <Image source={{uri: imageList[0]}} style={styles.fullWidthImage} />
+          <Image source={{uri: imageList[0].uri}} style={styles.fullWidthImage} />
           {removeImage && (
             <TouchableOpacity
               style={styles.removeButtonFull}
@@ -72,7 +69,7 @@ const SelectedImages: React.FC<SelectedImagesProps> = ({
           <View key={index + 1}>
             <TouchableOpacity
               onPress={() => setSelectedImage(index + 1, image)}>
-              <Image source={{uri: image}} style={styles.smallImage} />
+              <Image source={{uri: image.uri}} style={styles.smallImage} />
             </TouchableOpacity>
             {removeImage && (
               <TouchableOpacity
@@ -131,7 +128,7 @@ const styles = StyleSheet.create({
   },
   text: {
     fontSize: 16,
-    color: '#216C53',
+    color: 'white',
     fontWeight: 'bold',
   },
   addImageButton: {
@@ -147,7 +144,7 @@ const styles = StyleSheet.create({
   iconPlus: {
     height: 20,
     width: 20,
-    tintColor: '#216C53',
+    tintColor: 'green',
   },
   displayCenter: {
     paddingTop: 10,
