@@ -11,13 +11,13 @@ const API_CHALLENGES = `${EZCHALLENG_API}/challenge`;
 //  --------------get all list challenge ----------------------
 export function useGetAllChallenges() {
   const getAllChallenges = useMutation({
-    mutationKey: ['challenges'],
+    mutationKey: ['challengesList'],
     mutationFn: async () => {
       try {
         const token = await AsyncStorage.getItem('accessToken');
         const res = await axios.get(API_ALLCHALLENGE, {
           headers: {
-            'Content-Type': `application/json`,
+            'Content-Type': 'application/json',
             Authorization: `Bearer ${token}`,
           },
         });

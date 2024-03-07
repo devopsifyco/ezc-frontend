@@ -187,7 +187,7 @@ export const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
   titleDetail: {
-    paddingTop: 10,
+    paddingTop: 100,
   },
   displayCenter: {
     justifyContent: 'center',
@@ -236,6 +236,16 @@ export const styles = StyleSheet.create({
   actionButton: {
     flexDirection: 'row',
     justifyContent: 'space-between',
+  },
+  displayLoading: {
+    position: 'absolute',
+    zIndex: 12,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#2C3550',
+    opacity: 0.6,
+    width: '100%',
+    height: '100%',
   },
 });
 

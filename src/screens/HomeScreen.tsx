@@ -6,6 +6,7 @@ import {
   Image,
   TouchableOpacity,
   FlatList,
+  ScrollView,
 } from 'react-native';
 
 import LiveCard from '../components/LiveCard';
@@ -46,9 +47,11 @@ const HomeScreen: React.FC<NavigateType> = ({ navigation }) => {
         </TouchableOpacity>
       </View>
 
-      <View style={{ height: 150 }}>
-        <Slides />
-      </View>
+      <ScrollView>
+
+        <View style={{ height: 150 }}>
+          <Slides />
+        </View>
 
       <View style={styles.section}>
         <Text style={styles.sectionName}>Processing</Text>
@@ -118,6 +121,7 @@ const HomeScreen: React.FC<NavigateType> = ({ navigation }) => {
           )}
         />
       </View>
+      </ScrollView>
 
     </View>
 
