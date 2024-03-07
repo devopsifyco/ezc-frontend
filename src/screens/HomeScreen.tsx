@@ -63,7 +63,6 @@ const HomeScreen: React.FC<NavigateType> = ({ navigation }) => {
         </TouchableOpacity>
       </View>
       <View>
-        
         <FlatList
           data={challenges}
           horizontal
