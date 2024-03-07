@@ -1,34 +1,52 @@
 import React, { useEffect, useState } from 'react';
-import { View, StyleSheet, Text, TouchableOpacity, Image, ScrollView, ActivityIndicator} from 'react-native';
+import { View, StyleSheet, Text, TouchableOpacity, Image, ScrollView, ActivityIndicator } from 'react-native';
 import Moment from 'moment';
 import { NavigateType } from '../../models/Navigations';
-import { useGetAllChallengesPending } from '../../hooks/useChallenge';
+import { useDeleteChallenges, useGetAllChallengesByStatus, } from '../../hooks/useChallenge';
 import { Challenge } from '../../models/InfChallenge';
+import { useQueryClient } from '@tanstack/react-query';
+import WarningComponent from '../../components/WarningComponent';
 
 
 
 export default function PendingScreen({ navigation }: NavigateType) {
 
-  const { data: challengespending, mutate: mutatePending, isPending: loadingPending } = useGetAllChallengesPending();
+  const queryClient = useQueryClient();
+  const { data: challengesPending, isLoading: loadingPending } = useGetAllChallengesByStatus('pending');
+  const { mutateAsync: deleteChallenge } = useDeleteChallenges();
 
-  useEffect(() => {
 
-    mutatePending();
-
-  }, [mutatePending]);
+  const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [isModalVisible, setModalVisible] = React.useState(false);
 
   const handlePress = (id: string) => {
     navigation.navigate('ChallengeDetail', { id });
   };
 
+
+  const handleDelete = async () => {
+    try {
+      await deleteChallenge({ id: selectedId });
+      queryClient.invalidateQueries({ queryKey: ['challenges', 'pending'] });
+      toggleModal(null)
+    } catch (error) {
+      console.error('Error delete challenge:', error);
+    }
+  };
+
+  const toggleModal = (id: string | null = null) => {
+    setSelectedId(id);
+    setModalVisible(!isModalVisible);
+  };
+
   return (
     <View style={styles.container}>
-      {loadingPending  ? (
+      {loadingPending ? (
         <ActivityIndicator size="large" color="#0000ff" />
       ) : (
         <ScrollView style={styles.listItems}>
           <View style={styles.listItems}>
-            {challengespending?.map((challenge: Challenge, index: number) => (
+            {challengesPending?.map((challenge: Challenge, index: number) => (
               <TouchableOpacity style={styles.item} key={index} onPress={() => handlePress(challenge._id)}>
                 <Image
                   style={styles.image}
@@ -53,7 +71,9 @@ export default function PendingScreen({ navigation }: NavigateType) {
                       <TouchableOpacity onPress={() => (challenge.id)}>
                         <Image source={require('../../assets/icons/Shape.png')} style={styles.editGroup} />
                       </TouchableOpacity>
-                      <Image source={require('../../assets/icons/delete.png')} style={styles.editGroup} />
+                      <TouchableOpacity onPress={() => toggleModal(challenge._id)}>
+                        <Image source={require('../../assets/icons/delete.png')} style={styles.editGroup} />
+                      </TouchableOpacity>
                     </View>
                   </View>
                   <Text style={styles.hour}>1m ago.</Text>
@@ -62,6 +82,16 @@ export default function PendingScreen({ navigation }: NavigateType) {
             ))}
           </View>
         </ScrollView >
+      )}
+       {isModalVisible && (
+        <WarningComponent
+          title='Warning'
+          description='Are you sure to delete this challenge?'
+          Action1='Cancel'
+          Action2='Delete'
+          handleAction2={handleDelete}
+          toggleModal={toggleModal}
+        />
       )}
     </View>
   );

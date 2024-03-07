@@ -9,12 +9,6 @@ import ButtonDetaiChallenge from '../components/ButtonDetailChallenge';
 import Moment from 'moment';
 
 
-const slideData = [
-  { id: 1, imageUrl: require('../assets/slides.jpg'), title: 'Slide 1' },
-  { id: 2, imageUrl: require('../assets/slides.jpg'), title: 'Slide 2' },
-  { id: 3, imageUrl: require('../assets/slides.jpg'), title: 'Slide 3' },
-];
-
 
 const ChallengeDetail = ({ navigation, route }: NavigateType) => {
 
@@ -50,8 +44,6 @@ const ChallengeDetail = ({ navigation, route }: NavigateType) => {
 
   // The number of lines you want to display
   const numberOfLinesToShow = 4;
-
-  console.log("Data", Challenge)
 
 
 
