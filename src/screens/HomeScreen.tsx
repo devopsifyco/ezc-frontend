@@ -6,6 +6,7 @@ import {
   Image,
   TouchableOpacity,
   FlatList,
+  ScrollView,
 } from 'react-native';
 
 import LiveCard from '../components/LiveCard';
@@ -13,10 +14,9 @@ import ListCard from '../components/ListCard';
 import Slides from '../components/Slides';
 
 import { NavigateType } from '../models/Navigations';
-import { Challenge } from '../models/InfChallenge';
-import NotificationScreen from './Notification';
 
-import { useGetAllChallenges} from '../hooks/useChallenge';
+
+import { useGetAllChallenges } from '../hooks/useChallenge';
 
 
 const HomeScreen: React.FC<NavigateType> = ({ navigation }) => {
@@ -27,11 +27,11 @@ const HomeScreen: React.FC<NavigateType> = ({ navigation }) => {
   useEffect(() => {
     mutate();
   }, [mutate]);
-  
+
   const handleNotificationPress = () => {
     navigation.navigate('NotificationScreen');
   };
-  
+
 
   const handlePress = (id: string) => {
     navigation.navigate('ChallengeDetail', { id });
@@ -47,9 +47,11 @@ const HomeScreen: React.FC<NavigateType> = ({ navigation }) => {
         </TouchableOpacity>
       </View>
 
-      <View style={{ height: 150 }}>
-        <Slides />
-      </View>
+      <ScrollView>
+
+        <View style={{ height: 150 }}>
+          <Slides />
+        </View>
 
       <View style={styles.section}>
         <Text style={styles.sectionName}>Processing</Text>
@@ -74,13 +76,13 @@ const HomeScreen: React.FC<NavigateType> = ({ navigation }) => {
               end_time={item.end_time}
               title={item.title}
               company={item.company}
-              Address={item.Address}
+              address={item.address}
               images_path={item.images_path}
               isLive={item.isLive}
               points_reward={item.points_reward}
               description={item.description}
               onPress={() => handlePress(item._id)}
-              
+
             />
           )}
         />
@@ -95,7 +97,7 @@ const HomeScreen: React.FC<NavigateType> = ({ navigation }) => {
           <Image source={require('../assets/icons/iconSeeAll.png')} />
         </TouchableOpacity>
       </View>
-      <View style={{flex:1}}>
+      <View style={{ flex: 1 }}>
         <FlatList
           data={challenges}
           showsVerticalScrollIndicator={false}
@@ -105,16 +107,21 @@ const HomeScreen: React.FC<NavigateType> = ({ navigation }) => {
             <ListCard
               id={item._id}
               key={item.id ? item.id.toString() : index.toString()}
-              Days={item.Days}
+              start_time={item.start_time}
+              end_time={item.end_time}
               title={item.title}
-              Address={item.Address}
+              company={item.company}
+              address={item.address}
               images_path={item.images_path}
               isLive={item.isLive}
-              onPress={() => navigation.navigate('ChallengeDetail', {id})}
+              points_reward={item.points_reward}
+              description={item.description}
+              onPress={() => handlePress(item._id)}
             />
           )}
         />
       </View>
+      </ScrollView>
 
     </View>
 

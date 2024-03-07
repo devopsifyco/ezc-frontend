@@ -30,13 +30,15 @@ export default function RegisterScreen({navigation}: NavigateType) {
 
   const moveLogin = () => navigation.goBack();
 
-  const {mutate, isPending} = useRegister();
+  const { mutate } = useRegister();
+
 
   const onSubmit = (data: RegistrationData) => {
     if (data.password === data.confirmPassword) {
       mutate(data, {
         onSuccess: async () => {
           AsyncStorage.setItem('email', data.email);
+          console.log("data ne: ", data);
           try {
             await axios.post(
               `${EZCHALLENG_API}/send-verification-code`,

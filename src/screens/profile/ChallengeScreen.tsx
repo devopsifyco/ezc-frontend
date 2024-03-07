@@ -1,210 +1,160 @@
-import React from 'react';
-import { View, Text, Image, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
+import React, { useEffect } from 'react';
+import { View, Text, Image, StyleSheet, ScrollView, TouchableOpacity, ActivityIndicator } from 'react-native';
+
+import { NavigateType } from '../../models/Navigations';
+
+import { useGetAllChallengesPending, useGetAllChallengesApproved, useGetAllChallengesRejected } from '../../hooks/useChallenge';
+import { Challenge } from '../../models/InfChallenge';
+import Moment from 'moment';
 
 
+export default function ChallengeScreen({ navigation }: NavigateType) {
+  const { data: challengespending, mutate: mutatePending, isPending: loadingPending } = useGetAllChallengesPending();
+  const { data: challengesApproved, mutate: mutateApproved, isPending: loadingApproved } = useGetAllChallengesApproved();
+  const { data: challengesRejected, mutate: mutateRejected, isPending: loadingRejected } = useGetAllChallengesRejected();
 
-export default function ChallengeScreen() {
+
+  useEffect(() => {
+    mutatePending();
+    mutateApproved();
+    mutateRejected();
+  }, [mutatePending, mutateApproved, mutateRejected]);
+
+  
+  const handlePress = (id: string) => {
+    navigation.navigate('ChallengeDetail', { id });
+  };
+
   return (
     <View style={styles.container}>
-      <ScrollView style={styles.listItems}>
-        <View style={styles.section}>
-          <Text style={styles.sectionName}>Pending</Text>
-          <TouchableOpacity style={styles.seeAll}>
-            <Text
-              onPress={() => navigation.navigate('SeeAllLive')}
-            >See All</Text>
-            <Image source={require('../../assets/icons/iconSeeAll.png')} />
-          </TouchableOpacity>
-        </View>
-        <View style={styles.listItems}>
-          <View style={styles.item}>
-            <Image
-              style={styles.image}
-              source={require('../../assets/images/Green.png')}
-            />
-            <View style={styles.detailItems}>
-              <Text style={styles.time}>Wed, Apr 10 •8:30AM - 17:30 PM</Text>
-              <View style={styles.times_group}>
-                <View style={styles.listItemDetail}>
-                  <Text style={styles.detail}>Challenge: Clear the city</Text>
-                  <View style={styles.times_group}>
-                    <Image source={require('../../assets/icons/locationdetail.png')} />
-                    <Text style={{
-                      fontSize: 12,
-                      color: "#363636"
-                    }}>Phuoc My • Son Tra • Da Nang</Text>
-                  </View>
-                </View>
-                <View style={styles.displayCenter}>
-                  <Image source={require('../../assets/icons/Shape.png')} style={styles.editGroup} />
-                </View>
-              </View>
-
-              <Text style={styles.hour}>1m ago.</Text>
-            </View>
-          </View>
-          <View style={styles.item}>
-            <Image
-              style={styles.image}
-              source={require('../../assets/images/Green.png')}
-            />
-            <View style={styles.detailItems}>
-              <Text style={styles.time}>Wed, Apr 28 •8:30AM - 17:30 PM</Text>
-              <View style={styles.times_group}>
-                <View style={styles.listItemDetail}>
-                  <Text style={styles.detail}>Challenge: Clean the beach</Text>
-                  <View style={styles.times_group}>
-                    <Image source={require('../../assets/icons/locationdetail.png')} />
-                    <Text style={{
-                      fontSize: 12,
-                      color: "#363636"
-                    }}>Phuoc My • Son Tra • Da Nang</Text>
-                  </View>
-                </View>
-                <View style={styles.displayCenter}>
-                  <Image source={require('../../assets/icons/Shape.png')} style={styles.editGroup} />
-                </View>
-              </View>
-
-              <Text style={styles.hour}>1m ago.</Text>
-            </View>
-          </View>
-          <View style={styles.item}>
-            <Image
-              style={styles.image}
-              source={require('../../assets/images/Green.png')}
-            />
-            <View style={styles.detailItems}>
-              <Text style={styles.time}>Wed, Apr 30 •8:30AM - 17:30 PM</Text>
-              <View style={styles.times_group}>
-                <View style={styles.listItemDetail}>
-                  <Text style={styles.detail}>Challenge: Clear the city</Text>
-                  <View style={styles.times_group}>
-                    <Image source={require('../../assets/icons/locationdetail.png')} />
-                    <Text style={{
-                      fontSize: 12,
-                      color: "#363636"
-                    }}>Phuoc My • Son Tra • Da Nang</Text>
-                  </View>
-                </View>
-                <View style={styles.displayCenter}>
-                  <Image source={require('../../assets/icons/Shape.png')} style={styles.editGroup} />
-                </View>
-              </View>
-
-              <Text style={styles.hour}>1m ago.</Text>
-            </View>
-          </View>
+      {loadingPending || loadingApproved || loadingRejected ? (
+        <ActivityIndicator size="large" color="#0000ff" />
+      ) : (
+        <ScrollView style={styles.listItems}>
           <View style={styles.section}>
-            <Text style={styles.sectionName}>Approve</Text>
-            <TouchableOpacity style={styles.seeAll}>
-              <Text
-                onPress={() => navigation.navigate('SeeAllLive')}
-              >See All</Text>
+            <Text style={styles.sectionName}>Pending</Text>
+            <TouchableOpacity style={styles.seeAll} onPress={() => navigation.navigate('Status', { value: 'Pending' })}>
+              <Text>See All</Text>
               <Image source={require('../../assets/icons/iconSeeAll.png')} />
             </TouchableOpacity>
           </View>
-          <View style={styles.item}>
-            <Image
-              style={styles.image}
-              source={require('../../assets/images/Green.png')}
-            />
-            <View style={styles.detailItems}>
-              <Text style={styles.time}>Wed, Apr 15 •8:30AM - 17:30 PM</Text>
-              <View style={styles.times_group}>
-                <Text style={{ fontSize: 14, marginLeft: 5, color: "#363636" }}>
-                  <Text style={styles.detail}>Challenge:Protect the green fores...</Text>
-                </Text>
-              </View>
-              <View style={styles.times_group}>
-                    <Image source={require('../../assets/icons/locationdetail.png')} />
-                    <Text style={{
-                      fontSize: 12,
-                      color: "#363636"
-                    }}>Vo Nguyen Giap • Son Tra • Da Nang</Text>
+          <View style={styles.listItems}>
+            {challengespending?.map((challenge: Challenge, index: number) => (
+              <TouchableOpacity style={styles.item} key={index} onPress={() => handlePress(challenge._id)}>
+                <Image
+                  style={styles.image}
+                  source={{ uri: challenge.images_path[0].downloadLink }}
+                />
+                <View style={styles.detailItems}>
+                  <Text style={styles.time}>
+                    {Moment(challenge.start_time).format('ddd, MMM DD • LT')} - {Moment(challenge.end_time).format('LT')}
+                  </Text>
+                  <View style={styles.times_group}>
+                    <View style={styles.listItemDetail}>
+                      <Text style={styles.detail}>Challenge: {challenge.title}</Text>
+                      <View style={styles.times_group}>
+                        <Image source={require('../../assets/icons/locationdetail.png')} />
+                        <Text style={{
+                          fontSize: 12,
+                          color: "#363636"
+                        }}>{challenge.address}</Text>
+                      </View>
+                    </View>
+                    <View style={styles.displayCenter}>
+                      <TouchableOpacity onPress={() =>(challenge.id)}>
+                        <Image source={require('../../assets/icons/Shape.png')} style={styles.editGroup} />
+                      </TouchableOpacity>
+                      <Image source={require('../../assets/icons/delete.png')} style={styles.editGroup} />
+                    </View>
                   </View>
-              <Text style={styles.hour}>1m ago.</Text>
+                  <Text style={styles.hour}>1m ago.</Text>
+                </View>
+              </TouchableOpacity>
+            ))}
+            
+
+            {/* ------------------------------------ */}
+            <View style={styles.section}>
+              <Text style={styles.sectionName}>Approved</Text>
+              <TouchableOpacity style={styles.seeAll} onPress={() => navigation.navigate('Status', { value: 'Approve' })}>
+                <Text>See All</Text>
+                <Image source={require('../../assets/icons/iconSeeAll.png')} />
+              </TouchableOpacity>
             </View>
-          </View>
-          <View style={styles.item}>
-            <Image
-              style={styles.image}
-              source={require('../../assets/images/Green.png')}
-            />
-            <View style={styles.detailItems}>
-              <Text style={styles.time}>Wed, Apr 01 •9:30AM - 17:30 PM</Text>
-              <View style={styles.times_group}>
-                <Text style={{ fontSize: 14, marginLeft: 5, color: "#363636" }}>
-                  <Text style={styles.detail}>Challenge:Protect the green fores...</Text>
-                </Text>
-              </View>
-              <View style={styles.times_group}>
-                    <Image source={require('../../assets/icons/locationdetail.png')} />
-                    <Text style={{
-                      fontSize: 12,
-                      color: "#363636"
-                    }}>Vo Nguyen Giap • Son Tra • Da Nang</Text>
+            {challengesApproved?.map((challenge: Challenge, index: number) => (
+              <TouchableOpacity style={styles.item} key={index} onPress={() => handlePress(challenge._id)}>
+                <Image
+                  style={styles.image}
+                  source={{ uri: challenge.images_path[0].downloadLink }}
+                />
+                <View style={styles.detailItems}>
+                  <Text style={styles.time}>
+                    {Moment(challenge.start_time).format('ddd, MMM DD • LT')} - {Moment(challenge.end_time).format('LT')}
+                  </Text>
+                  <View style={styles.times_group}>
+                    <View style={styles.listItemDetail}>
+                      <Text style={styles.detail}>Challenge: {challenge.title}</Text>
+                      <View style={styles.times_group}>
+                        <Image source={require('../../assets/icons/locationdetail.png')} />
+                        <Text style={{
+                          fontSize: 12,
+                          color: "#363636"
+                        }}>{challenge.address}</Text>
+                      </View>
+                    </View>
+                    <View style={styles.displayCenter}>
+                      <Image source={require('../../assets/icons/Shape.png')} style={styles.editGroup} />
+                      <Image source={require('../../assets/icons/delete.png')} style={styles.editGroup} />
+                    </View>
                   </View>
-              <Text style={styles.hour}>1m ago.</Text>
+                  <Text style={styles.hour}>1m ago.</Text>
+                </View>
+              </TouchableOpacity>
+            ))}
+
+
+            {/* -------------------------------------- */}
+            <View style={styles.section} >
+              <Text style={styles.sectionName}>Rejected</Text>
+              <TouchableOpacity style={styles.seeAll} onPress={() => navigation.navigate('Status', { value: 'Reject' })}>
+                <Text>See All</Text>
+                <Image source={require('../../assets/icons/iconSeeAll.png')} />
+              </TouchableOpacity>
             </View>
-          </View>
-          
-          <View style={styles.section}>
-            <Text style={styles.sectionName}>Reject</Text>
-            <TouchableOpacity style={styles.seeAll}>
-              <Text
-                onPress={() => navigation.navigate('SeeAllLive')}
-              >See All</Text>
-              <Image source={require('../../assets/icons/iconSeeAll.png')} />
-            </TouchableOpacity>
-          </View>
-          <View style={styles.item}>
-            <Image
-              style={styles.image}
-              source={require('../../assets/profile/Sa.jpg')}
-            />
-            <View style={styles.detailItems}>
-              <Text style={styles.time}>Wed, Apr 30 •8:30AM - 17:30 PM</Text>
-              <View style={styles.times_group}>
-                <Text style={{ fontSize: 14, marginLeft: 5, color: "#363636" }}>
-                  <Text style={styles.detail}>Challenge: Racing event</Text>
-                </Text>
-              </View>
-              <View style={styles.times_group}>
-                    <Image source={require('../../assets/icons/locationdetail.png')} />
-                    <Text style={{
-                      fontSize: 12,
-                      color: "#363636"
-                    }}>Vo Van Kiet • Son Tra • Da Nang</Text>
+            {challengesRejected?.map((challenge: Challenge, index: number) => (
+              <TouchableOpacity style={styles.item} key={index} onPress={() => handlePress(challenge._id)}>
+                <Image
+                  style={styles.image}
+                  source={{ uri: challenge.images_path[0].downloadLink }}
+                />
+                <View style={styles.detailItems}>
+                  <Text style={styles.time}>
+                    {Moment(challenge.start_time).format('ddd, MMM DD • LT')} - {Moment(challenge.end_time).format('LT')}
+                  </Text>
+                  <View style={styles.times_group}>
+                    <View style={styles.listItemDetail}>
+                      <Text style={styles.detail}>Challenge: {challenge.title}</Text>
+                      <View style={styles.times_group}>
+                        <Image source={require('../../assets/icons/locationdetail.png')} />
+                        <Text style={{
+                          fontSize: 12,
+                          color: "#363636"
+                        }}>{challenge.address}</Text>
+                      </View>
+                    </View>
+                    <View style={styles.displayCenter}>
+                      <Image source={require('../../assets/icons/Shape.png')} style={styles.editGroup} />
+                      <Image source={require('../../assets/icons/delete.png')} style={styles.editGroup} />
+                    </View>
                   </View>
-              <Text style={styles.hour}>2m ago.</Text>
-            </View>
+                  <Text style={styles.hour}>1m ago.</Text>
+                </View>
+              </TouchableOpacity>
+            ))}
           </View>
-          <View style={styles.item}>
-            <Image
-              style={styles.image}
-              source={require('../../assets/profile/Sa.jpg')}
-            />
-            <View style={styles.detailItems}>
-              <Text style={styles.time}>Wed, Apr 30 •8:30AM - 17:30 PM</Text>
-              <View style={styles.times_group}>
-                <Text style={{ fontSize: 14, marginLeft: 5, color: "#363636" }}>
-                  <Text style={styles.detail}>Challenge: Racing event</Text>
-                </Text>
-              </View>
-              <View style={styles.times_group}>
-                    <Image source={require('../../assets/icons/locationdetail.png')} />
-                    <Text style={{
-                      fontSize: 12,
-                      color: "#363636"
-                    }}>Vo Van Kiet • Son Tra • Da Nang</Text>
-                  </View>
-              <Text style={styles.hour}>3m ago.</Text>
-            </View>
-          </View>
-        </View>
-      </ScrollView>
-    </View>
+        </ScrollView >
+      )}
+    </View >
   );
 }
 
@@ -217,6 +167,8 @@ const styles = StyleSheet.create({
     rowGap: 5,
   },
   displayCenter: {
+    gap: 10,
+    flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
   },
