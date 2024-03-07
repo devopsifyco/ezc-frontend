@@ -1,8 +1,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import axios from 'axios';
 import { EZCHALLENG_API } from '../api/endPoint';
-import { Challenge } from '../models/InfChallenge';
 
 const API_ALLCHALLENGE = `${EZCHALLENG_API}/challenges`;
 const API_CHALLENGES = `${EZCHALLENG_API}/challenge`;
@@ -33,15 +32,15 @@ export function useGetAllChallenges() {
   return { ...getAllChallenges };
 }
 
-//  -----------get all list challenge pending ---------------------
+//  -----------get get all challenge by status ---------------------
 
-export function useGetAllChallengesPending() {
-  const getAllChallengesPending = useMutation({
-    mutationKey: ['challengesPending'],
-    mutationFn: async () => {
+export function useGetAllChallengesByStatus(status: string) {
+  return useQuery({
+    queryKey: ['challenges', status],
+    queryFn: async () => {
       try {
         const token = await AsyncStorage.getItem('accessToken');
-        const res = await axios.get(`${API_CHALLENGES}/status/pending`, {
+        const res = await axios.get(`${API_CHALLENGES}/status/${status}`, {
           headers: {
             'Content-Type': `application/json`,
             Authorization: `Bearer ${token}`,
@@ -52,67 +51,8 @@ export function useGetAllChallengesPending() {
         console.error('Error fetching challenges pending:', error);
         throw error;
       }
-    },
-    onSuccess: () => console.log('Get challenge pending successful'),
+    }
   });
-
-  return { ...getAllChallengesPending };
-}
-
-
-//  -----------get all list challenge approve -------------------
-
-
-export function useGetAllChallengesApproved() {
-  const getAllChallengesApproved = useMutation({
-    mutationKey: ['challengesApproved'],
-    mutationFn: async () => {
-      try {
-        const token = await AsyncStorage.getItem('accessToken');
-        const res = await axios.get(`${API_CHALLENGES}/status/approved`, {
-          headers: {
-            'Content-Type': `application/json`,
-            Authorization: `Bearer ${token}`,
-          },
-        });
-        return res.data;
-      } catch (error) {
-        console.error('Error fetching challenges approved:', error);
-        throw error;
-      }
-    },
-    onSuccess: () => console.log('Get challenge approved successful'),
-  });
-
-  return { ...getAllChallengesApproved };
-}
-
-
-//  -----------get all list challenge rejected -----------------
-
-
-export function useGetAllChallengesRejected() {
-  const getAllChallengesRejected = useMutation({
-    mutationKey: ['challengesRejected'],
-    mutationFn: async () => {
-      try {
-        const token = await AsyncStorage.getItem('accessToken');
-        const res = await axios.get(`${API_CHALLENGES}/status/rejected`, {
-          headers: {
-            'Content-Type': `application/json`,
-            Authorization: `Bearer ${token}`,
-          },
-        });
-        return res.data;
-      } catch (error) {
-        console.error('Error fetching challenges rejected:', error);
-        throw error;
-      }
-    },
-    onSuccess: () => console.log('Get challenge rejected successful'),
-  });
-
-  return { ...getAllChallengesRejected };
 }
 
 //  -----------get one challenge ---------------------
@@ -150,7 +90,7 @@ export function useOneChallenges(id: string) {
 export function useDeleteChallenges() {
   const getDeleteChallenge = useMutation({
     mutationKey: ['DeleteChallenge'], 
-    mutationFn: async (params: {id: string}) => {
+    mutationFn: async (params: {id: string | null}) => {
       try {
         const token = await AsyncStorage.getItem('accessToken');
         const res = await axios.delete(`${API_CHALLENGES}/delete`,{
@@ -178,8 +118,7 @@ export function useDeleteChallenges() {
 
 export default { 
   useGetAllChallenges, 
-  useGetAllChallengesPending,
-  useGetAllChallengesApproved,
+  useGetAllChallengesByStatus,
   useOneChallenges,
   useDeleteChallenges
 

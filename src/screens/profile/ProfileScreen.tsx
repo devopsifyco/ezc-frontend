@@ -23,6 +23,7 @@ export default function SubProfileScreen({
   };
   const [isModalVisible, setModalVisible] = React.useState(false);
   const toggleModal = () => setModalVisible(!isModalVisible);
+  
   const handleLogout = async () => {
     try {
       await AsyncStorage.removeItem('accessToken');

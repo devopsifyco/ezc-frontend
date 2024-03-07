@@ -12,6 +12,7 @@ const ButtonDetaiChallenge = ({
     buttonStyle = {},
     textStyle = {},
   }: CustomButtonProps) => {
+    
     return (
       <LinearGradient
         colors={colors}
