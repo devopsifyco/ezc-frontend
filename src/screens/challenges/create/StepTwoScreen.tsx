@@ -165,10 +165,10 @@ const StepTwoScreen = () => {
     delete combinedData.endDate;
     delete combinedData.endTime;
 
-    console.log(combinedData);
-
     try {
-      challengeCreate({ data: combinedData });
+      challengeCreate({ data: combinedData }, {
+        onSuccess: () => navigation.goBack()
+      });
     } catch (error) {
       console.log(error);
     }
