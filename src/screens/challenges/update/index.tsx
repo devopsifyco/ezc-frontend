@@ -66,7 +66,7 @@ const UpdateChallenges = ({ navigation, route }: NavigateType) => {
     setValue,
     watch,
     formState: { errors },
-    
+
   } = useForm<Challenge>({});
 
   const selectedImages = watch('images_path');
@@ -141,9 +141,10 @@ const UpdateChallenges = ({ navigation, route }: NavigateType) => {
               render={({ field }) => (
                 <SelectedImages
                   imageList={images_path}
-                  setSelectedImage={(index: number, uri: string) => {
+                  setSelectedImage={(index: number, asset: any) => {
                     const updatedImages = [...selectedImages];
-                    updatedImages[index] = { name: 'NewName', downloadLink: uri };
+                    // updatedImages[index] = { name: 'NewName', downloadLink: uri };
+                    updatedImages[index] = asset;
                     setValue('images_path', updatedImages);
                   }}
                   removeImage={(index: number) => {
@@ -152,7 +153,7 @@ const UpdateChallenges = ({ navigation, route }: NavigateType) => {
                     setValue('images_path', updatedImages);
                   }}
                   clearImages={() => setValue('images_path', [])}
-                  loadingComponent={<ActivityIndicator />} 
+                  loadingComponent={<ActivityIndicator />}
                 />
               )}
               name="images_path"

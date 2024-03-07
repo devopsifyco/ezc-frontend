@@ -7,8 +7,8 @@ import {
 } from 'react-native-image-picker';
 
 export interface SelectedImagesProps {
-    imageList: { name: string; downloadLink: string }[];
-    setSelectedImage: (index: number, uri: string) => void;
+    imageList: { fileName: string; base64: string }[];
+    setSelectedImage: (index: number, asset: { fileName: string; base64: string }) => void;
     removeImage?: (index: number) => void;
     clearImages?: () => void;
     loadingComponent?: React.ReactElement;
@@ -24,18 +24,18 @@ const SelectedImages: React.FC<SelectedImagesProps> = ({ imageList, setSelectedI
     const imagePickerHandler = () => {
         let options: ImageLibraryOptions = {
             mediaType: 'photo',
-            includeBase64: false,
+            includeBase64: true,
             maxHeight: 200,
             maxWidth: 200,
         };
 
         launchImageLibrary(options, response => {
             if (response.assets) {
-                const newImages: string[] = response.assets.map(
-                    (asset: Asset) => asset.uri,
-                );
-                newImages.forEach((uri, index) => {
-                    setSelectedImage(index + imageList.length, uri);
+                // const newImages: string[] = response.assets.map(
+                //     (asset: Asset) => asset.uri,
+                // );
+                response.assets.forEach((asset, index) => {
+                    setSelectedImage(index + imageList.length, asset);
                 });
             } else {
                 console.log('No images selected.');
