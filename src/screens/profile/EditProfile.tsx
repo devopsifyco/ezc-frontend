@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -7,55 +7,106 @@ import {
   Image,
   TouchableOpacity,
 } from 'react-native';
+import { Alert, ActivityIndicator } from 'react-native';
+import { launchImageLibrary} from 'react-native-image-picker';
 import LinearGradient from 'react-native-linear-gradient';
-import { DataPropsType } from './ProfileScreen';
+import { useUpdateUserProfile } from '../../hooks/useUser';
+import { DataProfile } from '../../models/Profile';
+import { NavigateType } from '../../models/Navigations';
 
 export default function EditProfile({
   route,
+  navigation,
 }: {
-  route: { params: { DATA: DataPropsType } };
+  route: { params: { DATA: DataProfile } };
+  navigation: NavigateType;
 }) {
   const { DATA } = route.params;
-  const [newValues, setNewValues] = useState({ ...DATA });
 
-  const handleUpdate = () => {
-    console.log('Update:', newValues);
+  const [newData, setNewData] = useState({
+    username: DATA.username,
+    location: DATA.location,
+    about_me: DATA.about_me,
+    email: DATA.email,
+    image: DATA.image || '',
+  });
+  const { mutate, isLoading } = useUpdateUserProfile();
+
+  const handleImagePicker = () => {
+    const options = {
+      title: 'Select Avatar',
+      storageOptions: {
+        skipBackup: true,
+        path: 'images',
+      },
+    };
+
+    launchImageLibrary(options, (response) => {
+      console.log('ImagePicker Response: ', response);
+
+      if (response.assets && response.assets.length > 0) {
+        const selectedUri = response.assets[0].uri;
+        setNewData((prev) => ({ ...prev, image: selectedUri }));
+      } else {
+        console.log('User cancelled image picker or there was an error');
+      }
+    });
+  };
+
+  const handleUpdate = async () => {
+    console.log("Data to be sent to the server:", newData);
+    try {
+      await mutate(newData);
+      console.log('Update successful');
+      // navigation.goBack();
+    } catch (error) {
+      console.error('Update failed', error);
+      Alert.alert('Error', 'Failed to update user profile');
+    }
   };
 
   return (
     <View style={styles.container}>
       <View style={styles.formInput}>
         <View style={styles.displayCenter}>
-          <Image source={DATA.image} style={styles.profileImage} />
+          <Image source={{ uri: newData.image || DATA?.avatar.downloadLink }} style={styles.profileImage} />
+          <TouchableOpacity onPress={handleImagePicker}>
+            <Image
+              source={require('../../assets/icons/edit-profile.png')}
+              style={styles.iconEdit}
+            />
+          </TouchableOpacity>
+        </View>
+        <View style={styles.containerInput}>
+          <Text style={styles.textInput}>Email</Text>
+          <TextInput
+            style={styles.input}
+            value={newData.email}
+            onChangeText={(text) => setNewData((prev) => ({ ...prev, email: text }))}
+          />
         </View>
         <View style={styles.containerInput}>
           <Text style={styles.textInput}>User name</Text>
           <TextInput
             style={styles.input}
-            value={newValues.name}
-            onChangeText={text =>
-              setNewValues(prev => ({ ...prev, userName: text }))
-            }
+            value={newData.username}
+            onChangeText={(text) => setNewData((prev) => ({ ...prev, username: text }))}
           />
         </View>
         <View style={styles.containerInput}>
           <Text style={styles.textInput}>Location</Text>
           <TextInput
             style={styles.input}
-            value={newValues.location}
-            onChangeText={text =>
-              setNewValues(prev => ({ ...prev, location: text }))
-            }
+            value={newData.location}
+            onChangeText={(text) => setNewData((prev) => ({ ...prev, location: text }))}
           />
         </View>
         <View style={styles.containerInput}>
           <Text style={styles.textInput}>About me</Text>
           <TextInput
             style={styles.input}
-            value={newValues.title}
-            onChangeText={text =>
-              setNewValues(prev => ({ ...prev, aboutMe: text }))
-            }
+            value={newData.about_me}
+            onChangeText={(text) => setNewData((prev) => ({ ...prev, about_me: text }))}
             multiline
           />
         </View>
@@ -64,9 +115,14 @@ export default function EditProfile({
             colors={['#FF0A00', '#FF890B']}
             start={{ x: 0.0, y: 0.5 }}
             end={{ x: 2.0, y: 0.5 }}
-            style={styles.button}>
+            style={styles.button}
+          >
             <TouchableOpacity onPress={handleUpdate}>
-              <Text style={styles.textButton}>Update</Text>
+              {isLoading ? (
+                <ActivityIndicator color="#fff" />
+              ) : (
+                <Text style={styles.textButton}>Update</Text>
+              )}
             </TouchableOpacity>
           </LinearGradient>
         </View>
@@ -90,7 +146,7 @@ const styles = StyleSheet.create({
   },
   input: {
     borderWidth: 1,
-    borderColor: '#000',
+    borderColor: '#000000',
     borderRadius: 8,
     height: 'auto',
     paddingHorizontal: 10,
@@ -117,6 +173,10 @@ const styles = StyleSheet.create({
     width: 100,
     height: 100,
     borderRadius: 50,
+  },
+  iconEdit: {
+    marginLeft: 50,
+    marginTop: -20
   },
   displayCenter: {
     justifyContent: 'center',
