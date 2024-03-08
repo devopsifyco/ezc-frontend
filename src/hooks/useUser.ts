@@ -12,7 +12,7 @@ export function useUpdateUserProfile() {
       try {
         const token = await AsyncStorage.getItem('accessToken');
 
-        const res = await axios.put(`http://192.168.9.242:4000/api/user/update`, newData, {
+        const res = await axios.put(`${EZCHALLENG_API}/user/update`, newData, {
           headers: {
             'Content-Type': 'application/json',
             Authorization: `Bearer ${token}`,
