@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import {
   View,
   Text,
@@ -28,9 +28,9 @@ export default function EditProfile({
     location: DATA.location,
     about_me: DATA.about_me,
     email: DATA.email,
-    image: DATA.image || '',
+    image: DATA.avatar.name || '',
   });
-  const { mutate, isLoading } = useUpdateUserProfile();
+  const { mutate, isPending } = useUpdateUserProfile();
 
   const handleImagePicker = () => {
     const options = {
@@ -42,7 +42,6 @@ export default function EditProfile({
     };
 
     launchImageLibrary(options, (response) => {
-      console.log('ImagePicker Response: ', response);
 
       if (response.assets && response.assets.length > 0) {
         const selectedUri = response.assets[0].uri;
@@ -54,11 +53,11 @@ export default function EditProfile({
   };
 
   const handleUpdate = async () => {
-    console.log("Data to be sent to the server:", newData);
+    
     try {
       await mutate(newData);
-      console.log('Update successful');
-      // navigation.goBack();
+        Alert.alert('Edit Prodile successfully')
+       navigation.goBack();
     } catch (error) {
       console.error('Update failed', error);
       Alert.alert('Error', 'Failed to update user profile');
@@ -69,7 +68,7 @@ export default function EditProfile({
     <View style={styles.container}>
       <View style={styles.formInput}>
         <View style={styles.displayCenter}>
-          <Image source={{ uri: newData.image || DATA?.avatar.downloadLink }} style={styles.profileImage} />
+          <Image source={{ uri: newData.image || DATA?.avatar.name }} style={styles.profileImage} />
           <TouchableOpacity onPress={handleImagePicker}>
             <Image
               source={require('../../assets/icons/edit-profile.png')}
@@ -118,8 +117,10 @@ export default function EditProfile({
             style={styles.button}
           >
             <TouchableOpacity onPress={handleUpdate}>
-              {isLoading ? (
-                <ActivityIndicator color="#fff" />
+              {isPending ? (
+                <View style={styles.displayLoading}>
+                  <ActivityIndicator color="#fff" />
+                </View>
               ) : (
                 <Text style={styles.textButton}>Update</Text>
               )}
@@ -135,6 +136,11 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 16,
+  },
+  displayLoading: {
+    backgroundColor: 'grey',
+    position: 'absolute',
+    opacity: 0.5,
   },
   formInput: {
     flex: 1,

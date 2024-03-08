@@ -5,14 +5,14 @@ import { EZCHALLENG_API } from '../api/endPoint';
 import { Alert } from 'react-native';
 
 export function useUpdateUserProfile() {
+
   const updateUserProfile = useMutation({
     mutationKey: ['user'],
     mutationFn: async (newData) => {
       try {
         const token = await AsyncStorage.getItem('accessToken');
-        console.log(token);
 
-        const res = await axios.put(`${EZCHALLENG_API}/user/update`, newData, {
+        const res = await axios.put(`http://192.168.9.242:4000/api/user/update`, newData, {
           headers: {
             'Content-Type': 'application/json',
             Authorization: `Bearer ${token}`,
