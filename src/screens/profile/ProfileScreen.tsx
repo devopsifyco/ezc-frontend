@@ -40,7 +40,7 @@ export default function SubProfileScreen({
       </View>
 
       <View style={styles.profile}>
-      <Image source={{ uri: DATA?.avatar.downloadLink }} style={styles.profileImage} />
+      <Image source={{ uri: DATA?.avatar.name }} style={styles.profileImage} />
         <Text style={styles.profileName}>{DATA.username}</Text>
         <Text style={styles.email}>{DATA.email}</Text>
 

@@ -6,10 +6,7 @@ import {
   StyleSheet,
   Image,
   TouchableOpacity,
-  Alert,
 } from 'react-native';
-import ButtonProfile from '../../components/ButtonProfile';
-import ButtonProfile2 from '../../components/ButtonProfile2';
 import HeaderProfile from '../../components/HeaderProfile';
 import {NavigateType} from '../../models/Navigations';
 import AboutScreen from './AboutScreen';
@@ -40,7 +37,6 @@ export default function ProfileScreen({ navigation }: NavigateType) {
 
           const data = res.data;
           setData(data);
-          // console.log(data);
         }).catch((error) => {
           console.error('Error retrieving email:', error.response.data);
         });
@@ -52,6 +48,8 @@ export default function ProfileScreen({ navigation }: NavigateType) {
     fetchData();
   }, []);
 
+  console.log("Data Respon: ",DATA);
+  
 
   return (
     <View style={styles.container}>
@@ -63,7 +61,10 @@ export default function ProfileScreen({ navigation }: NavigateType) {
         </TouchableOpacity>
       </View>
       <View style={styles.profile}>
-        <Image source={{ uri: DATA?.avatar.downloadLink }} style={styles.profileImage} />
+        <Image
+          source={{ uri: DATA?.avatar.name }}
+          style={styles.profileImage}
+        />
         <Text style={styles.profileName}>{DATA?.username}</Text>
         <Text style={styles.profileName}>{DATA?.email}</Text>
         <View style={styles.numberStatus}>
@@ -96,7 +97,6 @@ export default function ProfileScreen({ navigation }: NavigateType) {
 
       {selectedTab === 'ABOUT' && <AboutScreen data={DATA} />}
       {selectedTab === 'CHALLENGE' && <ChallengeScreen navigation={navigation}/>}
-      {/* {selectedTab === 'REVIEWS' && <ReviewScreen />} */}
     </View>
   );
 }
