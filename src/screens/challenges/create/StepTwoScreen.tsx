@@ -1,12 +1,13 @@
-import React, {useState} from 'react';
-import {View, Text, TextInput, TouchableOpacity} from 'react-native';
-import {useForm, Controller, SubmitHandler} from 'react-hook-form';
+import React, { useEffect, useState } from 'react';
+import { View, Text, TextInput, TouchableOpacity } from 'react-native';
+import { useForm, Controller, SubmitHandler } from 'react-hook-form';
 import DateTimePicker from '@react-native-community/datetimepicker';
-import {useNavigation, useRoute} from '@react-navigation/native';
+import { useNavigation, useRoute } from '@react-navigation/native';
 import Button from '../../../components/Button';
-import {styles} from '.';
+import { styles } from '.';
 import useChallengeCreate from '../../../hooks/useChallengeCreate';
 import * as Progress from 'react-native-progress';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 type Input = {
   startDate: Date;
@@ -14,6 +15,7 @@ type Input = {
   startTime?: Date;
   endTime?: Date;
   address: string;
+  email: string;
 };
 
 const useCombinedData = () => {
@@ -50,6 +52,7 @@ const StepTwoScreen = () => {
   const [endTime, setEndTime] = useState(undefined);
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [showTimePicker, setShowTimePicker] = useState(false);
+  const [email, setEmail] = useState('');
   const [pickerMode, setPickerMode] = useState<
     'startDate' | 'endDate' | 'startTime' | 'endTime'
   >('startDate');
@@ -66,6 +69,7 @@ const StepTwoScreen = () => {
       startTime: undefined,
       endTime: undefined,
       address: '',
+      email: '',
     },
   });
 
@@ -82,7 +86,7 @@ const StepTwoScreen = () => {
     setShowTimePicker(false);
   };
 
-  const handleDateChange = ({selectedDate}: any) => {
+  const handleDateChange = ({ selectedDate }: any) => {
     hidePicker();
     if (pickerMode === 'startDate') {
       setStartDate(selectedDate || new Date());
@@ -93,7 +97,7 @@ const StepTwoScreen = () => {
     }
   };
 
-  const handleTimeChange = ({selectedTime}: any) => {
+  const handleTimeChange = ({ selectedTime }: any) => {
     hidePicker();
     if (pickerMode === 'startTime') {
       setStartTime(selectedTime || new Date());
@@ -121,9 +125,16 @@ const StepTwoScreen = () => {
     }
     return ' *';
   };
+  useEffect(() => {
+    AsyncStorage.getItem('email').then((data: any) => {
+      setEmail(data)
+    })
+  })
+  // const handleEmail = () => {
+  // }
 
   const backScreen = () => {
-    navigation.navigate('CreateChallenges', {step: 1});
+    navigation.navigate('CreateChallenges', { step: 1 });
   };
 
   const {mutate: challengeCreate, isPending} = useChallengeCreate();
@@ -166,7 +177,7 @@ const StepTwoScreen = () => {
     delete combinedData.endTime;
 
     try {
-      challengeCreate({ data: combinedData }, {
+      challengeCreate({ data: combinedData, email: email }, {
         onSuccess: () => navigation.goBack()
       });
     } catch (error) {

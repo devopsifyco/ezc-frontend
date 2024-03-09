@@ -47,7 +47,7 @@ const HomeScreen: React.FC<NavigateType> = ({ navigation }) => {
         </TouchableOpacity>
       </View>
 
-      <ScrollView>
+
         <View style={{ height: 150 }}>
           <Slides />
         </View>
@@ -119,7 +119,6 @@ const HomeScreen: React.FC<NavigateType> = ({ navigation }) => {
             )}
           />
         </View>
-      </ScrollView>
 
     </View>
 

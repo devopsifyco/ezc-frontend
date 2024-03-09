@@ -9,13 +9,19 @@ export default function useChallengeCreate() {
 
   const challengeCreate = useMutation({
     mutationKey: ['challengeCreate'],
-    mutationFn: async ({ data }: any) => {    
+    mutationFn: async ({ data, email }: any) => {
       const tokenUser = await AsyncStorage.getItem('accessToken');
-
+      
+      const modifyEmail = email.substring(1, email.length - 1)
+      console.log("email ennene", email);
+      const fullData = {
+        ...data,
+        "email": modifyEmail
+      }
       const res = await axios.post(
-        // `http://192.168.102.53:4000/api/challenge/create`,
-        `${EZCHALLENG_API}/challenge/create`,
-        data,
+        `http://192.168.77.96:4000/api/challenge/create`,
+        // `${EZCHALLENG_API}/challenge/create`,
+        fullData,
         {
           headers: {
             'Content-Type': 'application/json',
