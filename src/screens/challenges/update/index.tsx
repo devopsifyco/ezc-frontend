@@ -5,8 +5,8 @@ import { NavigateType } from '../../../models/Navigations';
 import { useOneChallenges, useUpdateChallenges } from '../../../hooks/useChallenge';
 import ButtonChallenge from '../../../components/ButtonChallenge';
 import { Challenge } from '../../../models/InfChallenge';
-import SelectedImages from './ImageUpdate';
 import { styles } from './style';
+import SelectedImages from './ImageUpdate';
 
 
 import DateTimePicker, { DateTimePickerEvent } from '@react-native-community/datetimepicker';
@@ -26,6 +26,9 @@ const UpdateChallenges = ({ navigation, route }: NavigateType) => {
   const handleUpdate = async () => {
     try {
       if (editedChallenge) {
+console.log('This is data want to update:', editedChallenge);
+
+
         await updateMutate({
           ...editedChallenge,
           id,
@@ -72,9 +75,9 @@ const UpdateChallenges = ({ navigation, route }: NavigateType) => {
 
   const selectedImages = watch('images_path');
 
-  const validateImages = (value: { name: string; downloadLink: string }[]) => {
-    return value.length > 0 || ' *';
-  };
+  //const validateImages = (value: { name: string; downloadLink: string }[]) => {
+  //  return value.length > 0 || ' *';
+  //};
 
 
   const [startTime, setStartTime] = useState<Date>(new Date(start_time || 0));
@@ -141,12 +144,15 @@ const UpdateChallenges = ({ navigation, route }: NavigateType) => {
               control={control}
               render={({ field }) => (
                 <SelectedImages
-                  imageList={images_path}
+                  imageList={selectedImages}
                   setSelectedImage={(index: number, asset: any) => {
                     const updatedImages = [...selectedImages];
-                    // updatedImages[index] = { name: 'NewName', downloadLink: uri };
+                    //console.log('asset', asset, asset.constructor.name)
                     updatedImages[index] = asset;
-                    setValue('images_path', updatedImages);
+                    setValue(
+                      'images_path',
+                      updatedImages.filter(images_path => images_path.fileName !== ''),
+                    );
                   }}
                   removeImage={(index: number) => {
                     const updatedImages = [...selectedImages];
@@ -154,12 +160,11 @@ const UpdateChallenges = ({ navigation, route }: NavigateType) => {
                     setValue('images_path', updatedImages);
                   }}
                   clearImages={() => setValue('images_path', [])}
-                  loadingComponent={<ActivityIndicator />}
                 />
               )}
               name="images_path"
               defaultValue={[]}
-              rules={{ validate: validateImages }}
+            //rules={{ validate: validateImages }}
             />
           </View>
 
@@ -301,7 +306,7 @@ const UpdateChallenges = ({ navigation, route }: NavigateType) => {
 
         <View style={styles.buttonUpdate}>
           <ButtonChallenge
-            onPress={handleUpdate}
+            onPress={handleSubmit(handleUpdate)}
             title="Update"
             buttonStyle={{ width: 120 }}
           />

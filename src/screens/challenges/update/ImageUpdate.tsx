@@ -48,20 +48,11 @@ const SelectedImages: React.FC<SelectedImagesProps> = ({ imageList, setSelectedI
 
     const [backup_imageList, setBackup_imageList] = useState({});
 
-    // useEffect(() => {
-    //     setBackup_imageList(imageList)
-    //     console.log("backup_imageList", backup_imageList);
-    // }, [backup_imageList]);
-
 
     const removeFirstImage = (array: any) => {
         array.shift();
         setBackup_imageList(array)
     }
-
-    console.log("backup_imageList", backup_imageList);
-    
-
 
 
     return (
