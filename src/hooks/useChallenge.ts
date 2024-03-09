@@ -59,8 +59,6 @@ export function useGetAllChallengesByStatus(status: string) {
 
 //  -----------get one challenge ---------------------
 
-
-
 export function useOneChallenges(_id: string) {
   const getOneChallenge = useMutation({
     mutationKey: ['getOneChallenge', _id], 
@@ -79,7 +77,6 @@ export function useOneChallenges(_id: string) {
       }
     },
     onSuccess: (data) => {
-      console.log(data);
       console.log('Successful get one data');
     },
   });
