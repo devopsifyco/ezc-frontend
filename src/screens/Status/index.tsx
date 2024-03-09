@@ -8,13 +8,12 @@ import {
 } from 'react-native';
 import HeaderChallenge from '../../components/HeaderChallenge';
 import { NavigateType } from '../../models/Navigations';
-import Pending from './PendingScreen';
-import Approve from './ApproveScreen';
-import Reject from './RejectScreen';
+import PendingScreen from './PendingScreen';
+import ApproveScreen from './ApproveScreen';
+import RejectScreen from './RejectScreen';
 
 
-
-export default function Status({ navigation, route }: any) {
+export default function Status({ navigation, route }: NavigateType) {
     const value = route.params;
     const [selectedTab, setSelectedTab] = useState(value);
     useEffect(() => {
@@ -44,18 +43,18 @@ export default function Status({ navigation, route }: any) {
 
                         selectedTab === 'Approve' && styles.selectedTab,
                     ]}>
-                    <Text style={[styles.titleLarge, selectedTab == 'Approve' && styles.textSelectedTab]}>Approve</Text>
+                    <Text style={[styles.titleLarge, selectedTab == 'Approve' && styles.textSelectedTab]}>Approved</Text>
                 </TouchableOpacity>
                 <TouchableOpacity
                     onPress={() => setSelectedTab('Reject')}
                     style={[styles.tab, selectedTab === 'Reject' && styles.selectedTab]}>
-                    <Text style={[styles.titleLarge, selectedTab == 'Reject' && styles.textSelectedTab]}>Reject</Text>
+                    <Text style={[styles.titleLarge, selectedTab == 'Reject' && styles.textSelectedTab]}>Rejected</Text>
                 </TouchableOpacity>
             </View>
 
-            {selectedTab === 'Pending' && <Pending navigation= {navigation} />}
-            {selectedTab === 'Approve' && <Approve navigation= {navigation} />}
-            {selectedTab === 'Reject' && <Reject navigation= {navigation}/>}
+            {selectedTab === 'Pending' && <PendingScreen navigation= {navigation} />}
+            {selectedTab === 'Approve' && <ApproveScreen navigation= {navigation} />}
+            {selectedTab === 'Reject' && <RejectScreen navigation= {navigation}/>}
         </View>
     );
 }

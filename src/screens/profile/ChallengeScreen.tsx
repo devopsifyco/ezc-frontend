@@ -1,24 +1,26 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, Image, StyleSheet, ScrollView, TouchableOpacity, ActivityIndicator } from 'react-native';
+import { useQueryClient } from '@tanstack/react-query';
 import { NavigateType } from '../../models/Navigations';
+
 import { useGetAllChallengesPending, useGetAllChallengesApproved, useGetAllChallengesRejected } from '../../hooks/useChallenge';
 import { Challenge } from '../../models/InfChallenge';
-import Moment from 'moment';
+import WarningComponent from '../../components/WarningComponent';
 
 
 export default function ChallengeScreen({ navigation }: NavigateType) {
-  const { data: challengespending, mutate: mutatePending, isPending: loadingPending } = useGetAllChallengesPending();
-  const { data: challengesApproved, mutate: mutateApproved, isPending: loadingApproved } = useGetAllChallengesApproved();
-  const { data: challengesRejected, mutate: mutateRejected, isPending: loadingRejected } = useGetAllChallengesRejected();
+
+  const queryClient = useQueryClient();
+  const { data: challengesPending, isLoading: loadingPending } = useGetAllChallengesByStatus('pending');
+  const { data: challengesApproved, isLoading: loadingApproved } = useGetAllChallengesByStatus('approved');
+  const { data: challengesRejected, isLoading: loadingRejected } = useGetAllChallengesByStatus('rejected');
+  const { mutateAsync: deleteChallenge } = useDeleteChallenges();
 
 
-  useEffect(() => {
-    mutatePending();
-    mutateApproved();
-    mutateRejected();
-  }, [mutatePending, mutateApproved, mutateRejected]);
 
-  
+  const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [isModalVisible, setModalVisible] = React.useState(false);
+
   const handlePress = (id: string) => {
     navigation.navigate('ChallengeDetail', { id });
   };
@@ -26,6 +28,26 @@ export default function ChallengeScreen({ navigation }: NavigateType) {
   const handleEditPress = (id: string) => {
     navigation.navigate('UpdateChallenge', { id });
   }
+
+
+  const handleDelete = async () => {
+    try {
+      await deleteChallenge({ id: selectedId });
+      queryClient.invalidateQueries({ queryKey: ['challenges', 'pending'] });
+      queryClient.invalidateQueries({ queryKey: ['challenges', 'approved'] });
+      queryClient.invalidateQueries({ queryKey: ['challenges', 'rejected'] });
+
+      toggleModal(null)
+    } catch (error) {
+      console.error('Error delete challenge:', error);
+    }
+  };
+
+
+  const toggleModal = (id: string | null = null) => {
+    setSelectedId(id);
+    setModalVisible(!isModalVisible);
+  };
 
   return (
     <View style={styles.container}>
@@ -41,7 +63,7 @@ export default function ChallengeScreen({ navigation }: NavigateType) {
             </TouchableOpacity>
           </View>
           <View style={styles.listItems}>
-            {challengespending?.map((challenge: Challenge, index: number) => (
+            {challengesPending?.map((challenge: Challenge, index: number) => (
               <TouchableOpacity style={styles.item} key={index} onPress={() => handlePress(challenge._id)}>
                 <Image
                   style={styles.image}
@@ -63,17 +85,20 @@ export default function ChallengeScreen({ navigation }: NavigateType) {
                       </View>
                     </View>
                     <View style={styles.displayCenter}>
-                      <TouchableOpacity onPress={() =>handleEditPress(challenge._id)}>
+                      <TouchableOpacity onPress={() =>(challenge.id)}>
                         <Image source={require('../../assets/icons/Shape.png')} style={styles.editGroup} />
                       </TouchableOpacity>
-                      <Image source={require('../../assets/icons/delete.png')} style={styles.editGroup} />
+
+                      <TouchableOpacity onPress={() => toggleModal(challenge._id)}>
+                        <Image source={require('../../assets/icons/delete.png')} style={styles.editGroup} />
+                      </TouchableOpacity>
                     </View>
                   </View>
                   <Text style={styles.hour}>1m ago.</Text>
                 </View>
               </TouchableOpacity>
             ))}
-            
+
 
             {/* ------------------------------------ */}
             <View style={styles.section}>
@@ -106,7 +131,9 @@ export default function ChallengeScreen({ navigation }: NavigateType) {
                     </View>
                     <View style={styles.displayCenter}>
                       <Image source={require('../../assets/icons/Shape.png')} style={styles.editGroup} />
-                      <Image source={require('../../assets/icons/delete.png')} style={styles.editGroup} />
+                      <TouchableOpacity onPress={() => toggleModal(challenge._id)}>
+                        <Image source={require('../../assets/icons/delete.png')} style={styles.editGroup} />
+                      </TouchableOpacity>
                     </View>
                   </View>
                   <Text style={styles.hour}>1m ago.</Text>
@@ -146,7 +173,9 @@ export default function ChallengeScreen({ navigation }: NavigateType) {
                     </View>
                     <View style={styles.displayCenter}>
                       <Image source={require('../../assets/icons/Shape.png')} style={styles.editGroup} />
-                      <Image source={require('../../assets/icons/delete.png')} style={styles.editGroup} />
+                      <TouchableOpacity onPress={() => toggleModal(challenge._id)}>
+                        <Image source={require('../../assets/icons/delete.png')} style={styles.editGroup} />
+                      </TouchableOpacity>
                     </View>
                   </View>
                   <Text style={styles.hour}>1m ago.</Text>
@@ -156,6 +185,17 @@ export default function ChallengeScreen({ navigation }: NavigateType) {
           </View>
         </ScrollView >
       )}
+      {isModalVisible && (
+        <WarningComponent
+          title='Warning'
+          description='Are you sure to delete this challenge?'
+          Action1='Cancel'
+          Action2='Delete'
+          handleAction2={handleDelete}
+          toggleModal={toggleModal}
+        />
+      )}
+
     </View >
   );
 }

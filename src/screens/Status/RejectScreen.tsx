@@ -1,21 +1,42 @@
-import React, { useEffect, useState } from 'react';
-import { View, StyleSheet, Text, TouchableOpacity, Image, FlatList, ScrollView, ActivityIndicator } from 'react-native';
+import React, { useState } from 'react';
+import { View, StyleSheet, Text, TouchableOpacity, Image, ScrollView, ActivityIndicator } from 'react-native';
 import { NavigateType } from '../../models/Navigations';
 import Moment from 'moment';
-import { useGetAllChallengesRejected } from '../../hooks/useChallenge';
+import { useDeleteChallenges, useGetAllChallengesByStatus } from '../../hooks/useChallenge';
 import { Challenge } from '../../models/InfChallenge';
+import { useQueryClient } from '@tanstack/react-query';
+import WarningComponent from '../../components/WarningComponent';
 
 export default function RejectScreen({ navigation }: NavigateType) {
 
-  const { data: challengesRejected, mutate: mutateRejected, isPending: loadingRejected } = useGetAllChallengesRejected();
+  const queryClient = useQueryClient();
+  const { data: challengesRejected, isLoading: loadingRejected } = useGetAllChallengesByStatus('rejected');
+  const { mutateAsync: deleteChallenge } = useDeleteChallenges();
 
-  useEffect(() => {
-    mutateRejected();
-  }, [mutateRejected]);
+
+  const [selectedId, setSelectedId] = useState<string | null>(null);
+  const [isModalVisible, setModalVisible] = React.useState(false);
 
   const handlePress = (id: string) => {
     navigation.navigate('ChallengeDetail', { id });
   };
+
+
+  const handleDelete = async () => {
+    try {
+      await deleteChallenge({ id: selectedId });
+      queryClient.invalidateQueries({ queryKey: ['challenges', 'rejected'] });
+      toggleModal(null);
+    } catch (error) {
+      console.error('Error delete challenge:', error);
+    }
+  };
+
+  const toggleModal = (id: string | null = null) => {
+    setSelectedId(id);
+    setModalVisible(!isModalVisible);
+  };
+
 
 
   return (
@@ -50,7 +71,9 @@ export default function RejectScreen({ navigation }: NavigateType) {
                       <TouchableOpacity onPress={() => (challenge.id)}>
                         <Image source={require('../../assets/icons/Shape.png')} style={styles.editGroup} />
                       </TouchableOpacity>
-                      <Image source={require('../../assets/icons/delete.png')} style={styles.editGroup} />
+                      <TouchableOpacity onPress={() => toggleModal(challenge._id)}>
+                        <Image source={require('../../assets/icons/delete.png')} style={styles.editGroup} />
+                      </TouchableOpacity>
                     </View>
                   </View>
                   <Text style={styles.hour}>1m ago.</Text>
@@ -59,6 +82,16 @@ export default function RejectScreen({ navigation }: NavigateType) {
             ))}
           </View>
         </ScrollView >
+      )}
+       {isModalVisible && (
+        <WarningComponent
+          title='Warning'
+          description='Are you sure to delete this challenge?'
+          Action1='Cancel'
+          Action2='Delete'
+          handleAction2={handleDelete}
+          toggleModal={toggleModal}
+        />
       )}
     </View>
   );

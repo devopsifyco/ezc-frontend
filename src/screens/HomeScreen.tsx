@@ -6,6 +6,7 @@ import {
   Image,
   TouchableOpacity,
   FlatList,
+  ScrollView,
 } from 'react-native';
 
 import LiveCard from '../components/LiveCard';
@@ -45,44 +46,44 @@ const HomeScreen: React.FC<NavigateType> = ({ navigation }) => {
         </TouchableOpacity>
       </View>
 
-      <View style={{ height: 150 }}>
-        <Slides />
-      </View>
 
-      <View style={styles.section}>
-        <Text style={styles.sectionName}>Processing</Text>
-        <TouchableOpacity style={styles.seeAll}>
-          <Text
-            onPress={() => navigation.navigate('SeeAllLive')}
-          >See All</Text>
-          <Image source={require('../assets/icons/iconSeeAll.png')} />
-        </TouchableOpacity>
-      </View>
-      <View>
-        <FlatList
-          data={challenges}
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          keyExtractor={(item, index) => index.toString()}
-          renderItem={({ item, index }) => (
-            <LiveCard
-              id={item._id}
-              key={item.id ? item.id.toString() : index.toString()}
-              start_time={item.start_time}
-              end_time={item.end_time}
-              title={item.title}
-              company={item.company}
-              address={item.address}
-              images_path={item.images_path}
-              isLive={item.isLive}
-              points_reward={item.points_reward}
-              description={item.description}
-              onPress={() => handlePress(item._id)}
+        <View style={{ height: 150 }}>
+          <Slides />
+        </View>
+        <View style={styles.section}>
+          <Text style={styles.sectionName}>Processing</Text>
+          <TouchableOpacity style={styles.seeAll}>
+            <Text
+              onPress={() => navigation.navigate('SeeAllLive')}
+            >See All</Text>
+            <Image source={require('../assets/icons/iconSeeAll.png')} />
+          </TouchableOpacity>
+        </View>
+        <View>
+          <FlatList
+            data={challenges}
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            keyExtractor={(item, index) => index.toString()}
+            renderItem={({ item, index }) => (
+              <LiveCard
+                id={item._id}
+                key={item.id ? item.id.toString() : index.toString()}
+                start_time={item.start_time}
+                end_time={item.end_time}
+                title={item.title}
+                company={item.company}
+                address={item.address}
+                images_path={item.images_path}
+                isLive={item.isLive}
+                points_reward={item.points_reward}
+                description={item.description}
+                onPress={() => handlePress(item._id)}
 
-            />
-          )}
-        />
-      </View>
+              />
+            )}
+          />
+        </View>
 
       <View style={styles.section}>
         <Text style={styles.sectionName}>Challenges</Text>

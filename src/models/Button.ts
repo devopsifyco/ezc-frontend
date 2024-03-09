@@ -1,4 +1,4 @@
-import {ImageSourcePropType} from 'react-native';
+import { ImageSourcePropType } from 'react-native';
 
 export interface ButtonTypeProps {
   onPress: () => void;
@@ -15,4 +15,12 @@ export interface CustomButtonProps extends ButtonTypeProps {
   end?: { x: number; y: number };
   buttonStyle?: object;
   textStyle?: object;
+}
+export interface WarningProps {
+  title: string;
+  description: string;
+  Action1: string;
+  Action2: string;
+  handleAction2: () => void;
+  toggleModal: () => void;
 }
