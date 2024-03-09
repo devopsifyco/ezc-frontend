@@ -79,6 +79,7 @@ export function useOneChallenges(_id: string) {
       }
     },
     onSuccess: (data) => {
+      console.log(data);
       console.log('Successful get one data');
     },
   });
@@ -86,13 +87,15 @@ export function useOneChallenges(_id: string) {
   return { ...getOneChallenge };
 }
 
+// ----------------------------------
 export function useUpdateChallenges( ) {
   const getUpdateChallenge = useMutation({
     mutationKey: ['UpdateChallenge'], 
     mutationFn: async (params: Challenge) => {
       try {
         const token = await AsyncStorage.getItem('accessToken');
-        const res = await axios.put(`${API_CHALLENGES}/update`, params, {
+        // const res = await axios.put(`${API_CHALLENGES}/update`, params, {
+        const res = await axios.put(`http://192.168.56.96:4000/api/update`, params, {
           headers: {
             'Content-Type': 'application/json',
             Authorization: `Bearer ${token}`,
@@ -152,7 +155,7 @@ export default {
   useGetAllChallenges, 
   useGetAllChallengesByStatus,
   useOneChallenges,
+  useDeleteChallenges,
   useUpdateChallenges
-  useDeleteChallenges
 
 }

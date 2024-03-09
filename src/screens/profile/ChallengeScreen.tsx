@@ -2,8 +2,11 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, Image, StyleSheet, ScrollView, TouchableOpacity, ActivityIndicator } from 'react-native';
 import { useQueryClient } from '@tanstack/react-query';
 import { NavigateType } from '../../models/Navigations';
-
-import { useGetAllChallengesPending, useGetAllChallengesApproved, useGetAllChallengesRejected } from '../../hooks/useChallenge';
+import {
+  useGetAllChallengesByStatus,
+  useDeleteChallenges
+} from '../../hooks/useChallenge';
+import Moment from 'moment';
 import { Challenge } from '../../models/InfChallenge';
 import WarningComponent from '../../components/WarningComponent';
 
@@ -28,7 +31,6 @@ export default function ChallengeScreen({ navigation }: NavigateType) {
   const handleEditPress = (id: string) => {
     navigation.navigate('UpdateChallenge', { id });
   }
-
 
   const handleDelete = async () => {
     try {
@@ -85,9 +87,10 @@ export default function ChallengeScreen({ navigation }: NavigateType) {
                       </View>
                     </View>
                     <View style={styles.displayCenter}>
-                      <TouchableOpacity onPress={() =>(challenge.id)}>
+                      <TouchableOpacity onPress={() => handleEditPress(challenge._id)}>
                         <Image source={require('../../assets/icons/Shape.png')} style={styles.editGroup} />
                       </TouchableOpacity>
+
 
                       <TouchableOpacity onPress={() => toggleModal(challenge._id)}>
                         <Image source={require('../../assets/icons/delete.png')} style={styles.editGroup} />
@@ -221,8 +224,6 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     height: 110,
     borderRadius: 15,
-    position: "relative",
-    marginTop:5
 
   },
   listItemDetail: {
@@ -255,17 +256,12 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     width: '90%',
   },
-  icon_edit: {
-    position: "absolute",
-    right: 10
-  },
   address: {
     fontSize: 13,
     marginLeft: 4,
     fontWeight: "bold",
     color: '#747688',
-  }
-  ,
+  },
   editGroup: {
     flexDirection: 'row',
     backgroundColor: '#FFFFFF',

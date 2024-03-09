@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Image, TouchableOpacity, Text, StyleSheet } from 'react-native';
 import {
     launchImageLibrary,
@@ -31,9 +31,6 @@ const SelectedImages: React.FC<SelectedImagesProps> = ({ imageList, setSelectedI
 
         launchImageLibrary(options, response => {
             if (response.assets) {
-                // const newImages: string[] = response.assets.map(
-                //     (asset: Asset) => asset.uri,
-                // );
                 response.assets.forEach((asset, index) => {
                     setSelectedImage(index + imageList.length, asset);
                 });
@@ -49,6 +46,23 @@ const SelectedImages: React.FC<SelectedImagesProps> = ({ imageList, setSelectedI
         }
     };
 
+    const [backup_imageList, setBackup_imageList] = useState({});
+
+    // useEffect(() => {
+    //     setBackup_imageList(imageList)
+    //     console.log("backup_imageList", backup_imageList);
+    // }, [backup_imageList]);
+
+
+    const removeFirstImage = (array: any) => {
+        array.shift();
+        setBackup_imageList(array)
+    }
+
+    console.log("backup_imageList", backup_imageList);
+    
+
+
 
     return (
         <>
@@ -57,32 +71,32 @@ const SelectedImages: React.FC<SelectedImagesProps> = ({ imageList, setSelectedI
                     style={styles.fullWidthContainer}
                     onPress={() => setSelectedImage(0, imageList[0].downloadLink)}>
                     <Image source={{ uri: imageList[0].downloadLink }} style={styles.fullWidthImage} />
-                    {removeImage && (
+                    {/* {removeImage && ( */}
                         <TouchableOpacity
                             style={styles.removeButtonFull}
-                            onPress={() => removeImage(0)}>
+                            onPress={() => removeFirstImage(imageList)}>
                             <Image
                                 source={require('../../../assets/icons/delete.png')}
                                 style={styles.iconRemove}
                             />
                         </TouchableOpacity>
-                    )}
+                    {/* )} */}
                 </TouchableOpacity>
             )}
+
             <View style={styles.viewAdd}>
                 {imageList?.slice(1).map((image, index) => (
                     <View key={index + 1}>
                         <TouchableOpacity onPress={() => setSelectedImage(index + 1, image.downloadLink)}>
                             <Image source={{ uri: image.downloadLink }} style={styles.smallImage} />
                         </TouchableOpacity>
-                        {removeImage && (
                             <TouchableOpacity style={styles.removeButton} onPress={() => removeImage(index + 1)}>
                                 <Image source={require('../../../assets/icons/delete.png')} style={styles.iconRemove} />
                             </TouchableOpacity>
-                        )}
                     </View>
                 ))}
             </View>
+
             <View style={styles.displayCenter}>
                 <TouchableOpacity
                     onPress={imagePickerHandler}
