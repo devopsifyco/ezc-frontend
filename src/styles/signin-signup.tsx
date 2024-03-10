@@ -1,4 +1,4 @@
-import {StyleSheet} from 'react-native';
+import { StyleSheet } from 'react-native';
 
 export const styles = StyleSheet.create({
   container: {
@@ -38,7 +38,7 @@ export const styles = StyleSheet.create({
     paddingTop: 20,
     paddingBottom: 20,
   },
-  formInput: {paddingBottom: 10, gap: 10},
+  formInput: { paddingBottom: 10, gap: 10 },
   inputContainter: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -54,14 +54,14 @@ export const styles = StyleSheet.create({
   options: {},
   setCenter: {},
   tileWhiteColor: {},
-  titleBold: {fontWeight: 'bold'},
+  titleBold: { fontWeight: 'bold' },
   textRegister: {
     color: '#FFFFFF',
     top: 3.5,
   },
   moreLogin: {},
   displayOneline: {},
-  moreOption: {flexDirection: 'row', justifyContent: 'space-between'},
+  moreOption: { flexDirection: 'row', justifyContent: 'space-between' },
   errorText: {
     color: 'red',
   },
@@ -80,6 +80,14 @@ export const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
-  titleLarge: {fontSize: 24},
+  titleLarge: { fontSize: 24 },
   itemVerify: {},
+  resendCode: {
+    flexDirection: 'row',
+    gap: 4,
+  },
+  displayCenter: {
+    justifyContent: 'center',
+    alignItems: 'center',
+  }
 });
