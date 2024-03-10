@@ -144,7 +144,7 @@ console.log('This is data want to update:', editedChallenge);
               control={control}
               render={({ field }) => (
                 <SelectedImages
-                  imageList={selectedImages}
+                  imageList={images_path}
                   setSelectedImage={(index: number, asset: any) => {
                     const updatedImages = [...selectedImages];
                     //console.log('asset', asset, asset.constructor.name)
