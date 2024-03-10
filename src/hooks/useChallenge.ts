@@ -2,6 +2,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import axios from 'axios';
 import { EZCHALLENG_API } from '../api/endPoint';
+import { Challenge } from '../models/InfChallenge';
 
 const API_ALLCHALLENGE = `${EZCHALLENG_API}/challenges`;
 const API_CHALLENGES = `${EZCHALLENG_API}/challenge`;
@@ -32,6 +33,7 @@ export function useGetAllChallenges() {
   return { ...getAllChallenges };
 }
 
+
 //  -----------get get all challenge by status ---------------------
 
 export function useGetAllChallengesByStatus(status: string) {
@@ -57,13 +59,13 @@ export function useGetAllChallengesByStatus(status: string) {
 
 //  -----------get one challenge ---------------------
 
-export function useOneChallenges(id: string) {
+export function useOneChallenges(_id: string) {
   const getOneChallenge = useMutation({
-    mutationKey: ['getOneChallenge', id], 
+    mutationKey: ['getOneChallenge', _id], 
     mutationFn: async () => {
       try {
         const token = await AsyncStorage.getItem('accessToken');
-        const res = await axios.get(`${API_CHALLENGES}/${id}`, {
+        const res = await axios.get(`${API_CHALLENGES}/${_id}`, {
           headers: {
             'Content-Type': 'application/json',
             Authorization: `Bearer ${token}`,
@@ -81,6 +83,35 @@ export function useOneChallenges(id: string) {
 
   return { ...getOneChallenge };
 }
+
+// ----------------------------------
+export function useUpdateChallenges( ) {
+  const getUpdateChallenge = useMutation({
+    mutationKey: ['UpdateChallenge'], 
+    mutationFn: async (params: Challenge) => {
+      try {
+        const token = await AsyncStorage.getItem('accessToken');
+        const res = await axios.put(`${API_CHALLENGES}/update`, params, {
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        return res.data;
+      } catch (error) {
+        console.error('Error updating challenge:', error);
+        throw error;
+      }
+    },
+    onSuccess: () => {
+      console.log('Successful update data');
+    },
+  });
+
+  return { ...getUpdateChallenge };
+}
+
+
 
 
 
@@ -120,6 +151,7 @@ export default {
   useGetAllChallenges, 
   useGetAllChallengesByStatus,
   useOneChallenges,
-  useDeleteChallenges
+  useDeleteChallenges,
+  useUpdateChallenges
 
 }

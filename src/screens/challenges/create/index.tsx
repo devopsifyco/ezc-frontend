@@ -16,12 +16,12 @@ const CreateChallenges = ({route}: any) => {
   const navigation = useNavigation();
   const [currentStep, setCurrentStep] = useState(1);
 
-  useEffect(() => {
-    const stepParam = route.params?.step;
-    if (stepParam) {
-      setCurrentStep(stepParam);
-    }
-  }, [route.params]);
+  // useEffect(() => {
+  //   const stepParam = route.params?.step;
+  //   if (stepParam) {
+  //     setCurrentStep(stepParam);
+  //   }
+  // }, [route.params]);
 
   const renderStep = () => {
     switch (currentStep) {

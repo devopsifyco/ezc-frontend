@@ -28,6 +28,9 @@ export default function ChallengeScreen({ navigation }: NavigateType) {
     navigation.navigate('ChallengeDetail', { id });
   };
 
+  const handleEditPress = (id: string) => {
+    navigation.navigate('UpdateChallenge', { id });
+  }
 
   const handleDelete = async () => {
     try {
@@ -84,9 +87,10 @@ export default function ChallengeScreen({ navigation }: NavigateType) {
                       </View>
                     </View>
                     <View style={styles.displayCenter}>
-                      <TouchableOpacity onPress={() => (challenge.id)}>
+                      <TouchableOpacity onPress={() => handleEditPress(challenge._id)}>
                         <Image source={require('../../assets/icons/Shape.png')} style={styles.editGroup} />
                       </TouchableOpacity>
+
 
                       <TouchableOpacity onPress={() => toggleModal(challenge._id)}>
                         <Image source={require('../../assets/icons/delete.png')} style={styles.editGroup} />

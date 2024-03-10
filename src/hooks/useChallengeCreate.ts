@@ -19,8 +19,7 @@ export default function useChallengeCreate() {
         "email": modifyEmail
       }
       const res = await axios.post(
-        `http://192.168.77.96:4000/api/challenge/create`,
-        // `${EZCHALLENG_API}/challenge/create`,
+        `${EZCHALLENG_API}/challenge/create`,
         fullData,
         {
           headers: {

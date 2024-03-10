@@ -4,8 +4,8 @@ import react, { useEffect, useState, useRef } from 'react';
 
 import { NavigateType } from '../models/Navigations';
 import Swiper from 'react-native-swiper';
+import ButtonChallenge from '../components/ButtonChallenge';
 import { useOneChallenges } from '../hooks/useChallenge';
-import ButtonDetaiChallenge from '../components/ButtonDetailChallenge';
 import Moment from 'moment';
 
 
@@ -108,12 +108,12 @@ const ChallengeDetail = ({ navigation, route }: NavigateType) => {
           </View>
         </View>
         <View style={styles.wrapped_button}>
-          <ButtonDetaiChallenge
+          <ButtonChallenge
             onPress={handlePress}
             title="Donate"
             buttonStyle={{ width: 120 }}
           />
-          <ButtonDetaiChallenge
+          <ButtonChallenge
             onPress={handlePress}
             title="Join"
             buttonStyle={{ width: 120 }}

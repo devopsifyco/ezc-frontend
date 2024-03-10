@@ -4,3 +4,4 @@ export interface NavigateType {
     params: string | any; 
     };
 }
+

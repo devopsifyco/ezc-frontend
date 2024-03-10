@@ -19,6 +19,7 @@ import RatingScreen from './RatingScreen';
 import ChatScreen from './ChatScreen';
 import NotificationScreen from './Notification';
 import GroupScreen from './GroupScreen';
+import UpdateChallenges from './challenges/update';
 import PendingScreen from './Status/PendingScreen';
 import Status from './Status';
 import CreateChallenges from './challenges/create';
@@ -51,14 +52,10 @@ export default function EZChallenge() {
         <Stack.Screen name="RatingScreen" component={RatingScreen} />
         <Stack.Screen name="ChatScreen" component={ChatScreen} />
         <Stack.Screen name="GroupScreen" component={GroupScreen} />
-        <Stack.Screen
-          name="NotificationScreen"
-          component={NotificationScreen}
-        />
-        <Stack.Screen name="CreateChallenges" component={CreateChallenges} />
-      </Stack.Group>
-      <Stack.Group screenOptions={{ headerShown: false }}>
+        <Stack.Screen name='NotificationScreen' component={NotificationScreen} />
         <Stack.Screen name="ChallengeDetail" component={ChallengeDetail} />
+        <Stack.Screen name="UpdateChallenge" component={UpdateChallenges} />
+        <Stack.Screen name="CreateChallenges" component={CreateChallenges} />
       </Stack.Group>
     </Stack.Navigator>
   );
