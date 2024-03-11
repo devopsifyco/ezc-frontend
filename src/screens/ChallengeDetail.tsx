@@ -152,7 +152,7 @@ const ChallengeDetail = ({ navigation, route }: NavigateType) => {
             />
         </View>
         <View style={styles.wrapped_avarta}>
-          <Image style={styles.avatar} source={require('../assets/images/challenges1.jpg')} />
+          <Image style={styles.avatar} source={{uri: owner_id?.avatar.name}} />
           <View style={styles.infUser}>
             <Text style={{ fontSize: 16, fontWeight: 'bold', color: "#363636" }}>{owner_id?.username}</Text>
             <Text>Organizer</Text>
