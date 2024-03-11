@@ -48,12 +48,13 @@ const ChallengeDetail = ({ navigation, route }: NavigateType) => {
   };
 
 
-  
 
   const handleJoinChallenge = async () => {
     AsyncStorage.getItem('email').then(data => {
 
       const emailWithoutQuotes = data ? data.replace(/["']/g, '') : '';
+
+      console.log("my Email", emailWithoutQuotes);
 
       const joinData = { email: emailWithoutQuotes, id: id };
 
