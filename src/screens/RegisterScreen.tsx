@@ -30,7 +30,7 @@ export default function RegisterScreen({navigation}: NavigateType) {
 
   const moveLogin = () => navigation.goBack();
 
-  const { mutate } = useRegister();
+  const { mutate, isPending } = useRegister();
 
 
   const onSubmit = (data: RegistrationData) => {
