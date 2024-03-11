@@ -11,6 +11,7 @@ const ButtonChallenge = ({
     end = { x: 0.5, y: 1.0 },
     buttonStyle = {},
     textStyle = {},
+    disabled = false
   }: CustomButtonProps) => {
     
     return (
@@ -18,8 +19,8 @@ const ButtonChallenge = ({
         colors={colors}
         start={start}
         end={end}
-        style={[styles.button, buttonStyle]}>
-        <TouchableOpacity onPress={onPress}>
+        style={[styles.button, buttonStyle, disabled && styles.disabledButton]}>
+        <TouchableOpacity onPress={onPress} disabled={disabled}>
           <Text style={[styles.buttonText, textStyle]}>{title}</Text>
         </TouchableOpacity>
       </LinearGradient>
@@ -39,6 +40,9 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: 'bold',
   },
+  disabledButton: {
+    opacity:0.5
+  }
   
 });
 

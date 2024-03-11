@@ -113,8 +113,6 @@ export function useUpdateChallenges( ) {
 
 
 
-
-
 //  -----------delete challenge  -------------------
 
 
@@ -145,6 +143,34 @@ export function useDeleteChallenges() {
   return { ...getDeleteChallenge };
 }
 
+//------------------join challenge-----------------------------
+
+export function useJoinChallenge() {
+  const getJoinChallenge = useMutation({
+    mutationKey: ['JoinChallenge'], 
+    mutationFn: async (dataJoin: {email: string, id: string}) => {
+      try {
+        const token = await AsyncStorage.getItem('accessToken');
+        const res = await axios.post(`${API_CHALLENGES}/join`, dataJoin, {
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        return res.data;
+      } catch (error) {
+        throw new Error("Failed join challenge");
+      }
+    },
+    onSuccess: () => {
+      console.log('Successful join data');
+    },
+    onError: (error) => console.log(error.message)
+  });
+
+  return { ...getJoinChallenge };
+}
+
 
 
 export default { 
@@ -152,6 +178,7 @@ export default {
   useGetAllChallengesByStatus,
   useOneChallenges,
   useDeleteChallenges,
-  useUpdateChallenges
+  useUpdateChallenges,
+  useJoinChallenge
 
 }
