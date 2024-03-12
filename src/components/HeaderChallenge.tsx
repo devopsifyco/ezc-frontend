@@ -1,24 +1,29 @@
 import React from 'react';
 import {Text, View, StyleSheet, Image, TouchableOpacity} from 'react-native';
-import {NavigateType} from '../models/Navigations';
 
-export default function HeaderChallenge({navigation}: NavigateType) {
+interface HeaderChallengeProps  {
+  title: string; 
+  navigation: string | any;
+
+}
+
+export default function HeaderChallenge({navigation, title}: HeaderChallengeProps) {
   return (
     <View style={styles.container}>
-      <TouchableOpacity style={{position: 'absolute'}} onPress={() => navigation.goBack()}>
+      <TouchableOpacity  onPress={() => navigation.goBack()}>
         <Image source={require('../assets/profile/back.png')} />
       </TouchableOpacity>
-      <Text style={styles.title}>Challenge</Text>
+      <Text style={styles.title}>{title}</Text>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
+    paddingRight:"5%"
   },
   title: {
     fontSize: 20,
@@ -27,6 +32,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     textAlign: 'center',
     width: '100%',
-    marginBottom: 10,
+    flex: 1,
+
   },
 });
