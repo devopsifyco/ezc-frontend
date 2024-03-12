@@ -1,5 +1,5 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { QueryClient, useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import axios from 'axios';
 import { EZCHALLENG_API } from '../api/endPoint';
 import { Challenge } from '../models/InfChallenge';
@@ -90,7 +90,6 @@ export function useOneChallenges(_id: string) {
 
 // ----------------------------------
 export function useUpdateChallenges( ) {
-  const QueryClient = useQueryClient ()
   const getUpdateChallenge = useMutation({
     mutationKey: ['UpdateChallenge'], 
     mutationFn: async (params: Challenge) => {
@@ -109,7 +108,7 @@ export function useUpdateChallenges( ) {
       }
     },
     onSuccess: () => {
-      
+      console.log('Successful update data');
     },
   });
 

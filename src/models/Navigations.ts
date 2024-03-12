@@ -1,3 +1,10 @@
 export interface NavigateType {
-  navigation: any;
+  navigation: string | any;
+  route: {
+    params: string | any; 
+    };
 }
+
+
+
+
