@@ -1,11 +1,13 @@
 import { StyleSheet, Text, View, Image, TouchableOpacity, ScrollView, ActivityIndicator } from 'react-native'
-import react, { useEffect, useState, useRef } from 'react';
-
+import React, { useEffect, useState, useRef } from 'react';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import { NavigateType } from '../models/Navigations';
 import Swiper from 'react-native-swiper';
 import ButtonChallenge from '../components/ButtonChallenge';
-import { useOneChallenges } from '../hooks/useChallenge';
+import { useOneChallenges, useJoinChallenge } from '../hooks/useChallenge';
+import WarningComponent from '../components/WarningComponent';
+
 import Moment from 'moment';
 
 
@@ -14,14 +16,19 @@ const ChallengeDetail = ({ navigation, route }: NavigateType) => {
 
   const { id } = route.params;
 
+  const { mutate: JoinChallenge, error: errChallenge,  } = useJoinChallenge();
+  const [isJoined, setIsJoined] = useState(false);
   const { data: Challenge, isError, isPending, mutate } = useOneChallenges(id);
+  const [isModalVisible, setModalVisible] = React.useState(false);
 
 
   useEffect(() => {
     mutate();
+    
   }, [id, mutate]);
 
   const {
+    owner_id,
     title,
     images_path,
     description,
@@ -29,15 +36,35 @@ const ChallengeDetail = ({ navigation, route }: NavigateType) => {
     company,
     start_time,
     end_time,
-    address
+    address,
+    participants
   } = Challenge || {}
 
   const swiperRef = useRef<Swiper>(null);
+
 
   const handlePress = () => {
     console.log('Button pressed!');
   };
 
+
+
+  const handleJoinChallenge = async () => {
+    AsyncStorage.getItem('email').then(data => {
+
+      const emailWithoutQuotes = data ? data.replace(/["']/g, '') : '';
+
+      console.log("my Email", emailWithoutQuotes);
+
+      const joinData = { email: emailWithoutQuotes, id: id };
+
+      JoinChallenge(joinData);
+      setIsJoined(true);
+      setModalVisible(!isModalVisible);
+
+    });
+
+  };
 
   // read more content
   const [showFullContent, setShowFullContent] = useState(false);
@@ -45,6 +72,10 @@ const ChallengeDetail = ({ navigation, route }: NavigateType) => {
   // The number of lines you want to display
   const numberOfLinesToShow = 4;
 
+  // handle modal
+  const toggleModal = () => {
+    setModalVisible(!isModalVisible);
+  };
 
 
   return (
@@ -114,15 +145,16 @@ const ChallengeDetail = ({ navigation, route }: NavigateType) => {
             buttonStyle={{ width: 120 }}
           />
           <ButtonChallenge
-            onPress={handlePress}
+            onPress={toggleModal}
             title="Join"
             buttonStyle={{ width: 120 }}
-          />
+            disabled={errChallenge?.response?.status === 400 || isJoined}
+            />
         </View>
         <View style={styles.wrapped_avarta}>
-          <Image style={styles.avatar} source={require('../assets/images/challenges1.jpg')} />
+          <Image style={styles.avatar} source={{uri: owner_id?.avatar.name}} />
           <View style={styles.infUser}>
-            <Text style={{ fontSize: 16, fontWeight: 'bold', color: "#363636" }}>Ho Xuan Ty</Text>
+            <Text style={{ fontSize: 16, fontWeight: 'bold', color: "#363636" }}>{owner_id?.username}</Text>
             <Text>Organizer</Text>
           </View>
         </View>
@@ -142,6 +174,16 @@ const ChallengeDetail = ({ navigation, route }: NavigateType) => {
             </TouchableOpacity>
           )}
         </View>
+        {isModalVisible && (
+        <WarningComponent
+          title='verify'
+          description='Are you sure to join this challenge?'
+          Action1='Cancel'
+          Action2='Join'
+          handleAction2={handleJoinChallenge}
+          toggleModal={toggleModal}
+        />
+      )}
       </View>
     </ScrollView>
   )

@@ -4,23 +4,31 @@ import axios from 'axios';
 import { EZCHALLENG_API } from '../api/endPoint';
 import { Challenge } from '../models/InfChallenge';
 
-const API_ALLCHALLENGE = `${EZCHALLENG_API}/challenges`;
+const API_ALLCHALLENGE = `${EZCHALLENG_API}/challenges/not-participate`;
 const API_CHALLENGES = `${EZCHALLENG_API}/challenge`;
 
 
 //  --------------get all list challenge ----------------------
 export function useGetAllChallenges() {
   const getAllChallenges = useMutation({
-    mutationKey: ['challengesList'],
+    mutationKey: ['challengesList'], 
     mutationFn: async () => {
       try {
+        const email = await AsyncStorage.getItem('email'); 
+        const newEmail = email ? email.replace(/["']/g, '') : '';
+        console.log(newEmail)
         const token = await AsyncStorage.getItem('accessToken');
-        const res = await axios.get(API_ALLCHALLENGE, {
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${token}`,
-          },
-        });
+        const res = await axios.post(
+          API_ALLCHALLENGE, {email: newEmail},
+          {
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        console.log("res.data", res.data);
+        
         return res.data;
       } catch (error) {
         console.error('Error fetching challenges:', error);
@@ -32,7 +40,6 @@ export function useGetAllChallenges() {
 
   return { ...getAllChallenges };
 }
-
 
 //  -----------get get all challenge by status ---------------------
 
@@ -113,8 +120,6 @@ export function useUpdateChallenges( ) {
 
 
 
-
-
 //  -----------delete challenge  -------------------
 
 
@@ -145,6 +150,36 @@ export function useDeleteChallenges() {
   return { ...getDeleteChallenge };
 }
 
+//------------------join challenge-----------------------------
+
+export function useJoinChallenge() {
+  const getJoinChallenge = useMutation({
+    mutationKey: ['JoinChallenge'], 
+    mutationFn: async (dataJoin: {email: string, id: string}) => {
+      try {
+        const token = await AsyncStorage.getItem('accessToken');
+        const res = await axios.post(`${API_CHALLENGES}/join`, dataJoin, {
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        return res.data;
+      } catch (error) {
+        throw new Error("Failed join challenge");
+      }
+    },
+    onSuccess: () => {
+      console.log('Successful join data');
+    },
+    onError: (error: any) => {
+      console.log(error?.response.data.message);
+    }
+  });
+
+  return { ...getJoinChallenge };
+}
+
 
 
 export default { 
@@ -152,6 +187,7 @@ export default {
   useGetAllChallengesByStatus,
   useOneChallenges,
   useDeleteChallenges,
-  useUpdateChallenges
+  useUpdateChallenges,
+  useJoinChallenge
 
 }
