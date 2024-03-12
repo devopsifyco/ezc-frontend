@@ -21,16 +21,17 @@ import { useGetAllChallenges } from '../hooks/useChallenge';
 
 const HomeScreen: React.FC<NavigateType> = ({ navigation }) => {
 
-  const { data: challenges, mutate } = useGetAllChallenges();
+  const { data: challenges, mutate: getChallenges } = useGetAllChallenges();
 
   useEffect(() => {
-    mutate();
-  }, [mutate]);
+    getChallenges();
+  }, [getChallenges]);
 
+ console.log("Data", challenges)
+  
   const handleNotificationPress = () => {
     navigation.navigate('NotificationScreen');
   };
-
 
   const handlePress = (id: string) => {
     navigation.navigate('ChallengeDetail', { id });
@@ -113,7 +114,6 @@ const HomeScreen: React.FC<NavigateType> = ({ navigation }) => {
               images_path={item.images_path}
               isLive={item.isLive}
               points_reward={item.points_reward}
-              description={item.description}
               onPress={() => handlePress(item._id)}
             />
           )}

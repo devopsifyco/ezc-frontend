@@ -15,6 +15,8 @@ export interface CustomButtonProps extends ButtonTypeProps {
   end?: { x: number; y: number };
   buttonStyle?: object;
   textStyle?: object;
+  disabled?: boolean; 
+
 }
 export interface WarningProps {
   title: string;
