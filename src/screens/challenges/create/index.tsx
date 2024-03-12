@@ -11,6 +11,9 @@ import StepOneScreen from './StepOneScreen';
 import StepTwoScreen from './StepTwoScreen';
 import FinalStep from './FinalStep';
 import {useNavigation} from '@react-navigation/native';
+import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
+import { faBell } from '@fortawesome/free-solid-svg-icons';
+
 
 const CreateChallenges = ({route}: any) => {
   const navigation = useNavigation();
@@ -36,6 +39,8 @@ const CreateChallenges = ({route}: any) => {
     }
   };
 
+
+
   return (
     <View style={styles.container}>
       <ScrollView contentContainerStyle={styles.formContainer}>
@@ -46,6 +51,9 @@ const CreateChallenges = ({route}: any) => {
           <View>
             <Text style={styles.titleLarge}>Create Challenges</Text>
           </View>
+          <TouchableOpacity style={styles.iconNotify} onPress={()=> navigation.navigate("NotificationScreen")}>
+              <FontAwesomeIcon icon={faBell} size={24}/>
+          </TouchableOpacity>
         </View>
         <View style={styles.formBackground}>{renderStep()}</View>
       </ScrollView>
@@ -78,6 +86,9 @@ export const styles = StyleSheet.create({
     alignItems: 'center',
     paddingTop: 20,
     gap: 50,
+  },
+  iconNotify:{
+    marginTop:10
   },
   title: {
     fontSize: 24,
