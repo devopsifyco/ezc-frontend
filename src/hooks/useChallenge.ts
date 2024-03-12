@@ -16,7 +16,6 @@ export function useGetAllChallenges() {
       try {
         const email = await AsyncStorage.getItem('email'); 
         const newEmail = email ? email.replace(/["']/g, '') : '';
-        console.log(newEmail)
         const token = await AsyncStorage.getItem('accessToken');
         const res = await axios.post(
           API_ALLCHALLENGE, {email: newEmail},
@@ -27,8 +26,6 @@ export function useGetAllChallenges() {
             },
           }
         );
-        console.log("res.data", res.data);
-        
         return res.data;
       } catch (error) {
         console.error('Error fetching challenges:', error);

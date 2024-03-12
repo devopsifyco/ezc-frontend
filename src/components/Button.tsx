@@ -1,19 +1,19 @@
 import React from 'react';
-import {StyleSheet, Text, TouchableOpacity} from 'react-native';
-import {ButtonTypeProps} from '../models/Button';
+import { StyleSheet, Text, TouchableOpacity } from 'react-native';
+import { ButtonTypeProps } from '../models/Button';
 import LinearGradient from 'react-native-linear-gradient';
 
-const Button = ({onPress, title}: ButtonTypeProps) => {
+const Button = ({ onPress, title }: ButtonTypeProps) => {
   return (
-    <LinearGradient
-      colors={['#FF0A00', '#FF890B']}
-      start={{x: 0.0, y: 0.5}}
-      end={{x: 1.0, y: 0.5}}
-      style={styles.button}>
-      <TouchableOpacity onPress={onPress}>
+    <TouchableOpacity onPress={onPress}>
+      <LinearGradient
+        colors={['#FF0A00', '#FF890B']}
+        start={{ x: 0.0, y: 0.5 }}
+        end={{ x: 1.0, y: 0.5 }}
+        style={styles.button}>
         <Text style={styles.buttonText}>{title}</Text>
-      </TouchableOpacity>
-    </LinearGradient>
+      </LinearGradient>
+    </TouchableOpacity>
   );
 };
 
