@@ -46,7 +46,7 @@ export default function BottomTabs() {
 
             const iconColor = focused ? '#FF890B' : '#D9D9D9';
 
-            return <FontAwesomeIcon icon={icon} color={iconColor} size={30} />;
+            return <FontAwesomeIcon icon={icon} color={iconColor} size={30}  />;
           },
           tabBarLabel: () => {
             return null;

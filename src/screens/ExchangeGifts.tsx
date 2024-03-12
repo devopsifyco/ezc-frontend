@@ -1,10 +1,14 @@
 import React from 'react';
 import { NavigateType } from '../models/Navigations';
 import { View, StyleSheet, Text, TouchableOpacity, Image } from 'react-native';
+import HeaderChallenge from '../components/HeaderChallenge';
 
 export default function ExchangeGifts({ navigation }: NavigateType) {
   return (
     <View style={styles.container}>
+      <View style={styles.header}>
+        <HeaderChallenge navigation={navigation} title='Category' />
+      </View>
       <View style={styles.contain}>
         <TouchableOpacity style={styles.object} onPress={() => {
           navigation.navigate("ListGift")
@@ -15,6 +19,7 @@ export default function ExchangeGifts({ navigation }: NavigateType) {
             <Text style={styles.des}>Receive sustainable green gifts with GP</Text>
           </View>
         </TouchableOpacity>
+
         <View style={styles.object}>
           <Image source={require('../assets/images/icon-donate.png')}
             style={styles.icon}
@@ -24,6 +29,7 @@ export default function ExchangeGifts({ navigation }: NavigateType) {
             <Text style={styles.des}>Share green joy with friends by giving away GP green points</Text>
           </View>
         </View>
+
       </View>
     </View>
   );
@@ -31,7 +37,13 @@ export default function ExchangeGifts({ navigation }: NavigateType) {
 export const styles = StyleSheet.create({
   container: {
     flex: 1,
-    marginTop: 100
+  },
+  header: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingHorizontal: 20,
+    alignItems: 'center',
+    marginVertical:20
   },
   contain: {
     display: "flex",

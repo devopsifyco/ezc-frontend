@@ -27,7 +27,7 @@ export default function Status({ navigation, route }: NavigateType) {
                 style={styles.backgroundImage}
             />
             <View style={styles.header}>
-                <HeaderChallenge navigation={navigation} />
+                <HeaderChallenge navigation={navigation} title='Challenge'/>
 
             </View>
             <View style={styles.listActions}>
@@ -68,9 +68,10 @@ const styles = StyleSheet.create({
     },
     header: {
         flexDirection: 'row',
-        justifyContent: 'space-between',
+        justifyContent: "space-around",
         paddingHorizontal: 20,
         alignItems: 'center',
+        marginBottom:20,
     },
     profileName: {
         fontSize: 18,
