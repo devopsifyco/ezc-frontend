@@ -1,24 +1,20 @@
 import React from 'react';
-import {Text, View, StyleSheet} from 'react-native';
-import {NavigateType} from '../models/Navigations';
+import {Text} from 'react-native';
+import {View, StyleSheet} from 'react-native';
 
-export default function MapScreen({navigation}: NavigateType) {
+const MapScreen = () => {
   return (
     <View style={styles.container}>
-      <Text style={styles.textDemo}>EZ Challenge</Text>
+      <Text>Map Screen</Text>
     </View>
   );
-}
+};
 
-export const styles = StyleSheet.create({
+const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
     alignItems: 'center',
   },
-  textDemo: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: 'tomato',
-  },
 });
+
+export default MapScreen;

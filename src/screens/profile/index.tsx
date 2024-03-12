@@ -1,45 +1,102 @@
-import React from 'react';
-import {Text, View, StyleSheet, Image} from 'react-native';
+import { EZCHALLENG_API } from '../../api/endPoint';
+import React, { useState, useEffect } from 'react';
+import {
+  Text,
+  View,
+  StyleSheet,
+  Image,
+  TouchableOpacity,
+} from 'react-native';
+import HeaderProfile from '../../components/HeaderProfile';
+import {NavigateType} from '../../models/Navigations';
+import AboutScreen from './AboutScreen';
+import ChallengeScreen from './ChallengeScreen';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { DataProfile } from '../../models/Profile';
+import axios from 'axios';
+const USER_API = `${EZCHALLENG_API}/user`;
 
-const DATA = {
-  name: 'A Tien',
-  image: require('../../assets/profile/atien.jpg'),
-  flowing: 345,
-  flower: 55,
-  des: 'Em sống vì cộng đồng nên là thằng nào có tiền thì donate cho tao. Ít thì 5 quả trứng nhiều thì 1 quả tên lửa. Chúng mày nhớ chưa',
-  interest: ['Game Online', 'Music', 'Reading Book', 'Foot ball'],
-};
+export default function ProfileScreen({ navigation }: NavigateType) {
+  const [DATA, setData] = useState<DataProfile | null>(null);
+  const [selectedTab, setSelectedTab] = useState('ABOUT');
 
-export default function ProfileScreen() {
-  const {name, image, flower, flowing, des, interest} = DATA;
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        AsyncStorage.getItem('email').then(async (email) => {
+          const token = await AsyncStorage.getItem('accessToken');
+          const emailUser = email?.slice(1, -1);
+          const res = await axios.post(USER_API, {
+            email: emailUser,
+          }, {
+            headers: {
+              'Content-Type': 'application/json',
+              'Authorization': `Bearer ${token}`
+            }
+          });
+
+          const data = res.data;
+          setData(data);
+        }).catch((error) => {
+          console.error('Error retrieving email:', error.response.data);
+        });
+      } catch (error) {
+        console.log('User profile error:', error);
+      }
+    };
+
+    fetchData();
+  }, []);
+
+  console.log("Data Respon: ",DATA);
+  
 
   return (
     <View style={styles.container}>
+      <View style={styles.header}>
+        <HeaderProfile navigation={navigation} />
+        <TouchableOpacity
+          onPress={() => navigation.navigate('SubProfileScreen', { DATA })}>
+          <Image source={require('../../assets/profile/menu-toggle.png')} />
+        </TouchableOpacity>
+      </View>
       <View style={styles.profile}>
-        <Image source={image} style={styles.profileImage} />
-        <Text style={styles.profileName}>{name}</Text>
+        <Image
+          source={{ uri: DATA?.avatar.name }}
+          style={styles.profileImage}
+        />
+        <Text style={styles.profileName}>{DATA?.username}</Text>
+        <Text style={styles.profileName}>{DATA?.email}</Text>
         <View style={styles.numberStatus}>
-          <View style={styles.itemFlowing}>
-            <Text style={styles.itemNumber}>{flowing}</Text>
-            <Text style={styles.titleMedium}>Flowing</Text>
+          <View style={styles.itemfllowing}>
+            <Text style={styles.itemNumber}>{DATA?.points}</Text>
+            <Text style={styles.titleMedium}>Points</Text>
           </View>
           <View style={styles.arrowMiddle} />
-          <View style={styles.itemFlower}>
-            <Text style={styles.itemNumber}>{flower}</Text>
-            <Text style={styles.titleMedium}>Flower</Text>
+          <View style={styles.itemfllower}>
+            <Text style={styles.itemNumber}>{DATA?.challenges ? DATA?.challenges.length : 0}</Text>
+            <Text style={styles.titleMedium}>Challenge</Text>
           </View>
         </View>
       </View>
-      <Text style={styles.titleLarge}>About me</Text>
-      <Text style={styles.description}>{des}</Text>
-      <View>
-        <Text style={styles.titleLarge}>Interests</Text>
-        {interest.map((item, index) => (
-          <Text key={index} style={styles.interestItem}>
-            {item}
-          </Text>
-        ))}
+      <View style={styles.listActions}>
+        <TouchableOpacity
+          onPress={() => setSelectedTab('ABOUT')}
+          style={[styles.tab, selectedTab === 'ABOUT' && styles.selectedTab]}>
+          <Text style={styles.titleLarge}>ABOUT</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => setSelectedTab('CHALLENGE')}
+          style={[
+            styles.tab,
+            selectedTab === 'CHALLENGE' && styles.selectedTab,
+          ]}>
+          <Text style={styles.titleLarge}>CHALLENGE</Text>
+        </TouchableOpacity>
       </View>
+
+      {selectedTab === 'ABOUT' && <AboutScreen data={DATA} />}
+      {selectedTab === 'CHALLENGE' && <ChallengeScreen navigation={navigation}/>}
     </View>
   );
 }
@@ -47,7 +104,13 @@ export default function ProfileScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 16,
+    paddingHorizontal: 5,
+    paddingTop: 20,
+  },
+  header: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingHorizontal: 20,
   },
   profile: {
     alignItems: 'center',
@@ -67,12 +130,12 @@ const styles = StyleSheet.create({
   numberStatus: {
     flexDirection: 'row',
     justifyContent: 'space-around',
-    width: '50%',
+    gap: 10,
   },
-  itemFlowing: {
+  itemfllowing: {
     alignItems: 'center',
   },
-  itemFlower: {
+  itemfllower: {
     alignItems: 'center',
   },
   itemNumber: {
@@ -80,15 +143,12 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: '#120D26',
   },
-  description: {
-    marginBottom: 16,
-    color: '#120D26',
-  },
+
   titleLarge: {
     fontSize: 16,
     fontWeight: 'bold',
     marginBottom: 8,
-    color: '#120D26',
+    color: '#216C53',
   },
   interestItem: {
     fontSize: 14,
@@ -105,5 +165,27 @@ const styles = StyleSheet.create({
     width: 1,
     height: 45,
     backgroundColor: '#120D26',
+  },
+  interestList: {},
+  listActions: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    paddingHorizontal: 20,
+    
+  },
+  actionInteraction: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    paddingHorizontal: 20,
+
+  },
+  tab: {
+    flex: 1,
+    alignItems: 'center',
+  },
+  selectedTab: {
+    borderBottomWidth: 2,
+    borderColor: '#216C53',
+    width: 50,
   },
 });
