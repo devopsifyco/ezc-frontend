@@ -10,6 +10,8 @@ const API_CHALLENGES = `${EZCHALLENG_API}/challenge`;
 
 //  --------------get all list challenge ----------------------
 export function useGetAllChallenges() {
+  const queryClient = useQueryClient();
+
   const getAllChallenges = useMutation({
     mutationKey: ['challengesList'], 
     mutationFn: async () => {
@@ -30,11 +32,13 @@ export function useGetAllChallenges() {
         
         return res.data;
       } catch (error) {
-        console.error('Error fetching challenges:', error);
+        console.error('Error fetching all challenges:', error);
         throw error;
       }
     },
-    onSuccess: () => console.log('Get all challenge successful'),
+    onSuccess: () => {
+      queryClient.invalidateQueries({queryKey: ['challengesList']})
+    },
   });
 
   return { ...getAllChallenges };
