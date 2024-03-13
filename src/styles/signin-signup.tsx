@@ -33,6 +33,7 @@ export const styles = StyleSheet.create({
     paddingHorizontal: '6.3%',
     position: 'absolute',
     bottom: '0%',
+    width: '100%',
   },
   formContainer: {
     paddingTop: 20,
@@ -52,7 +53,10 @@ export const styles = StyleSheet.create({
     width: 210,
   },
   options: {},
-  setCenter: {},
+  setCenter: {
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   tileWhiteColor: {},
   titleBold: { fontWeight: 'bold' },
   textRegister: {
@@ -60,7 +64,10 @@ export const styles = StyleSheet.create({
     top: 3.5,
   },
   moreLogin: {},
-  displayOneline: {},
+  displayOneline: {
+    flexDirection: 'row',
+    gap: 4,
+  },
   moreOption: { flexDirection: 'row', justifyContent: 'space-between' },
   errorText: {
     color: 'red',
@@ -89,5 +96,35 @@ export const styles = StyleSheet.create({
   displayCenter: {
     justifyContent: 'center',
     alignItems: 'center',
-  }
+  },
+  modalContainer: {
+    backgroundColor: '#216C53',
+    height: 130,
+    width: '80%',
+    borderRadius: 10,
+    alignSelf: 'center',
+    top: '40%',
+  },
+  modalContent: {
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  modalText: {
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+    color: '#FFFFFF',
+    fontSize: 16,
+    textAlign: 'center',
+  },
+  modalButton: {
+    width: 55,
+    height: 35,
+    backgroundColor: 'grey',
+    borderRadius: 15,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  modalButtonText: {
+    color: 'white',
+  },
 });
