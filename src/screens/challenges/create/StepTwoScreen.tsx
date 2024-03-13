@@ -61,7 +61,7 @@ const StepTwoScreen = () => {
     control,
     handleSubmit,
     setValue,
-    formState: {errors},
+    formState: { errors },
   } = useForm<Input>({
     defaultValues: {
       startDate: undefined,
@@ -125,22 +125,21 @@ const StepTwoScreen = () => {
     }
     return ' *';
   };
+
   useEffect(() => {
     AsyncStorage.getItem('email').then((data: any) => {
       setEmail(data)
     })
   })
-  // const handleEmail = () => {
-  // }
 
   const backScreen = () => {
     navigation.navigate('CreateChallenges', { step: 1 });
   };
 
-  const {mutate: challengeCreate, isPending} = useChallengeCreate();
+  const { mutate: challengeCreate, isPending } = useChallengeCreate();
 
   const onSubmit: SubmitHandler<Input> = data => {
-    const combinedData = {...dataFromStepOne, ...data};
+    const combinedData = { ...dataFromStepOne, ...data };
 
     if (data.startDate && data.startTime) {
       const start_time = new Date(
@@ -186,144 +185,146 @@ const StepTwoScreen = () => {
   };
 
   return (
-    <View style={styles.container}>
+    <>
       {isPending && (
         <View style={styles.displayLoading}>
           <Progress.CircleSnail color={'white'} size={65} />
         </View>
       )}
-      <View style={styles.mediaContainer}>
-        <Text style={styles.titleMedium}>Challenges Date, Time & Venue</Text>
-      </View>
 
-      <Controller
-        control={control}
-        render={() => (
-          <View style={styles.formContainerDateTime}>
-            <Text style={styles.titleMedium}>Start Date</Text>
-            <TouchableOpacity
-              style={styles.formInputTime}
-              onPress={() => showPicker('startDate')}>
-              <Text style={styles.titleSmall}>{dateString(startDate)}</Text>
-            </TouchableOpacity>
-            {errors.startDate && (
-              <Text style={styles.errorText}>{errors.startDate.message}</Text>
-            )}
-          </View>
-        )}
-        name="startDate"
-        rules={{validate: validateStartDate}}
-      />
-
-      <Controller
-        control={control}
-        render={() => (
-          <View style={styles.formContainerDateTime}>
-            <Text style={styles.titleMedium}>End Date</Text>
-            <TouchableOpacity
-              style={styles.formInputTime}
-              onPress={() => showPicker('endDate')}>
-              <Text style={styles.titleSmall}>{dateString(endDate)}</Text>
-            </TouchableOpacity>
-            {errors.endDate && (
-              <Text style={styles.errorText}>{errors.endDate?.message}</Text>
-            )}
-          </View>
-        )}
-        name="endDate"
-        rules={{validate: validateEndDate}}
-      />
-
-      {showDatePicker &&
-        (pickerMode === 'startDate' || pickerMode === 'endDate') && (
-          <DateTimePicker
-            value={
-              (pickerMode === 'startDate' ? startDate : endDate) || new Date()
-            }
-            onChange={(_event, selectedDate) => {
-              handleDateChange({selectedDate});
-            }}
-            mode="date"
-            display="default"
-            onCancel={hidePicker}
-            onConfirm={hidePicker}
-          />
-        )}
-
-      <View style={styles.formContainerDateTime}>
-        <Text style={styles.titleMedium}>Start Time</Text>
-        <TouchableOpacity
-          style={styles.formInputTime}
-          onPress={() => showPicker('startTime')}>
-          <Text style={styles.titleSmall}>{timeString(startTime)}</Text>
-        </TouchableOpacity>
-        {errors.startTime && (
-          <Text style={styles.errorText}>{errors.startTime.message}</Text>
-        )}
-      </View>
-      <View style={styles.formContainerDateTime}>
-        <Text style={styles.titleMedium}>End Time</Text>
-        <TouchableOpacity
-          style={styles.formInputTime}
-          onPress={() => showPicker('endTime')}>
-          <Text style={styles.titleSmall}>{timeString(endTime)}</Text>
-        </TouchableOpacity>
-        {errors.endTime && (
-          <Text style={styles.errorText}>{errors.endTime.message}</Text>
-        )}
-      </View>
-
-      {showTimePicker &&
-        (pickerMode === 'startTime' || pickerMode === 'endTime') && (
-          <DateTimePicker
-            value={
-              (pickerMode === 'startTime' ? startTime : endTime) || new Date()
-            }
-            onChange={(_event, selectedTime) => {
-              handleTimeChange({selectedTime});
-            }}
-            mode="time"
-            display="default"
-            onCancel={hidePicker}
-            onConfirm={hidePicker}
-          />
-        )}
-
-      <View style={styles.inputContainer}>
-        <View style={styles.displayError}>
-          <Text style={styles.titleMedium}>Address</Text>
-          {errors.address && (
-            <Text style={styles.errorText}>{errors.address.message}</Text>
-          )}
+      <View style={styles.formContainer}>
+        <View style={styles.mediaContainer}>
+          <Text style={styles.titleMedium}>Challenges Date, Time & Venue</Text>
         </View>
+        <Controller
+          control={control}
+          render={() => (
+            <View style={styles.formContainerDateTime}>
+              <Text style={styles.titleMedium}>Start Date</Text>
+              <TouchableOpacity
+                style={styles.formInputTime}
+                onPress={() => showPicker('startDate')}>
+                <Text style={styles.titleSmall}>{dateString(startDate)}</Text>
+              </TouchableOpacity>
+              {errors.startDate && (
+                <Text style={styles.errorText}>{errors.startDate.message}</Text>
+              )}
+            </View>
+          )}
+          name="startDate"
+          rules={{ validate: validateStartDate }}
+        />
 
         <Controller
           control={control}
-          render={({field}) => (
-            <>
-              <TextInput
-                style={styles.input}
-                placeholder="Enter the challenges address"
-                placeholderTextColor="#BDBDBD"
-                onChangeText={text => field.onChange(text)}
-                value={field.value}
-              />
-            </>
+          render={() => (
+            <View style={styles.formContainerDateTime}>
+              <Text style={styles.titleMedium}>End Date</Text>
+              <TouchableOpacity
+                style={styles.formInputTime}
+                onPress={() => showPicker('endDate')}>
+                <Text style={styles.titleSmall}>{dateString(endDate)}</Text>
+              </TouchableOpacity>
+              {errors.endDate && (
+                <Text style={styles.errorText}>{errors.endDate?.message}</Text>
+              )}
+            </View>
           )}
-          name="address"
-          defaultValue=""
-          rules={{required: ' *'}}
+          name="endDate"
+          rules={{ validate: validateEndDate }}
         />
-      </View>
-      <View style={styles.actionButton}>
-        <View style={styles.button}>
-          <Button title="Back" onPress={backScreen} />
+
+        {showDatePicker &&
+          (pickerMode === 'startDate' || pickerMode === 'endDate') && (
+            <DateTimePicker
+              value={
+                (pickerMode === 'startDate' ? startDate : endDate) || new Date()
+              }
+              onChange={(_event, selectedDate) => {
+                handleDateChange({ selectedDate });
+              }}
+              mode="date"
+              display="default"
+              onCancel={hidePicker}
+              onConfirm={hidePicker}
+            />
+          )}
+
+        <View style={styles.formContainerDateTime}>
+          <Text style={styles.titleMedium}>Start Time</Text>
+          <TouchableOpacity
+            style={styles.formInputTime}
+            onPress={() => showPicker('startTime')}>
+            <Text style={styles.titleSmall}>{timeString(startTime)}</Text>
+          </TouchableOpacity>
+          {errors.startTime && (
+            <Text style={styles.errorText}>{errors.startTime.message}</Text>
+          )}
         </View>
-        <View style={styles.button}>
-          <Button title="Create" onPress={handleSubmit(onSubmit)} />
+        <View style={styles.formContainerDateTime}>
+          <Text style={styles.titleMedium}>End Time</Text>
+          <TouchableOpacity
+            style={styles.formInputTime}
+            onPress={() => showPicker('endTime')}>
+            <Text style={styles.titleSmall}>{timeString(endTime)}</Text>
+          </TouchableOpacity>
+          {errors.endTime && (
+            <Text style={styles.errorText}>{errors.endTime.message}</Text>
+          )}
+        </View>
+
+        {showTimePicker &&
+          (pickerMode === 'startTime' || pickerMode === 'endTime') && (
+            <DateTimePicker
+              value={
+                (pickerMode === 'startTime' ? startTime : endTime) || new Date()
+              }
+              onChange={(_event, selectedTime) => {
+                handleTimeChange({ selectedTime });
+              }}
+              mode="time"
+              display="default"
+              onCancel={hidePicker}
+              onConfirm={hidePicker}
+            />
+          )}
+
+        <View style={styles.inputContainer}>
+          <View style={styles.displayError}>
+            <Text style={styles.titleMedium}>Address</Text>
+            {errors.address && (
+              <Text style={styles.errorText}>{errors.address.message}</Text>
+            )}
+          </View>
+
+          <Controller
+            control={control}
+            render={({ field }) => (
+              <>
+                <TextInput
+                  style={styles.input}
+                  placeholder="Enter the challenges address"
+                  placeholderTextColor="#BDBDBD"
+                  onChangeText={text => field.onChange(text)}
+                  value={field.value}
+                />
+              </>
+            )}
+            name="address"
+            defaultValue=""
+            rules={{ required: ' *' }}
+          />
+        </View>
+        <View style={styles.actionButton}>
+          <View style={styles.button}>
+            <Button title="Back" onPress={backScreen} />
+          </View>
+          <View style={styles.button}>
+            <Button title="Create" onPress={handleSubmit(onSubmit)} />
+          </View>
         </View>
       </View>
-    </View>
+    </>
   );
 };
 
