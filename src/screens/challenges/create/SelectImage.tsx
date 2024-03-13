@@ -1,5 +1,7 @@
 import React from 'react';
-import {View, Image, TouchableOpacity, Text, StyleSheet} from 'react-native';
+import { View, Image, TouchableOpacity, Text, StyleSheet } from 'react-native';
+import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
+import { faRemove, faAdd, faDeleteLeft } from '@fortawesome/free-solid-svg-icons';
 import {
   launchImageLibrary,
   ImageLibraryOptions,
@@ -29,7 +31,7 @@ const SelectedImages: React.FC<SelectedImagesProps> = ({
 
     launchImageLibrary(options, response => {
       if (response.assets) {
-        response.assets.forEach( (asset: Asset, index: number) =>
+        response.assets.forEach((asset: Asset, index: number) =>
           setSelectedImage(index + imageList.length, asset)
         );
       } else {
@@ -50,15 +52,12 @@ const SelectedImages: React.FC<SelectedImagesProps> = ({
         <TouchableOpacity
           style={styles.fullWidthContainer}
           onPress={() => setSelectedImage(0, imageList[0])}>
-          <Image source={{uri: imageList[0].uri}} style={styles.fullWidthImage} />
+          <Image source={{ uri: imageList[0].uri }} style={styles.fullWidthImage} />
           {removeImage && (
             <TouchableOpacity
               style={styles.removeButtonFull}
               onPress={() => removeImage(0)}>
-              <Image
-                source={require('../../../assets/icons/delete.png')}
-                style={styles.iconRemove}
-              />
+              <FontAwesomeIcon icon={faRemove} size={32} color='#ff0000' style={styles.removeButtonFull} />
             </TouchableOpacity>
           )}
         </TouchableOpacity>
@@ -69,16 +68,13 @@ const SelectedImages: React.FC<SelectedImagesProps> = ({
           <View key={index + 1}>
             <TouchableOpacity
               onPress={() => setSelectedImage(index + 1, image)}>
-              <Image source={{uri: image.uri}} style={styles.smallImage} />
+              <Image source={{ uri: image.uri }} style={styles.smallImage} />
             </TouchableOpacity>
             {removeImage && (
               <TouchableOpacity
                 style={styles.removeButton}
                 onPress={() => removeImage(index + 1)}>
-                <Image
-                  source={require('../../../assets/icons/delete.png')}
-                  style={styles.iconRemove}
-                />
+                <FontAwesomeIcon icon={faRemove} size={24} color='#ff0000' style={styles.removeButton} />
               </TouchableOpacity>
             )}
           </View>
@@ -89,13 +85,13 @@ const SelectedImages: React.FC<SelectedImagesProps> = ({
           onPress={imagePickerHandler}
           style={styles.addImageButton}>
           <Text style={styles.text}>Add files</Text>
-          <Image
-            source={require('../../../assets/icons/1.png')}
-            style={styles.iconPlus}
-          />
+          <FontAwesomeIcon icon={faAdd} size={24} color='#216C53' style={styles.iconPlus} />
         </TouchableOpacity>
-        <TouchableOpacity onPress={handleClearImages}>
-          <Text style={styles.text}>Clear Images</Text>
+        <TouchableOpacity
+          onPress={handleClearImages}
+          style={styles.clearImage}>
+          <Text style={[styles.text, { color: '#ff0000' }]}>Clear</Text>
+          <FontAwesomeIcon icon={faDeleteLeft} size={24} color='#ff0000' style={styles.iconPlus} />
         </TouchableOpacity>
       </View>
     </>
@@ -141,6 +137,15 @@ const styles = StyleSheet.create({
     height: 30,
     borderRadius: 10,
   },
+  clearImage: {
+    flexDirection: 'row',
+    gap: 5,
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: 105,
+    height: 30,
+    borderRadius: 10,
+  },
   iconPlus: {
     height: 20,
     width: 20,
@@ -156,19 +161,14 @@ const styles = StyleSheet.create({
     position: 'absolute',
     zIndex: 10,
     top: '2%',
-    left: '80%',
+    left: '75%',
     paddingTop: 5,
-  },
-  iconRemove: {
-    height: 15,
-    width: 15,
-    tintColor: 'red',
   },
   removeButtonFull: {
     position: 'absolute',
     zIndex: 10,
     top: '5%',
-    left: '90%',
+    left: '88%',
     paddingTop: 5,
   },
 });
