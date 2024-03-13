@@ -1,138 +1,181 @@
-import React, { useState } from 'react';
-import {
-  View,
-  Text,
-  StyleSheet,
-  TextInput,
-  Image,
-  TouchableOpacity,
-} from 'react-native';
-import { Alert, ActivityIndicator } from 'react-native';
-import { launchImageLibrary} from 'react-native-image-picker';
-import LinearGradient from 'react-native-linear-gradient';
+import React from 'react';
+import { View, Text, TextInput, TouchableOpacity, Alert, StyleSheet, ActivityIndicator } from 'react-native';
+import { useForm, Controller } from 'react-hook-form';
 import { useUpdateUserProfile } from '../../hooks/useUser';
-import { DataProfile } from '../../models/Profile';
 import { NavigateType } from '../../models/Navigations';
+import { DataProfile } from '../../models/Profile';
+import LinearGradient from 'react-native-linear-gradient';
+import ImagePickerButton from './ImagePickerButton';
 
-export default function EditProfile({
-  route,
-  navigation,
-}: {
-  route: { params: { DATA: DataProfile } };
-  navigation: NavigateType;
-}) {
-  const { DATA } = route.params;
-
-  const [newData, setNewData] = useState({
-    username: DATA.username,
-    location: DATA.location,
-    about_me: DATA.about_me,
-    email: DATA.email,
-    image: DATA.avatar.name || '',
+export default function EditProfile({ route, navigation }: { route: { params: { dataProfile: DataProfile } }; navigation: NavigateType }) {
+  const { dataProfile } = route.params;
+  const { control, handleSubmit, setValue, formState: { errors } } = useForm({
+    defaultValues: {
+      username: dataProfile.username,
+      location: dataProfile.location,
+      about_me: dataProfile.about_me,
+      email: dataProfile.email,
+      image: dataProfile.avatar.name || '',
+    },
   });
+
   const { mutate, isPending } = useUpdateUserProfile();
 
-  const handleImagePicker = () => {
-    const options = {
-      title: 'Select Avatar',
-      storageOptions: {
-        skipBackup: true,
-        path: 'images',
-      },
-    };
+  const handleSuccess = () => navigation.goBack();
 
-    launchImageLibrary(options, (response) => {
-
-      if (response.assets && response.assets.length > 0) {
-        const selectedUri = response.assets[0].uri;
-        setNewData((prev) => ({ ...prev, image: selectedUri }));
-      } else {
-        console.log('User cancelled image picker or there was an error');
-      }
-    });
+  const handleImageSelect = (selectedUri: any) => {
+    setValue('image', selectedUri);
   };
 
-  const handleUpdate = async () => {
-    
+  const handleUpdate = (formData: any) => {
     try {
-      await mutate(newData);
-        Alert.alert('Edit Prodile successfully')
-       navigation.goBack();
+      mutate(formData, {
+        onSuccess: () => handleSuccess()
+      });
     } catch (error) {
       console.error('Update failed', error);
       Alert.alert('Error', 'Failed to update user profile');
     }
   };
 
+  const handleCancel = () => {
+    navigation.goBack();
+  };
+
   return (
-    <View style={styles.container}>
-      <View style={styles.formInput}>
-        <View style={styles.displayCenter}>
-          <Image source={{ uri: newData.image || DATA?.avatar.name }} style={styles.profileImage} />
-          <TouchableOpacity onPress={handleImagePicker}>
-            <Image
-              source={require('../../assets/icons/edit-profile.png')}
-              style={styles.iconEdit}
-            />
-          </TouchableOpacity>
+    <>
+      {isPending && (
+        <View style={styles.displayLoading}>
+          <ActivityIndicator color="#fff" size={45} />
         </View>
-        <View style={styles.containerInput}>
-          <Text style={styles.textInput}>Email</Text>
-          <TextInput
-            style={styles.input}
-            value={newData.email}
-            onChangeText={(text) => setNewData((prev) => ({ ...prev, email: text }))}
-          />
-        </View>
-        <View style={styles.containerInput}>
-          <Text style={styles.textInput}>User name</Text>
-          <TextInput
-            style={styles.input}
-            value={newData.username}
-            onChangeText={(text) => setNewData((prev) => ({ ...prev, username: text }))}
-          />
-        </View>
-        <View style={styles.containerInput}>
-          <Text style={styles.textInput}>Location</Text>
-          <TextInput
-            style={styles.input}
-            value={newData.location}
-            onChangeText={(text) => setNewData((prev) => ({ ...prev, location: text }))}
-          />
-        </View>
-        <View style={styles.containerInput}>
-          <Text style={styles.textInput}>About me</Text>
-          <TextInput
-            style={styles.input}
-            value={newData.about_me}
-            onChangeText={(text) => setNewData((prev) => ({ ...prev, about_me: text }))}
-            multiline
-          />
-        </View>
-        <View style={styles.displayCenter}>
-          <LinearGradient
-            colors={['#FF0A00', '#FF890B']}
-            start={{ x: 0.0, y: 0.5 }}
-            end={{ x: 2.0, y: 0.5 }}
-            style={styles.button}
-          >
-            <TouchableOpacity onPress={handleUpdate}>
-              {isPending ? (
-                <View style={styles.displayLoading}>
-                  <ActivityIndicator color="#fff" />
-                </View>
-              ) : (
-                <Text style={styles.textButton}>Update</Text>
+      )}
+      <View style={styles.container}>
+
+        <View style={styles.formInput}>
+          <View style={styles.displayCenter}>
+            <Controller
+              control={control}
+              render={({ field: { value } }) => (
+                <ImagePickerButton onImageSelect={handleImageSelect} currentImage={value || dataProfile?.avatar.name} />
               )}
-            </TouchableOpacity>
-          </LinearGradient>
+              name="image"
+            />
+          </View>
+
+          <View style={styles.containerInput}>
+            <View style={styles.displayOneline}>
+              <Text style={styles.textInput}>Email</Text>
+              <Text style={styles.errorText}>{errors.email?.message}</Text>
+            </View>
+            <Controller
+              control={control}
+              render={({ field: { onBlur, onChange, value } }) => (
+                <TextInput
+                  style={styles.input}
+                  value={value}
+                  onChangeText={(text) => onChange(text)}
+                  onBlur={onBlur}
+                />
+              )}
+              name="email"
+              rules={{ required: '*', pattern: { value: /^\S+@\S+$/i, message: 'Invalid email address' } }}
+            />
+
+          </View>
+
+          <View style={styles.containerInput}>
+            <View style={styles.displayOneline}>
+              <Text style={styles.textInput}>User name</Text>
+              <Text style={styles.errorText}>{errors.username?.message}</Text>
+            </View>
+            <Controller
+              control={control}
+              render={({ field: { onBlur, onChange, value } }) => (
+                <TextInput
+                  style={styles.input}
+                  value={value}
+                  onChangeText={(text) => onChange(text)}
+                  onBlur={onBlur}
+                />
+              )}
+              name="username"
+              rules={{ required: '*' }}
+            />
+          </View>
+
+          <View style={styles.containerInput}>
+            <View style={styles.displayOneline}>
+              <Text style={styles.textInput}>Location</Text>
+              <Text style={styles.errorText}>{errors.location?.message}</Text>
+            </View>
+            <Controller
+              control={control}
+              render={({ field: { onBlur, onChange, value } }) => (
+                <TextInput
+                  style={styles.input}
+                  value={value}
+                  onChangeText={(text) => onChange(text)}
+                  onBlur={onBlur}
+                />
+              )}
+              name="location"
+              rules={{ required: '*' }}
+            />
+          </View>
+
+          <View style={styles.containerInput}>
+            <View style={styles.displayOneline}>
+              <Text style={styles.textInput}>About me</Text>
+              <Text style={styles.errorText}>{errors.about_me?.message}</Text>
+            </View>
+            <Controller
+              control={control}
+              render={({ field: { onBlur, onChange, value } }) => (
+                <TextInput
+                  style={styles.inputAbout}
+                  value={value}
+                  onChangeText={(text) => onChange(text)}
+                  onBlur={onBlur}
+                  multiline={true}
+                  textAlignVertical="top"
+                  maxLength={150}
+                />
+              )}
+              name="about_me"
+              rules={{ required: '*' }}
+            />
+          </View>
+
+          <View style={[styles.displayCenter, styles.displayOnelineButton]}>
+            <LinearGradient
+              colors={['#FF0A00', '#FF890B']}
+              start={{ x: 0.0, y: 0.5 }}
+              end={{ x: 2.0, y: 0.5 }}
+              style={styles.button}
+            >
+              <TouchableOpacity onPress={handleCancel}>
+                <Text style={styles.textButton}>Cancel</Text>
+              </TouchableOpacity>
+            </LinearGradient>
+            <LinearGradient
+              colors={['#FF0A00', '#FF890B']}
+              start={{ x: 0.0, y: 0.5 }}
+              end={{ x: 2.0, y: 0.5 }}
+              style={styles.button}
+            >
+              <TouchableOpacity onPress={handleSubmit(handleUpdate)}>
+                <Text style={styles.textButton}>Update</Text>
+              </TouchableOpacity>
+            </LinearGradient>
+          </View>
         </View>
       </View>
-    </View>
+    </>
   );
 }
 
-const styles = StyleSheet.create({
+
+export const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 16,
@@ -141,6 +184,10 @@ const styles = StyleSheet.create({
     backgroundColor: 'grey',
     position: 'absolute',
     opacity: 0.5,
+    width: '100%',
+    height: '100%',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   formInput: {
     flex: 1,
@@ -188,4 +235,26 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
+  errorText: {
+    color: 'red',
+  },
+  displayOneline: {
+    flexDirection: 'row',
+    gap: 5,
+    alignContent: 'center',
+  },
+  displayOnelineButton: {
+    flexDirection: 'row',
+    gap: 25,
+    alignContent: 'center',
+  },
+  inputAbout: {
+    height: 40,
+    borderWidth: 1,
+    borderColor: '#000000',
+    borderRadius: 8,
+    height: 'auto',
+    paddingHorizontal: 10,
+    color: '#000000',
+  }
 });
