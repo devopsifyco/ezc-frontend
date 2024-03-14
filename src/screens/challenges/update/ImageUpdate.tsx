@@ -17,7 +17,7 @@ export interface SelectedImagesProps {
 
 
 
-const SelectedImages: React.FC<SelectedImagesProps> = ({ imageList, onImagesSelected, removeImage, clearImages, initialImageURL }) => {
+const SelectedImages: React.FC<SelectedImagesProps> = ({  onImagesSelected, removeImage, clearImages, initialImageURL }) => {
 
     const [selectedImages, setSelectedImages] = useState<Asset[]>([])
 
@@ -27,8 +27,9 @@ const SelectedImages: React.FC<SelectedImagesProps> = ({ imageList, onImagesSele
         let options: ImageLibraryOptions = {
             mediaType: 'photo',
             includeBase64: true,
-            maxHeight: 200,
-            maxWidth: 200,
+            maxHeight: 800,
+            maxWidth: 800,
+            quality:1,
         };
 
         launchImageLibrary(options, response => {
@@ -46,9 +47,7 @@ const SelectedImages: React.FC<SelectedImagesProps> = ({ imageList, onImagesSele
 
     };
 
-    const renderSelectedImages = ({ item }: { item: Asset }) => (
-        <Image source={{ uri: item.uri }} style={{ width: 100, height: 100 }} />
-    );
+   
 
 
     // const handleClearImages = () => {
@@ -57,13 +56,20 @@ const SelectedImages: React.FC<SelectedImagesProps> = ({ imageList, onImagesSele
     //     }
     // };
 
-    // const [backup_imageList, setBackup_imageList] = useState({});
+    const [backup_imageList, setBackup_imageList] = useState([initialImageURL]);
 
+    console.log("New Anh", backup_imageList);
+    
 
     // const removeFirstImage = (array: any) => {
     //     array.shift();
     //     setBackup_imageList(array)
     // }
+
+
+    const renderSelectedImages = ({ item }: { item: Asset }) => (
+        <Image source={{ uri: item.uri }} style={{ width: 100, height: 100 }} />
+    );
 
     const renderInitialImage = () => {
         if (!initialImageURL) return null;

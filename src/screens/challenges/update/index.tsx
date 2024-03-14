@@ -31,10 +31,7 @@ const UpdateChallenges = ({ navigation, route }: NavigateType) => {
   useEffect(() => {
     mutate();
   }, [id, mutate]);
-
-
   
-
   const {
     title,
     images_path,
