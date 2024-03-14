@@ -9,8 +9,11 @@ import {
   FlatList,
   ScrollView,
 } from 'react-native';
+import HeaderChallenge from '../components/HeaderChallenge';
+import { NavigateType } from '../models/Navigations';
 
-const NotificationScreen = () => {
+const NotificationScreen = ({ navigation }: NavigateType) => {
+
   const [isPopupVisible, setIsPopupVisible] = useState(false);
   const [selectedNotification, setSelectedNotification] = useState(null);
   const [selectedTab, setSelectedTab] = useState('All');
@@ -31,8 +34,8 @@ const NotificationScreen = () => {
   const filteredData = showIndexedList
     ? dataOrDefault.filter(item => item.read === false)
     : selectedTab === 'Read'
-    ? dataOrDefault.filter(item => item.read === true)
-    : dataOrDefault;
+      ? dataOrDefault.filter(item => item.read === true)
+      : dataOrDefault;
   const totalIndex = data.length;
 
   const handleNotificationPress = (item) => {
@@ -79,7 +82,11 @@ const NotificationScreen = () => {
   };
 
   return (
+    <>
     <View style={styles.container}>
+      <TouchableOpacity style={styles.header}>
+        <HeaderChallenge navigation={navigation} title='' />
+      </TouchableOpacity>
       <Image source={require('../assets/images/background-noti.png')} style={styles.backgroundImage} />
       <Image source={require('../assets/images/ellipse-noti.png')} style={styles.foregroundImage} />
       <View style={styles.contentContainer}>
@@ -160,6 +167,7 @@ const NotificationScreen = () => {
         />
       </View>
     </View>
+    </>
   );
 };
 
@@ -172,72 +180,79 @@ const styles = StyleSheet.create({
     position: 'absolute',
     resizeMode: 'cover',
   },
+  header: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingHorizontal: 20,
+    alignItems: 'center',
+    marginVertical: 20,
+    zIndex:999
+  },
   foregroundImage: {
     position: 'absolute',
     resizeMode: 'cover',
-    left:250
+    left: 250
   },
   contentContainer: {
     flex: 1,
     justifyContent: 'space-between',
   },
-  notiGroup:{
-    display:"flex",
-    flexDirection:"row",
-    marginTop:50,
-    marginLeft:20,
-    gap:10
+  notiGroup: {
+    display: "flex",
+    flexDirection: "row",
+    marginLeft: 20,
+    gap: 10
   },
-  titleNoti:{
-    color:"#000",
-    fontSize:24,
-    fontWeight:"700",
+  titleNoti: {
+    color: "#000",
+    fontSize: 24,
+    fontWeight: "700",
   },
-  numCount:{
-    width:30,
-    height:30,
-    backgroundColor:"#216C53",
-    display:"flex",
-    justifyContent:"center",
-    alignItems:"center",
-    borderRadius:10
+  numCount: {
+    width: 30,
+    height: 30,
+    backgroundColor: "#216C53",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    borderRadius: 10
   },
-  num:{
-    color:"#FFF",
-    fontSize:18,
-    fontWeight:"700"
+  num: {
+    color: "#FFF",
+    fontSize: 18,
+    fontWeight: "700"
   },
-  markAllButton:{
-    borderWidth:1,
-    borderColor:"#216C53",
-    borderRadius:10,
-    display:"flex",
+  markAllButton: {
+    borderWidth: 1,
+    borderColor: "#216C53",
+    borderRadius: 10,
+    display: "flex",
     alignSelf: 'flex-end',
   },
-  markAllText:{
-    fontSize:16,
-    fontWeight:"700",
-    padding:5,
-    color:"#808080"
+  markAllText: {
+    fontSize: 16,
+    fontWeight: "700",
+    padding: 5,
+    color: "#808080"
   },
-  tabBar:{
-    marginTop:30,
-    display:"flex",
-    flexDirection:"row",
+  tabBar: {
+    marginTop: 30,
+    display: "flex",
+    flexDirection: "row",
     justifyContent: 'space-around',
   },
-  selectedTab:{
-    
+  selectedTab: {
+
   },
-  selectedText:{
-    color:"#000",
-    fontSize:16,
-    fontWeight:"bold"
+  selectedText: {
+    color: "#000",
+    fontSize: 16,
+    fontWeight: "bold"
   },
   tabText: {
-    fontSize:16,
-    fontWeight:"bold",
-    color:"#808080"
+    fontSize: 16,
+    fontWeight: "bold",
+    color: "#808080"
   },
   tabButton: {
     paddingVertical: 10,
@@ -253,17 +268,17 @@ const styles = StyleSheet.create({
     backgroundColor: '#104A51',
   },
   bottomLine: {
-    marginTop:2,
-    height: 1, 
+    marginTop: 2,
+    height: 1,
     backgroundColor: '#000',
   },
-  status:{
-    marginTop:10,
-    borderRadius:10,
-    marginHorizontal:10
+  status: {
+    marginTop: 10,
+    borderRadius: 10,
+    marginHorizontal: 10
   },
   listNoti: {
-    marginTop:15,
+    marginTop: 15,
   },
   itemNoti: {
     flexDirection: 'row',
@@ -273,14 +288,14 @@ const styles = StyleSheet.create({
   },
   name: {
     fontWeight: 'bold',
-    color:"#000",
-    fontSize:18
+    color: "#000",
+    fontSize: 18
   },
   InfoDetail: {
     flexDirection: 'row',
     alignItems: 'center',
     flex: 1,
-    gap:10
+    gap: 10
   },
   titleContent: {
     flex: 1,
@@ -288,29 +303,29 @@ const styles = StyleSheet.create({
   title: {
     paddingBottom: 16,
   },
-  unreadGroup:{
-    display:"flex",
-    flexDirection:"row",
+  unreadGroup: {
+    display: "flex",
+    flexDirection: "row",
   },
   notiContent: {
-    color:"#000",
-    fontSize:14,
-    fontWeight:"600",
-    display:"flex",
+    color: "#000",
+    fontSize: 14,
+    fontWeight: "600",
+    display: "flex",
     flexWrap: 'wrap',
-    maxWidth:'85%',
+    maxWidth: '85%',
   },
   time: {
-    fontSize:14,
-    color:"#808080"
+    fontSize: 14,
+    color: "#808080"
   },
-  pointUnread:{
-    width:10,
-    height:10,
-    backgroundColor:"#FF0A00",
-    borderRadius:20,
-    marginTop:8,
-    marginLeft:20
+  pointUnread: {
+    width: 10,
+    height: 10,
+    backgroundColor: "#FF0A00",
+    borderRadius: 20,
+    marginTop: 8,
+    marginLeft: 20
   },
   message: {
 
@@ -327,7 +342,7 @@ const styles = StyleSheet.create({
 
   },
   avatarImage: {
- 
+
   },
 });
 

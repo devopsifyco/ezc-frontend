@@ -7,6 +7,13 @@ import ButtonChallenge from '../../../components/ButtonChallenge';
 import { Challenge } from '../../../models/InfChallenge';
 import { styles } from './style';
 import SelectedImages from './ImageUpdate';
+import { Asset } from 'react-native-image-picker';
+
+
+interface ImageData {
+  fileName: string;
+  base64: string;
+}
 
 
 import DateTimePicker, { DateTimePickerEvent } from '@react-native-community/datetimepicker';
@@ -18,28 +25,15 @@ const UpdateChallenges = ({ navigation, route }: NavigateType) => {
 
   const [editedChallenge, setEditedChallenge] = useState<Challenge>(Challenge);
 
+  const [selectedImages, setSelectedImages] = useState<ImageData[]>([]); 
+
+
   useEffect(() => {
     mutate();
   }, [id, mutate]);
 
 
-  const handleUpdate = async () => {
-    try {
-      if (editedChallenge) {
-console.log('This is data want to update:', editedChallenge);
-
-
-        await updateMutate({
-          ...editedChallenge,
-          id,
-        });
-
-        mutate();
-      }
-    } catch (error) {
-      console.error('Error updating data:', error);
-    }
-  };
+  
 
   const {
     title,
@@ -52,6 +46,35 @@ console.log('This is data want to update:', editedChallenge);
     address
   } = Challenge || editedChallenge || {};
 
+
+  const handleUpdate = async () => {
+    try {
+      if (editedChallenge) {
+        await updateMutate({
+          ...editedChallenge,
+          id,
+          images_path: selectedImages
+        });
+        mutate();
+      }
+    } catch (error) {
+      console.error('Error updating data:', error);
+    }
+  };
+
+  const handleImagesSelected = async (images: Asset[] | undefined) => {
+    try {
+      const imageDatas:any =  images?.map(asset => ({
+        fileName: asset.fileName ?? '', 
+        base64: asset.base64 ?? '', 
+      })) ?? [];
+      console.log("image Da ta", imageDatas)
+      setSelectedImages(imageDatas)
+    
+    } catch (error) {
+      console.error('Error updating data:', error);
+    }
+  };
 
 
   const handleInputChange = (name: string, value: string) => {
@@ -73,11 +96,11 @@ console.log('This is data want to update:', editedChallenge);
 
   } = useForm<Challenge>({});
 
-  const selectedImages = watch('images_path');
+ 
 
-  //const validateImages = (value: { name: string; downloadLink: string }[]) => {
-  //  return value.length > 0 || ' *';
-  //};
+  // console.log("ssss", selectedImage)
+
+ 
 
 
   const [startTime, setStartTime] = useState<Date>(new Date(start_time || 0));
@@ -120,8 +143,8 @@ console.log('This is data want to update:', editedChallenge);
       }
     }
   };
-
-
+  
+  
 
   return (
     <View style={styles.container}>
@@ -140,32 +163,21 @@ console.log('This is data want to update:', editedChallenge);
             <View style={styles.mediaContainer}>
               <Text style={styles.titleMedium}>Attached Photos and Videos</Text>
             </View>
+
             <Controller
               control={control}
               render={({ field }) => (
                 <SelectedImages
                   imageList={images_path}
-                  setSelectedImage={(index: number, asset: any) => {
-                    const updatedImages = [...selectedImages];
-                    //console.log('asset', asset, asset.constructor.name)
-                    updatedImages[index] = asset;
-                    setValue(
-                      'images_path',
-                      updatedImages.filter(images_path => images_path.fileName !== ''),
-                    );
-                  }}
-                  removeImage={(index: number) => {
-                    const updatedImages = [...selectedImages];
-                    updatedImages.splice(index, 1);
-                    setValue('images_path', updatedImages);
-                  }}
+                  initialImageURL={images_path}
+                  onImagesSelected={handleImagesSelected}
                   clearImages={() => setValue('images_path', [])}
                 />
               )}
               name="images_path"
               defaultValue={[]}
-            //rules={{ validate: validateImages }}
             />
+
           </View>
 
           <View style={styles.inputContainer}>

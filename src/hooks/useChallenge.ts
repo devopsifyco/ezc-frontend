@@ -90,12 +90,14 @@ export function useOneChallenges(_id: string) {
 
 // ----------------------------------
 export function useUpdateChallenges( ) {
+  const queryClient = useQueryClient()
   const getUpdateChallenge = useMutation({
-    mutationKey: ['UpdateChallenge'], 
+    mutationKey: ['UpdateChallenge'],   
     mutationFn: async (params: Challenge) => {
       try {
         const token = await AsyncStorage.getItem('accessToken');
-        const res = await axios.put(`${API_CHALLENGES}/update`, params, {
+        // const res = await axios.put(`${API_CHALLENGES}/update`, params, {
+        const res = await axios.put(`http://192.168.42.77:4000/api/challenge/update`, params, {
           headers: {
             'Content-Type': 'application/json',
             Authorization: `Bearer ${token}`,
@@ -108,7 +110,7 @@ export function useUpdateChallenges( ) {
       }
     },
     onSuccess: () => {
-      console.log('Successful update data');
+      queryClient.invalidateQueries({queryKey: ['challenges', 'pending']});
     },
   });
 
