@@ -56,9 +56,9 @@ const SelectedImages: React.FC<SelectedImagesProps> = ({  onImagesSelected, remo
     //     }
     // };
 
-    const [backup_imageList, setBackup_imageList] = useState([initialImageURL]);
+    // const [backup_imageList, setBackup_imageList] = useState([initialImageURL]);
 
-    console.log("New Anh", backup_imageList);
+    // console.log("New Anh", backup_imageList);
     
 
     // const removeFirstImage = (array: any) => {
