@@ -97,7 +97,7 @@ export function useUpdateChallenges( ) {
       try {
         const token = await AsyncStorage.getItem('accessToken');
         // const res = await axios.put(`${API_CHALLENGES}/update`, params, {
-        const res = await axios.put(`http://192.168.42.77:4000/api/challenge/update`, params, {
+        const res = await axios.put(`http://192.168.43.147:4000/api/challenge/update`, params, {
           headers: {
             'Content-Type': 'application/json',
             Authorization: `Bearer ${token}`,

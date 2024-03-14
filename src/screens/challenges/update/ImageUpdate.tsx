@@ -31,16 +31,6 @@ const SelectedImages: React.FC<SelectedImagesProps> = ({ imageList, onImagesSele
             maxWidth: 200,
         };
 
-        // launchImageLibrary(options, response => {
-        //     if (response.assets) {
-        //         response.assets.forEach((asset, index) => {
-        //             setSelectedImage(index + imageList.length, asset);
-        //         });
-        //     } else {
-        //         console.log('No images selected.');
-        //     }
-        // });
-
         launchImageLibrary(options, response => {
             if (response.didCancel) {
                 console.log('User cancelled image picker');
