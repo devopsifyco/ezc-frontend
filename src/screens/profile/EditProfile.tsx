@@ -8,6 +8,7 @@ import LinearGradient from 'react-native-linear-gradient';
 import ImagePickerButton from './ImagePickerButton';
 
 export default function EditProfile({ route, navigation }: { route: { params: { dataProfile: DataProfile } }; navigation: NavigateType }) {
+
   const { dataProfile } = route.params;
   const { control, handleSubmit, setValue, formState: { errors } } = useForm({
     defaultValues: {
@@ -29,9 +30,11 @@ export default function EditProfile({ route, navigation }: { route: { params: { 
 
   const handleUpdate = (formData: any) => {
     try {
+
       mutate(formData, {
         onSuccess: () => handleSuccess()
       });
+
     } catch (error) {
       console.error('Update failed', error);
       Alert.alert('Error', 'Failed to update user profile');
@@ -253,7 +256,6 @@ export const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#000000',
     borderRadius: 8,
-    height: 'auto',
     paddingHorizontal: 10,
     color: '#000000',
   }
