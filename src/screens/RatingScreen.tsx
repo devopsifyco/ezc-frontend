@@ -1,13 +1,45 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, StyleSheet, Text, TouchableOpacity, Image } from 'react-native';
 import HeaderChallenge from '../components/HeaderChallenge';
 import { NavigateType } from '../models/Navigations';
+import { useRatingChallenge } from '../hooks/useRatings';
+
+interface userRating {
+  username: string,
+  highest_points: number
+}
 
 export default function RatingScreen({ navigation }: NavigateType) {
+
+  const { data: dataRating } = useRatingChallenge()
   const [selectedOption, setSelectedOption] = useState('Monthly');
+
+
+  const [rankings, setRankings] = useState([]);
+
+  useEffect(() => {
+    if (dataRating) {
+      const top3 = dataRating.slice(0, 3);
+      setRankings(top3);
+    }
+  }, [dataRating]);
 
   const handleOptionPress = ({ option }: any) => {
     setSelectedOption(option);
+  };
+
+
+  const getRankingImage = (index: number) => {
+    switch (index) {
+      case 0:
+        return require('../assets/icons/icon-ranking1.png');
+      case 1:
+        return require('../assets/icons/icon-ranking2.png');
+      case 2:
+        return require('../assets/icons/icon-ranking3.png');
+      default:
+        return null;
+    }
   };
 
   return (
@@ -28,116 +60,34 @@ export default function RatingScreen({ navigation }: NavigateType) {
         </TouchableOpacity>
       </View>
       <View style={styles.containList}>
-        <View style={styles.listRating}>
-          <View style={styles.itemRating}>
-            <View style={styles.itemInfo}>
-              <View style={styles.circularContainer}>
-                <Text style={styles.index}>1</Text>
-              </View>
-              <View style={styles.InfoDetail}>
-                <Image source={require('../assets/profile/ty.png')}
-                  style={styles.avatar}
-                />
-                <View>
-                  <Text style={styles.name}>Ho Xuan Ty</Text>
-                  <Text style={styles.challengename}>2,500 Challenges</Text>
-                </View>
-                <View style={styles.hexagonContainer}>
-                  <Image
-                    source={require('../assets/icons/icon-ranking1.png')}
-                    style={styles.mouthIcon}
-                  />
-                </View>
-              </View>
-            </View>
-          </View>
-        </View>
-        <View style={styles.listRating}>
-          <View style={styles.itemRating}>
-            <View style={styles.itemInfo}>
-              <View style={styles.circularContainer}>
-                <Text style={styles.index}>2</Text>
-              </View>
-              <View style={styles.InfoDetail}>
-                <Image source={require('../assets/profile/avatar2.jpg')}
-                  style={styles.avatar}
-                />
-                <View>
-                  <Text style={styles.name}>Cao Tuyen</Text>
-                  <Text style={styles.challengename}>2,500 Challenges</Text>
-                </View>
-                <View style={styles.hexagonContainer}>
-                  <Image
-                    source={require('../assets/icons/icon-ranking2.png')}
-                    style={styles.mouthIcon}
-                  />
+        {
+          dataRating?.map((user: userRating, index: number) => (
+            <View style={styles.listRating} key={index}>
+              <View style={styles.itemRating}>
+                <View style={styles.itemInfo}>
+                  <View style={styles.circularContainer}>
+                    <Text style={styles.index}>{index + 1}</Text>
+                  </View>
+                  <View style={styles.InfoDetail_wrapper}>
+                    <View style={styles.infoDetail}>
+                      <Image source={require('../assets/profile/ty.png')}
+                        style={styles.avatar}
+                      />
+                      <View>
+                        <Text style={styles.name}>{user.username}</Text>
+                        <Text style={styles.challengename}>{user.highest_points} Challenges</Text>
+                      </View>
+                    </View>
+                    <View style={styles.hexagonContainer}>
+                      <Image source={getRankingImage(index)} style={styles.mouthIcon} />
+                    </View>
+                  </View>
                 </View>
               </View>
             </View>
-          </View>
-        </View>
-        <View style={styles.listRating}>
-          <View style={styles.itemRating}>
-            <View style={styles.itemInfo}>
-              <View style={styles.circularContainer}>
-                <Text style={styles.index}>3</Text>
-              </View>
-              <View style={styles.InfoDetail}>
-                <Image source={require('../assets/profile/ranking.png')}
-                  style={styles.avatar}
-                />
-                <View>
-                  <Text style={styles.name}>Minh Quan</Text>
-                  <Text style={styles.challengename}>2,500 Challenges</Text>
-                </View>
-                <View style={styles.hexagonContainer}>
-                  <Image
-                    source={require('../assets/icons/icon-ranking3.png')}
-                    style={styles.mouthIcon}
-                  />
-                </View>
-              </View>
-            </View>
-          </View>
-        </View>
-        <View style={styles.listRating}>
-          <View style={styles.itemRating}>
-            <View style={styles.itemInfo}>
-              <View style={styles.circularContainer}>
-                <Text style={styles.index}>4</Text>
-              </View>
-              <View style={styles.InfoDetail}>
-                <Image source={require('../assets/profile/atien.jpg')}
-                  style={styles.avatar}
-                />
-                <View>
-                  <Text style={styles.name}>Tien</Text>
-                  <Text style={styles.challengename}>2,500 Challenges</Text>
-                </View>
-              </View>
-            </View>
-          </View>
-        </View>
-        <View style={styles.listRating}>
-          <View style={styles.itemRating}>
-            <View style={styles.itemInfo}>
-              <View style={styles.circularContainer}>
-                <Text style={styles.index}>5</Text>
-              </View>
-              <View style={styles.InfoDetail}>
-                <Image source={require('../assets/profile/avatar2.jpg')}
-                  style={styles.avatar}
-                />
-                <View>
-                  <Text style={styles.name}>Thai Hoang</Text>
-                  <Text style={styles.challengename}>2,500 Challenges</Text>
-                </View>
-              </View>
-            </View>
-          </View>
-        </View>
+          ))
+        }
       </View>
-
     </View>
   );
 }
@@ -146,12 +96,12 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
-  header:{
+  header: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     paddingHorizontal: 20,
     alignItems: 'center',
-    marginTop:20
+    marginTop: 20
   },
   optionButton: {
     marginTop: 30,
@@ -228,10 +178,11 @@ const styles = StyleSheet.create({
   challengename: {
     color: "#216C53"
   },
-  InfoDetail: {
+  InfoDetail_wrapper: {
+    flex: 1,
     flexDirection: 'row',
+    justifyContent: "space-between",
     alignItems: 'center',
-    gap: 20
   },
   avatar: {
     width: 50,
@@ -245,12 +196,14 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   hexagonContainer: {
-    marginLeft: 40,
-    display: "flex",
   },
   mouthIcon: {
     width: 35,
     height: 35,
   },
-  infoDetail: {},
+  infoDetail: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 20
+  },
 });
