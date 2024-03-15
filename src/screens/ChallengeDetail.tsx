@@ -78,9 +78,12 @@ const ChallengeDetail = ({ navigation, route }: NavigateType) => {
     AsyncStorage.getItem('email').then(data => {
 
       const emailWithoutQuotes = data ? data.replace(/["']/g, '') : '';
-      const joinData = { email: emailWithoutQuotes, id: id };
 
-      JoinChallenge(joinData);
+      JoinChallenge({email: emailWithoutQuotes, id: id}, {
+        onSuccess: () => {
+          navigation.goBack()
+        }
+      });
       setIsJoined(true);
       setModalVisible(!isModalVisible);
 
