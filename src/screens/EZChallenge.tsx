@@ -24,6 +24,7 @@ import PendingScreen from './Status/PendingScreen';
 import Status from './Status';
 import CreateChallenges from './challenges/create';
 
+
 const Stack = createNativeStackNavigator();
 
 export default function EZChallenge() {
@@ -56,6 +57,7 @@ export default function EZChallenge() {
         <Stack.Screen name="ChallengeDetail" component={ChallengeDetail} />
         <Stack.Screen name="UpdateChallenge" component={UpdateChallenges} />
         <Stack.Screen name="CreateChallenges" component={CreateChallenges} />
+        
       </Stack.Group>
     </Stack.Navigator>
   );

@@ -71,6 +71,7 @@ export function useOneChallenges(_id: string) {
             Authorization: `Bearer ${token}`,
           },
         });
+        
         return res.data;
       } catch (error) {
         throw error;

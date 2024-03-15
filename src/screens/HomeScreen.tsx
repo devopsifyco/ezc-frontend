@@ -79,7 +79,6 @@ const HomeScreen: React.FC<NavigateType> = ({ navigation }) => {
                 points_reward={item.points_reward}
                 description={item.description}
                 onPress={() => handlePress(item._id)}
-
               />
             )}
           />
