@@ -30,6 +30,8 @@ const HomeScreen: React.FC<NavigateType> = ({ navigation }) => {
   }, [getChallenges]);
 
 
+  
+
   const handleNotificationPress = () => {
     navigation.navigate('NotificationScreen');
   };
