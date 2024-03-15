@@ -8,17 +8,16 @@ const API_ALLCHALLENGE = `${EZCHALLENG_API}/challenges/not-participate`;
 const API_CHALLENGES = `${EZCHALLENG_API}/challenge`;
 
 
-//  --------------get all list challenge ----------------------
-export function useGetAllChallenges() {
-  const getAllChallenges = useMutation({
-    mutationKey: ['challengesList'], 
-    mutationFn: async () => {
+export function useApiGet(queryKey: string[], route: string) {
+  return useQuery({
+   queryKey, 
+    queryFn: async () => {
       try {
         const email = await AsyncStorage.getItem('email'); 
         const newEmail = email ? email.replace(/["']/g, '') : '';
         const token = await AsyncStorage.getItem('accessToken');
         const res = await axios.post(
-          API_ALLCHALLENGE, {email: newEmail},
+          `${EZCHALLENG_API}/${route}`, {email: newEmail},
           {
             headers: {
               'Content-Type': 'application/json',
@@ -32,33 +31,18 @@ export function useGetAllChallenges() {
         throw error;
       }
     },
-    onSuccess: () => console.log('Get all challenge successful'),
   });
+}
 
-  return { ...getAllChallenges };
+//  --------------get all list challenge ----------------------
+export function useGetAllChallenges() {
+  return useApiGet(['challenges'], 'challenges/not-participate')
 }
 
 //  -----------get get all challenge by status ---------------------
 
 export function useGetAllChallengesByStatus(status: string) {
-  return useQuery({
-    queryKey: ['challenges', status],
-    queryFn: async () => {
-      try {
-        const token = await AsyncStorage.getItem('accessToken');
-        const res = await axios.get(`${API_CHALLENGES}/status/${status}`, {
-          headers: {
-            'Content-Type': `application/json`,
-            Authorization: `Bearer ${token}`,
-          },
-        });
-        return res.data;
-      } catch (error) {
-        console.error('Error fetching challenges pending:', error);
-        throw error;
-      }
-    }
-  });
+  return useApiGet( ['challenges', status], `status/${status}`)
 }
 
 //  -----------get one challenge ---------------------
