@@ -1,19 +1,15 @@
-import React, {useState, useEffect} from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
-  Text,
   ScrollView,
   StyleSheet,
-  Image,
-  TouchableOpacity,
 } from 'react-native';
 import StepOneScreen from './StepOneScreen';
 import StepTwoScreen from './StepTwoScreen';
 import FinalStep from './FinalStep';
-import {useNavigation} from '@react-navigation/native';
 
-const CreateChallenges = ({route}: any) => {
-  const navigation = useNavigation();
+
+const CreateChallenges = ({ route }: any) => {
   const [currentStep, setCurrentStep] = useState(1);
 
   useEffect(() => {
@@ -38,15 +34,7 @@ const CreateChallenges = ({route}: any) => {
 
   return (
     <View style={styles.container}>
-      <ScrollView contentContainerStyle={styles.formContainer}>
-        <View style={styles.header}>
-          <TouchableOpacity onPress={() => navigation.goBack()}>
-            <Image source={require('../../../assets/icons/home.png')} />
-          </TouchableOpacity>
-          <View>
-            <Text style={styles.titleLarge}>Create Challenges</Text>
-          </View>
-        </View>
+      <ScrollView>
         <View style={styles.formBackground}>{renderStep()}</View>
       </ScrollView>
     </View>
@@ -64,11 +52,13 @@ export const styles = StyleSheet.create({
     alignItems: 'center',
   },
   formContainer: {
+    flex: 1,
     paddingHorizontal: 20,
-    paddingBottom: 50,
+    paddingBottom: 100,
+    backgroundColor: '#F5F5F5',
   },
   formBackground: {
-    top: 20,
+    flex: 1,
   },
   stepContainer: {
     alignItems: 'center',
@@ -76,8 +66,12 @@ export const styles = StyleSheet.create({
   header: {
     flexDirection: 'row',
     alignItems: 'center',
-    paddingTop: 20,
     gap: 50,
+    top: 20,
+    bottom: 20,
+  },
+  iconNotify: {
+    marginTop: 10
   },
   title: {
     fontSize: 24,
@@ -106,7 +100,7 @@ export const styles = StyleSheet.create({
     height: 100,
   },
   mediaContainer: {
-    paddingTop: 10,
+    paddingTop: 30,
     paddingBottom: 10,
   },
   viewChoose: {
@@ -186,16 +180,13 @@ export const styles = StyleSheet.create({
     color: '#4F4F4F',
     fontWeight: 'bold',
   },
-  titleDetail: {
-    paddingTop: 100,
-  },
   displayCenter: {
     justifyContent: 'center',
     alignItems: 'center',
     gap: 10,
   },
-  imageLarge: {width: 320, height: 220},
-  imageMedium: {width: 102, height: 100},
+  imageLarge: { width: 320, height: 220 },
+  imageMedium: { width: 102, height: 100 },
   actions: {
     flexDirection: 'row',
     gap: 20,

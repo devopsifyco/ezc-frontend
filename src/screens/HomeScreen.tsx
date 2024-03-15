@@ -8,6 +8,8 @@ import {
   FlatList,
   ScrollView,
 } from 'react-native';
+import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
+import { faBell, faDumbbell } from '@fortawesome/free-solid-svg-icons';
 
 import LiveCard from '../components/LiveCard';
 import ListCard from '../components/ListCard';
@@ -21,16 +23,16 @@ import { useGetAllChallenges } from '../hooks/useChallenge';
 
 const HomeScreen: React.FC<NavigateType> = ({ navigation }) => {
 
-  const { data: challenges, mutate } = useGetAllChallenges();
+  const { data: challenges, mutate: getChallenges } = useGetAllChallenges();
 
   useEffect(() => {
-    mutate();
-  }, [mutate]);
+    getChallenges();
+  }, [getChallenges]);
+
 
   const handleNotificationPress = () => {
     navigation.navigate('NotificationScreen');
   };
-
 
   const handlePress = (id: string) => {
     navigation.navigate('ChallengeDetail', { id });
@@ -42,7 +44,7 @@ const HomeScreen: React.FC<NavigateType> = ({ navigation }) => {
         <Image source={require('../assets/logoEZC.png')} />
         <Text style={styles.titles}>Home</Text>
         <TouchableOpacity onPress={handleNotificationPress}>
-          <Image source={require('../assets/icons/notification.png')} />
+          <FontAwesomeIcon icon={faBell} size={28} color='#FF890B' />
         </TouchableOpacity>
       </View>
 
@@ -79,6 +81,7 @@ const HomeScreen: React.FC<NavigateType> = ({ navigation }) => {
                 points_reward={item.points_reward}
                 description={item.description}
                 onPress={() => handlePress(item._id)}
+
               />
             )}
           />
@@ -112,7 +115,6 @@ const HomeScreen: React.FC<NavigateType> = ({ navigation }) => {
               images_path={item.images_path}
               isLive={item.isLive}
               points_reward={item.points_reward}
-              description={item.description}
               onPress={() => handlePress(item._id)}
             />
           )}

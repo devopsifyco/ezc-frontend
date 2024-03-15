@@ -1,4 +1,4 @@
-import React, {useRef, useState} from 'react';
+import React, { useRef, useState } from 'react';
 import {
   Image,
   Text,
@@ -9,24 +9,30 @@ import {
   Alert,
 } from 'react-native';
 import Button from '../components/Button';
-import {styles} from '../styles/signin-signup';
-import {NavigateType} from '../models/Navigations';
-import {useForm, Controller} from 'react-hook-form';
-import {RegistrationData} from '../models/Register';
+import { styles } from '../styles/signin-signup';
+import { NavigateType } from '../models/Navigations';
+import { useForm, Controller } from 'react-hook-form';
+import { RegistrationData } from '../models/Register';
 import useRegister from '../hooks/useRegister';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
-import {EZCHALLENG_API} from '../api/endPoint';
+import { EZCHALLENG_API } from '../api/endPoint';
 import * as Progress from 'react-native-progress';
 
-export default function RegisterScreen({navigation}: NavigateType) {
+export default function RegisterScreen({ navigation }: NavigateType) {
   const userNameRef = useRef<TextInput>(null);
   const passwordRegisterRef = useRef<TextInput>(null);
   const confirmPasswordRef = useRef<TextInput>(null);
   const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
+
   const togglePasswordVisibility = () => {
     setShowPassword(prev => !prev);
   };
+
+  const toggleConfirmPasswordVisibility = () => {
+    setShowConfirmPassword(prev => !prev);
+  }
 
   const moveLogin = () => navigation.goBack();
 
@@ -38,7 +44,6 @@ export default function RegisterScreen({navigation}: NavigateType) {
       mutate(data, {
         onSuccess: async () => {
           AsyncStorage.setItem('email', data.email);
-          console.log("data ne: ", data);
           try {
             await axios.post(
               `${EZCHALLENG_API}/send-verification-code`,
@@ -52,22 +57,20 @@ export default function RegisterScreen({navigation}: NavigateType) {
               },
             );
           } catch (error) {
-            console.log('data ne: ', data);
-            console.log('verification error');
             console.log(error);
           }
           navigation.navigate('VerifyRegisterScreen');
         },
       });
     } else {
-      Alert.alert('Confirm password does not match with password');
+      Alert.alert('Confirm password does not match with password!');
     }
   };
 
   const {
     control,
     handleSubmit,
-    formState: {errors},
+    formState: { errors },
   } = useForm({
     defaultValues: {
       email: '',
@@ -108,7 +111,7 @@ export default function RegisterScreen({navigation}: NavigateType) {
               />
               <Controller
                 control={control}
-                render={({field: {onChange, onBlur, value}}) => (
+                render={({ field: { onChange, onBlur, value } }) => (
                   <TextInput
                     style={styles.input}
                     placeholder="Enter your email"
@@ -145,7 +148,7 @@ export default function RegisterScreen({navigation}: NavigateType) {
               />
               <Controller
                 control={control}
-                render={({field: {onChange, onBlur, value}}) => (
+                render={({ field: { onChange, onBlur, value } }) => (
                   <TextInput
                     ref={userNameRef}
                     style={styles.input}
@@ -159,7 +162,7 @@ export default function RegisterScreen({navigation}: NavigateType) {
                   />
                 )}
                 name="username"
-                rules={{required: 'User name is require!'}}
+                rules={{ required: 'User name is require!' }}
               />
             </View>
           </View>
@@ -177,7 +180,7 @@ export default function RegisterScreen({navigation}: NavigateType) {
               />
               <Controller
                 control={control}
-                render={({field: {onChange, onBlur, value}}) => (
+                render={({ field: { onChange, onBlur, value } }) => (
                   <TextInput
                     ref={passwordRegisterRef}
                     style={styles.input}
@@ -225,7 +228,7 @@ export default function RegisterScreen({navigation}: NavigateType) {
               />
               <Controller
                 control={control}
-                render={({field: {onChange, onBlur, value}}) => (
+                render={({ field: { onChange, onBlur, value } }) => (
                   <TextInput
                     ref={confirmPasswordRef}
                     style={styles.input}
@@ -235,15 +238,17 @@ export default function RegisterScreen({navigation}: NavigateType) {
                     value={value}
                     onBlur={onBlur}
                     onChangeText={text => onChange(text)}
+                    secureTextEntry={!showConfirmPassword}
+
                   />
                 )}
                 name="confirmPassword"
-                rules={{required: 'Confirm Password is required!'}}
+                rules={{ required: 'Confirm Password is required!' }}
               />
-              <TouchableOpacity onPress={togglePasswordVisibility}>
+              <TouchableOpacity onPress={toggleConfirmPasswordVisibility}>
                 <Image
                   source={
-                    showPassword
+                    showConfirmPassword
                       ? require('../assets/signin_signup/open-eye.png')
                       : require('../assets/signin_signup/close-eye.png')
                   }
@@ -251,7 +256,7 @@ export default function RegisterScreen({navigation}: NavigateType) {
               </TouchableOpacity>
             </View>
           </View>
-          <Button onPress={handleSubmit(onSubmit)} title="Next step" />
+          <Button onPress={handleSubmit(onSubmit)} title="Register" />
           <View style={[styles.options, styles.setCenter]}>
             <Text style={[styles.titleSmall, styles.tileWhiteColor]}>
               Already have you an account?{' '}

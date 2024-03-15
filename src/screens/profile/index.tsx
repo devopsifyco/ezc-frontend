@@ -1,5 +1,4 @@
-import { EZCHALLENG_API } from '../../api/endPoint';
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import {
   Text,
   View,
@@ -8,73 +7,39 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import HeaderProfile from '../../components/HeaderProfile';
-import {NavigateType} from '../../models/Navigations';
+import { NavigateType } from '../../models/Navigations';
 import AboutScreen from './AboutScreen';
 import ChallengeScreen from './ChallengeScreen';
-import AsyncStorage from '@react-native-async-storage/async-storage';
-import { DataProfile } from '../../models/Profile';
-import axios from 'axios';
-const USER_API = `${EZCHALLENG_API}/user`;
+import useProfile from '../../hooks/useProfile';
 
 export default function ProfileScreen({ navigation }: NavigateType) {
-  const [DATA, setData] = useState<DataProfile | null>(null);
   const [selectedTab, setSelectedTab] = useState('ABOUT');
-
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        AsyncStorage.getItem('email').then(async (email) => {
-          const token = await AsyncStorage.getItem('accessToken');
-          const emailUser = email?.slice(1, -1);
-          const res = await axios.post(USER_API, {
-            email: emailUser,
-          }, {
-            headers: {
-              'Content-Type': 'application/json',
-              'Authorization': `Bearer ${token}`
-            }
-          });
-
-          const data = res.data;
-          setData(data);
-        }).catch((error) => {
-          console.error('Error retrieving email:', error.response.data);
-        });
-      } catch (error) {
-        console.log('User profile error:', error);
-      }
-    };
-
-    fetchData();
-  }, []);
-
-  console.log("Data Respon: ",DATA);
-  
+  const { data: dataProfile, isLoading } = useProfile();
 
   return (
     <View style={styles.container}>
       <View style={styles.header}>
         <HeaderProfile navigation={navigation} />
         <TouchableOpacity
-          onPress={() => navigation.navigate('SubProfileScreen', { DATA })}>
+          onPress={() => navigation.navigate('SubProfileScreen', { dataProfile })}>
           <Image source={require('../../assets/profile/menu-toggle.png')} />
         </TouchableOpacity>
       </View>
       <View style={styles.profile}>
         <Image
-          source={{ uri: DATA?.avatar.name }}
+          source={{ uri: dataProfile?.avatar.name }}
           style={styles.profileImage}
         />
-        <Text style={styles.profileName}>{DATA?.username}</Text>
-        <Text style={styles.profileName}>{DATA?.email}</Text>
+        <Text style={styles.profileName}>{dataProfile?.username}</Text>
+        <Text style={styles.profileName}>{dataProfile?.email}</Text>
         <View style={styles.numberStatus}>
           <View style={styles.itemfllowing}>
-            <Text style={styles.itemNumber}>{DATA?.points}</Text>
+            <Text style={styles.itemNumber}>{dataProfile?.points}</Text>
             <Text style={styles.titleMedium}>Points</Text>
           </View>
           <View style={styles.arrowMiddle} />
           <View style={styles.itemfllower}>
-            <Text style={styles.itemNumber}>{DATA?.challenges ? DATA?.challenges.length : 0}</Text>
+            <Text style={styles.itemNumber}>{dataProfile?.challenges ? dataProfile?.challenges.length : 0}</Text>
             <Text style={styles.titleMedium}>Challenge</Text>
           </View>
         </View>
@@ -95,8 +60,8 @@ export default function ProfileScreen({ navigation }: NavigateType) {
         </TouchableOpacity>
       </View>
 
-      {selectedTab === 'ABOUT' && <AboutScreen data={DATA} />}
-      {selectedTab === 'CHALLENGE' && <ChallengeScreen navigation={navigation}/>}
+      {selectedTab === 'ABOUT' && <AboutScreen data={dataProfile} />}
+      {selectedTab === 'CHALLENGE' && <ChallengeScreen navigation={navigation} />}
     </View>
   );
 }
@@ -171,7 +136,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-around',
     paddingHorizontal: 20,
-    
+
   },
   actionInteraction: {
     flexDirection: 'row',

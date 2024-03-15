@@ -1,29 +1,23 @@
 import React from 'react';
-import {Text, View, StyleSheet, Image, TouchableOpacity} from 'react-native';
+import { Text, View, StyleSheet, Image, TouchableOpacity } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Modal from 'react-native-modal';
 import LinearGradient from 'react-native-linear-gradient';
 import ButtonProfile from '../../components/ButtonProfile';
 import ButtonProfile2 from '../../components/ButtonProfile2';
 import HeaderProfile from '../../components/HeaderProfile';
-import {NavigateType} from '../../models/Navigations';
-import { DataProfile } from '../../models/Profile';
+import useProfile from '../../hooks/useProfile';
+import { NavigateType } from '../../models/Navigations';
 
-export default function SubProfileScreen({
-  route,
-  navigation,
-}: {
-  route: {params: {DATA: DataProfile}};
-  navigation: NavigateType;
-}) {
-  const {DATA} = route.params;
-
-  const moveEdit = () => {
-    navigation.navigate('EditProfile', {DATA});
-  };
+export default function SubProfileScreen({ navigation }: NavigateType) {
+  const { data: dataProfile } = useProfile();
   const [isModalVisible, setModalVisible] = React.useState(false);
   const toggleModal = () => setModalVisible(!isModalVisible);
-  
+
+  const moveEdit = () => {
+    navigation.navigate('EditProfile', { dataProfile });
+  };
+
   const handleLogout = async () => {
     try {
       await AsyncStorage.removeItem('accessToken');
@@ -40,23 +34,23 @@ export default function SubProfileScreen({
       </View>
 
       <View style={styles.profile}>
-      <Image source={{ uri: DATA?.avatar.name }} style={styles.profileImage} />
-        <Text style={styles.profileName}>{DATA.username}</Text>
-        <Text style={styles.email}>{DATA.email}</Text>
+        <Image source={{ uri: dataProfile?.avatar.name }} style={styles.profileImage} />
+        <Text style={styles.profileName}>{dataProfile.username}</Text>
+        <Text style={styles.email}>{dataProfile.email}</Text>
 
         <View style={styles.numberStatus}>
           <View style={styles.itemfllowing}>
-            <Text style={styles.itemNumber}>{DATA?.points}</Text>
-            <Text style={styles.titleMedium}>{DATA?.challenges.length>0 ? "Points" : "Point"}</Text>
+            <Text style={styles.itemNumber}>{dataProfile?.points}</Text>
+            <Text style={styles.titleMedium}>{dataProfile?.challenges.length > 0 ? "Points" : "Point"}</Text>
           </View>
           <View style={styles.arrowMiddle} />
           <View style={styles.itemfllower}>
-            <Text style={styles.itemNumber}>{DATA?.challenges ? DATA?.challenges.length : 0}</Text>
-            <Text style={styles.titleMedium}>{DATA?.challenges.length>0 ? "Challenges" : "Challenge"}</Text>
+            <Text style={styles.itemNumber}>{dataProfile?.challenges ? dataProfile?.challenges.length : 0}</Text>
+            <Text style={styles.titleMedium}>{dataProfile?.challenges.length > 0 ? "Challenges" : "Challenge"}</Text>
           </View>
         </View>
       </View>
-      
+
       <View style={styles.actionInteraction}>
         <ButtonProfile2
           title="Edit Profile"
@@ -70,7 +64,7 @@ export default function SubProfileScreen({
         />
       </View>
       <Text style={styles.titleLarge}>About me</Text>
-      <Text style={styles.titleMedium}>{DATA.about_me}</Text>
+      <Text style={styles.titleMedium}>{dataProfile.about_me}</Text>
       <Modal isVisible={isModalVisible}>
         <View style={styles.formBackground}>
           <Text style={styles.titleLogout}>Logout</Text>
@@ -78,8 +72,8 @@ export default function SubProfileScreen({
           <View style={styles.actionLogout}>
             <LinearGradient
               colors={['#FF0A00', '#FF890B']}
-              start={{x: 0.0, y: 1.5}}
-              end={{x: 1.0, y: 0.5}}
+              start={{ x: 0.0, y: 1.5 }}
+              end={{ x: 1.0, y: 0.5 }}
               style={styles.button}>
               <TouchableOpacity onPress={toggleModal}>
                 <Text>Cancel</Text>
@@ -87,8 +81,8 @@ export default function SubProfileScreen({
             </LinearGradient>
             <LinearGradient
               colors={['#FF0A00', '#FF890B']}
-              start={{x: 0.0, y: 0.5}}
-              end={{x: 2.0, y: 0.5}}
+              start={{ x: 0.0, y: 0.5 }}
+              end={{ x: 2.0, y: 0.5 }}
               style={styles.button}>
               <TouchableOpacity onPress={handleLogout}>
                 <Text>Logout</Text>

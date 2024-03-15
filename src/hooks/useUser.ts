@@ -1,13 +1,14 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { useMutation } from '@tanstack/react-query';
+import { useMutation, useQueryClient } from '@tanstack/react-query';
 import axios from 'axios';
 import { EZCHALLENG_API } from '../api/endPoint';
 import { Alert } from 'react-native';
 
 export function useUpdateUserProfile() {
+  const queryClient = useQueryClient();
 
   const updateUserProfile = useMutation({
-    mutationKey: ['user'],
+    mutationKey: ['userUpdate'],
     mutationFn: async (newData) => {
       try {
         const token = await AsyncStorage.getItem('accessToken');
@@ -19,12 +20,13 @@ export function useUpdateUserProfile() {
           },
         });
 
-        return res.data;
+        return res.data;  
+
       } catch (error) {
         throw new Error('Failed to update user profile');
       }
     },
-    onSuccess: () => console.log('Edit successfully'),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['dataProfile']}),
     onError: (error) => Alert.alert('Error', error.message),
   });
 
