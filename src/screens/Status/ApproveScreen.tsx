@@ -11,31 +11,11 @@ import WarningComponent from '../../components/WarningComponent';
 export default function ApproveScreen({ navigation }: NavigateType) {
   const queryClient = useQueryClient();
   const { data: challengesApproved, isLoading: loadingApproved } = useGetAllChallengesByStatus('approved');
-  const { mutateAsync: deleteChallenge } = useDeleteChallenges();
-
-
-  const [selectedId, setSelectedId] = useState<string | null>(null);
-  const [isModalVisible, setModalVisible] = React.useState(false);
   
   const handlePress = (id: string) => {
     navigation.navigate('ChallengeDetail', { id });
   };
 
-  const handleDelete = async () => {
-    try {
-      await deleteChallenge({ id: selectedId });
-      queryClient.invalidateQueries({ queryKey: ['challenges', 'approved'] });
-
-
-    } catch (error) {
-      console.error('Error delete challenge:', error);
-    }
-  };
-
-  const toggleModal = (id: string | null = null) => {
-    setSelectedId(id);
-    setModalVisible(!isModalVisible);
-  };
 
   return (
     <View style={styles.container}>
@@ -65,14 +45,6 @@ export default function ApproveScreen({ navigation }: NavigateType) {
                         }}>{challenge.address}</Text>
                       </View>
                     </View>
-                    <View style={styles.displayCenter}>
-                      <TouchableOpacity onPress={() => (challenge.id)}>
-                        <Image source={require('../../assets/icons/Shape.png')} style={styles.editGroup} />
-                      </TouchableOpacity>
-                      <TouchableOpacity onPress={() => toggleModal(challenge._id)}>
-                        <Image source={require('../../assets/icons/delete.png')} style={styles.editGroup} />
-                      </TouchableOpacity>
-                    </View>
                   </View>
                   <Text style={styles.hour}>1m ago.</Text>
                 </View>
@@ -80,16 +52,6 @@ export default function ApproveScreen({ navigation }: NavigateType) {
             ))}
           </View>
         </ScrollView >
-      )}
-       {isModalVisible && (
-        <WarningComponent
-          title='Warning'
-          description='Are you sure to delete this challenge?'
-          Action1='Cancel'
-          Action2='Delete'
-          handleAction2={handleDelete}
-          toggleModal={toggleModal}
-        />
       )}
     </View>
   );

@@ -132,12 +132,6 @@ export default function ChallengeScreen({ navigation }: NavigateType) {
                         }}>{challenge.address}</Text>
                       </View>
                     </View>
-                    <View style={styles.displayCenter}>
-                      <Image source={require('../../assets/icons/Shape.png')} style={styles.editGroup} />
-                      <TouchableOpacity onPress={() => toggleModal(challenge._id)}>
-                        <Image source={require('../../assets/icons/delete.png')} style={styles.editGroup} />
-                      </TouchableOpacity>
-                    </View>
                   </View>
                   <Text style={styles.hour}>1m ago.</Text>
                 </View>
@@ -174,8 +168,7 @@ export default function ChallengeScreen({ navigation }: NavigateType) {
                         }}>{challenge.address}</Text>
                       </View>
                     </View>
-                    <View style={styles.displayCenter}>
-                      <Image source={require('../../assets/icons/Shape.png')} style={styles.editGroup} />
+                    <View style={{marginLeft:20}} >
                       <TouchableOpacity onPress={() => toggleModal(challenge._id)}>
                         <Image source={require('../../assets/icons/delete.png')} style={styles.editGroup} />
                       </TouchableOpacity>
