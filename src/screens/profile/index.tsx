@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import {
   Text,
   View,
@@ -14,19 +14,7 @@ import useProfile from '../../hooks/useProfile';
 
 export default function ProfileScreen({ navigation }: NavigateType) {
   const [selectedTab, setSelectedTab] = useState('ABOUT');
-  const { dataProfile, mutate: fetchData } = useProfile();
-
-  useEffect(() => {
-    const fetchDataAsync = async () => {
-      try {
-        await fetchData();
-      } catch (error) {
-        console.error('User profile error:', error);
-      }
-    };
-
-    fetchDataAsync();
-  }, [fetchData]);
+  const { data: dataProfile, isLoading } = useProfile();
 
   return (
     <View style={styles.container}>
