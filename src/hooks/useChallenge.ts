@@ -87,7 +87,7 @@ export function useOneChallenges(_id: string) {
       }
     },
     onSuccess: (data) => {
-      console.log('Successful get one data');
+      console.log('Successful get one chellenge');
     },
   });
 
@@ -116,7 +116,7 @@ export function useUpdateChallenges() {
       }
     },
     onSuccess: () => {
-      console.log('Successful update data');
+      console.log('Successful update challenge');
       queryClient.invalidateQueries({ queryKey: ['challenges', 'pending'] });
     },
   });
@@ -178,7 +178,7 @@ export function useJoinChallenge() {
       }
     },
     onSuccess: () => {
-      console.log('Successful join data');
+      console.log('Successful join challenge');
       queryClient.invalidateQueries({ queryKey: ['challengesList'] });
 
     },
@@ -214,7 +214,7 @@ export function useCompleteChallenge() {
       }
     },
     onSuccess: () => {
-      console.log('Successful complete data');
+      console.log('Successful complete challenge');
       queryClient.invalidateQueries({ queryKey: ['challenges', 'approved'] });
       queryClient.invalidateQueries({ queryKey: ['challenges', 'pending'] });
     },

@@ -17,7 +17,7 @@ const ChallengeDetail = ({ navigation, route }: NavigateType) => {
   const { id } = route.params;
 
   const { mutate: JoinChallenge, error: errChallenge, } = useJoinChallenge();
-  const { mutate: CompleteChallenge, error: errorComplete } = useCompleteChallenge();
+  const { mutate: CompleteChallenge, error: errorComplete, isSuccess } = useCompleteChallenge();
   const [isJoined, setIsJoined] = useState(false);
   const { data: Challenge, isError, isPending, mutate } = useOneChallenges(id);
   const [isModalVisible, setModalVisible] = React.useState(false);
@@ -49,7 +49,10 @@ const ChallengeDetail = ({ navigation, route }: NavigateType) => {
     console.log('Button pressed!');
   };
 
-
+ // handle modal
+  const toggleModal = () => {
+    setModalVisible(!isModalVisible);
+  };
 
   // Get email user account
   const getEmailUser = async () => {
@@ -85,16 +88,14 @@ const ChallengeDetail = ({ navigation, route }: NavigateType) => {
 
   };
 
-
+  // handle complete challenge
 
   const handleFinishChallenge = () => {
-    const DataComplete = { email: owner_id?.email, id: id };
-    CompleteChallenge(DataComplete);
-
+    CompleteChallenge({ email: owner_id?.email, id: id }, {
+      onSuccess: () => navigation.goBack()
+    })
   }
 
-  console.log(errorComplete);
-  
 
   // read more content
   const [showFullContent, setShowFullContent] = useState(false);
@@ -102,10 +103,7 @@ const ChallengeDetail = ({ navigation, route }: NavigateType) => {
   // The number of lines you want to display
   const numberOfLinesToShow = 4;
 
-  // handle modal
-  const toggleModal = () => {
-    setModalVisible(!isModalVisible);
-  };
+ 
 
 
   return (
@@ -144,7 +142,6 @@ const ChallengeDetail = ({ navigation, route }: NavigateType) => {
           )}
         </View>
 
-
         <View style={styles.wrapped_title}>
           <Text style={{ fontSize: 20, color: "#363636" }}>{title}</Text>
         </View>
@@ -168,6 +165,7 @@ const ChallengeDetail = ({ navigation, route }: NavigateType) => {
             }}>{address}</Text>
           </View>
         </View>
+
         <View style={styles.wrapped_button}>
           <ButtonChallenge
             onPress={handlePress}
@@ -205,10 +203,10 @@ const ChallengeDetail = ({ navigation, route }: NavigateType) => {
             </TouchableOpacity>
           )}
         </View>
-        {isModalVisible && (
+        {isModalVisible &&  (
           <WarningComponent
-            title='verify'
-            description={`Are you sure to ${nameActionButton.toLowerCase()} this challenge ?`}
+            title={errorComplete?'Warning':'Verify'}
+            description={errorComplete? errorComplete:`Are you sure to ${nameActionButton.toLowerCase()} this challenge ?`}
             Action1='Cancel'
             Action2={nameActionButton}
             handleAction2={nameActionButton === "Complete" ? handleFinishChallenge : handleJoinChallenge}
