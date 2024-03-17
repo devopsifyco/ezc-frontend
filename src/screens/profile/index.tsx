@@ -27,9 +27,10 @@ export default function ProfileScreen({ navigation }: NavigateType) {
       </View>
       <View style={styles.profile}>
         <Image
-          source={{ uri: dataProfile?.avatar.name }}
+          source={dataProfile?.avatar.name ? { uri: dataProfile.avatar.name } : require('../../assets/profile/defaultProfile.png')}
           style={styles.profileImage}
         />
+
         <Text style={styles.profileName}>{dataProfile?.username}</Text>
         <Text style={styles.profileName}>{dataProfile?.email}</Text>
         <View style={styles.numberStatus}>
