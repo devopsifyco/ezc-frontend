@@ -26,21 +26,21 @@ const MapScreen = () => {
     longitude: 108.2772,
   };
 
-  const handleSetLocation = () => {
-    const lineCoordinates = [
-      {
-        latitude: currentLocation.latitude,
-        longitude: currentLocation.longitude,
-      },
-      {
-        latitude: vietnamCoordinate.latitude,
-        longitude: vietnamCoordinate.longitude,
-      },
-    ];
+  //const handleSetLocation = () => {
+  //  const lineCoordinates = [
+  //    {
+  //      latitude: currentLocation.latitude,
+  //      longitude: currentLocation.longitude,
+  //    },
+  //    {
+  //      latitude: vietnamCoordinate.latitude,
+  //      longitude: vietnamCoordinate.longitude,
+  //    },
+  //  ];
 
-    setCoordinates(lineCoordinates);
-    setShowSetLocationButton(false);
-  };
+  //  setCoordinates(lineCoordinates);
+  //  setShowSetLocationButton(false);
+  //};
 
   const handleSearch = async () => {
     try {
