@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from 'react';
-import { View, StyleSheet, Text, TouchableOpacity, Image } from 'react-native';
+import { View, StyleSheet, Text, TouchableOpacity, Image, ScrollView } from 'react-native';
 import HeaderChallenge from '../components/HeaderChallenge';
 import { NavigateType } from '../models/Navigations';
 import { useRatingChallenge } from '../hooks/useRatings';
 
 interface userRating {
   username: string,
-  highest_points: number
+  highest_points: number,
+  avatar: { name: string, downloadLink: string }[]
 }
 
 export default function RatingScreen({ navigation }: NavigateType) {
@@ -14,6 +15,7 @@ export default function RatingScreen({ navigation }: NavigateType) {
   const { data: dataRating } = useRatingChallenge()
   const [selectedOption, setSelectedOption] = useState('Monthly');
 
+  console.log('hh', selectedOption);
 
   const [rankings, setRankings] = useState([]);
 
@@ -43,20 +45,20 @@ export default function RatingScreen({ navigation }: NavigateType) {
   };
 
   return (
-    <View style={styles.container}>
+    <ScrollView style={styles.container}>
       <View style={styles.header}>
         <HeaderChallenge navigation={navigation} title='Ratings' />
       </View>
       <View style={styles.optionButton}>
         <TouchableOpacity
-          style={[styles.button, selectedOption === 'Monthly' && styles.selectedButton]}
-          onPress={() => handleOptionPress('Monthly')}>
-          <Text style={[styles.buttonText, selectedOption === 'Monthly' && styles.selectedButtonText]}>Monthly</Text>
+          style={[styles.button, selectedOption === 'Monthly' ? styles.selectedButton : null]}
+          onPress={() => handleOptionPress({ option: 'Monthly' })}>
+          <Text style={styles.buttonText}>Monthly</Text>
         </TouchableOpacity>
         <TouchableOpacity
-          style={[styles.button, selectedOption === 'AllTime' && styles.selectedButton]}
-          onPress={() => handleOptionPress('AllTime')}>
-          <Text style={[styles.buttonText, selectedOption === 'AllTime' && styles.selectedButtonText]}>All Time</Text>
+          style={[styles.button, selectedOption === 'AllTime' ? styles.selectedButton : null]}
+          onPress={() => handleOptionPress({ option: 'AllTime' })}>
+          <Text style={styles.buttonText}>All Time</Text>
         </TouchableOpacity>
       </View>
       <View style={styles.containList}>
@@ -70,7 +72,7 @@ export default function RatingScreen({ navigation }: NavigateType) {
                   </View>
                   <View style={styles.InfoDetail_wrapper}>
                     <View style={styles.infoDetail}>
-                      <Image source={require('../assets/profile/ty.png')}
+                      <Image source={{ uri: user.avatar?.name }}
                         style={styles.avatar}
                       />
                       <View>
@@ -88,13 +90,14 @@ export default function RatingScreen({ navigation }: NavigateType) {
           ))
         }
       </View>
-    </View>
+    </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    flexGrow: 1,
+
   },
   header: {
     flexDirection: 'row',
@@ -134,13 +137,13 @@ const styles = StyleSheet.create({
     fontWeight: "bold"
   },
   containList: {
-    flex: 1,
     marginTop: 20,
     marginHorizontal: 15,
     backgroundColor: "#216C53",
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
     elevation: 20,
+    paddingBottom: '20%'
   },
   listRating: {
     marginTop: 15,
