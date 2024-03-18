@@ -44,7 +44,7 @@ const MapScreen = () => {
 
   const handleSearch = async () => {
     try {
-      const apiKey = "YOUR_GOOGLE_API_KEY"; // Replace with your actual API key
+      const apiKey = "YOUR_GOOGLE_API_KEY";
       const response = await fetch(
         `https://maps.googleapis.com/maps/api/place/findplacefromtext/json?key=${apiKey}&input=${searchText}&inputtype=textquery&fields=geometry`
       );
@@ -71,12 +71,12 @@ const MapScreen = () => {
   const handlePredictionSelect = (prediction) => {
     setSearchText(prediction.description);
     setPredictions([]);
-    handleSearch(); // Perform search when a prediction is selected
+    handleSearch();
   };
 
   const fetchPredictions = async () => {
     try {
-      const apiKey = "YOUR_GOOGLE_API_KEY"; // Replace with your actual API key
+      const apiKey = "YOUR_GOOGLE_API_KEY";
       const response = await fetch(
         `https://maps.googleapis.com/maps/api/place/autocomplete/json?key=${apiKey}&input=${searchText}&types=geocode`
       );
@@ -140,7 +140,7 @@ const MapScreen = () => {
           <Polyline coordinates={coordinates} strokeWidth={3} strokeColor="blue" />
         )}
       </MapView>
-      <View style={styles.searchBar}>
+      {/*<View style={styles.searchBar}>
         <TextInput
           style={styles.input}
           placeholder="Tìm kiếm..."
@@ -151,7 +151,7 @@ const MapScreen = () => {
         <TouchableOpacity style={styles.searchButton} onPress={handleSearch}>
           <FontAwesomeIcon icon={faSearch} size={28} />
         </TouchableOpacity>
-      </View>
+      </View>*/}
       {predictions.length > 0 && (
         <View style={styles.predictionsContainer}>
           {predictions.map((prediction) => (
@@ -160,7 +160,7 @@ const MapScreen = () => {
               style={styles.predictionItem}
               onPress={() => handlePredictionSelect(prediction)}
             >
-              <Text>{prediction.description}</Text>
+              {/*<Text>{prediction.description}</Text>*/}
             </TouchableOpacity>
           ))}
         </View>
