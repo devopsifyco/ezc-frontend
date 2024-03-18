@@ -37,7 +37,7 @@ export default function WarningComponent({
                         end={{ x: 2.0, y: 0.5 }}
                         style={styles.button}>
                         <TouchableOpacity onPress={handleAction2}>
-                            <Text>{Action2}</Text>
+                            <Text >{Action2}</Text>
                         </TouchableOpacity>
                     </LinearGradient>
                 </View>
@@ -102,6 +102,7 @@ const styles = StyleSheet.create({
     titleText: {
         fontSize: 14,
         color: '#FFFFFF',
+        textAlign:"center"
     },
     actionLogout: {
         flexDirection: 'row',

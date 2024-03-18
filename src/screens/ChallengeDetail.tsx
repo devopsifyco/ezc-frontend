@@ -1,30 +1,36 @@
-import { StyleSheet, Text, View, Image, TouchableOpacity, ScrollView, ActivityIndicator } from 'react-native'
+import { StyleSheet, Text, View, Image, TouchableOpacity, ScrollView, ActivityIndicator, Alert } from 'react-native'
 import React, { useEffect, useState, useRef } from 'react';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import { NavigateType } from '../models/Navigations';
 import Swiper from 'react-native-swiper';
 import ButtonChallenge from '../components/ButtonChallenge';
-import { useOneChallenges, useJoinChallenge } from '../hooks/useChallenge';
+import { useOneChallenges, useJoinChallenge, useCompleteChallenge } from '../hooks/useChallenge';
 import WarningComponent from '../components/WarningComponent';
-
 import Moment from 'moment';
-
+import { DataProfile } from '../models/Profile';
+import useParticipant from '../hooks/useParticipant';
 
 
 const ChallengeDetail = ({ navigation, route }: NavigateType) => {
 
-  const { id } = route.params;
+  const { id} = route.params
+  // const id = "65eeca5c63fb390a4ccdb021"
 
-  const { mutate: JoinChallenge, error: errChallenge,  } = useJoinChallenge();
+  const { data, isLoading } = useParticipant({ id });
+  const { data: participantData, isLoading: participantIsLoading, isError: participantIsError } = useParticipant({ id });
+  const [filteredData, setFilteredData] = useState([]);
+  const { mutate: JoinChallenge, error: errChallenge, } = useJoinChallenge();
+  const { mutate: CompleteChallenge, error: errorComplete, isSuccess } = useCompleteChallenge();
   const [isJoined, setIsJoined] = useState(false);
   const { data: Challenge, isError, isPending, mutate } = useOneChallenges(id);
   const [isModalVisible, setModalVisible] = React.useState(false);
+  const [nameActionButton, setNameActionButton] = useState("Join");
 
 
   useEffect(() => {
     mutate();
-    
+
   }, [id, mutate]);
 
   const {
@@ -47,18 +53,47 @@ const ChallengeDetail = ({ navigation, route }: NavigateType) => {
     console.log('Button pressed!');
   };
 
+  useEffect(() => {
+    if (participantData) {
+      setFilteredData(participantData);
+    }
+  }, [participantData]);
 
+ // handle modal
+  const toggleModal = () => {
+    setModalVisible(!isModalVisible);
+  };
 
+  // Get email user account
+  const getEmailUser = async () => {
+    try {
+      const email = await AsyncStorage.getItem('email');
+      const formatemail = email ? email.replace(/["']/g, '') : '';
+      return formatemail;
+    } catch (error) {
+      console.error('Lỗi khi lấy email từ AsyncStorage:', error);
+      return null;
+    }
+  };
+
+  // check role for button
+  getEmailUser().then(email => {
+    if (email === owner_id?.email) {
+      setNameActionButton('Complete')
+    }
+  });
+
+  //handle join challenge
   const handleJoinChallenge = async () => {
     AsyncStorage.getItem('email').then(data => {
 
       const emailWithoutQuotes = data ? data.replace(/["']/g, '') : '';
 
-      console.log("my Email", emailWithoutQuotes);
-
-      const joinData = { email: emailWithoutQuotes, id: id };
-
-      JoinChallenge(joinData);
+      JoinChallenge({email: emailWithoutQuotes, id: id}, {
+        onSuccess: () => {
+          navigation.goBack()
+        }
+      });
       setIsJoined(true);
       setModalVisible(!isModalVisible);
 
@@ -66,16 +101,22 @@ const ChallengeDetail = ({ navigation, route }: NavigateType) => {
 
   };
 
+  // handle complete challenge
+
+  const handleFinishChallenge = () => {
+    CompleteChallenge({ email: owner_id?.email, id: id }, {
+      onSuccess: () => navigation.goBack()
+    })
+  }
+
+
   // read more content
   const [showFullContent, setShowFullContent] = useState(false);
 
-  // The number of lines you want to display
+
   const numberOfLinesToShow = 4;
 
-  // handle modal
-  const toggleModal = () => {
-    setModalVisible(!isModalVisible);
-  };
+ 
 
 
   return (
@@ -114,7 +155,6 @@ const ChallengeDetail = ({ navigation, route }: NavigateType) => {
           )}
         </View>
 
-
         <View style={styles.wrapped_title}>
           <Text style={{ fontSize: 20, color: "#363636" }}>{title}</Text>
         </View>
@@ -138,6 +178,7 @@ const ChallengeDetail = ({ navigation, route }: NavigateType) => {
             }}>{address}</Text>
           </View>
         </View>
+
         <View style={styles.wrapped_button}>
           <ButtonChallenge
             onPress={handlePress}
@@ -146,13 +187,14 @@ const ChallengeDetail = ({ navigation, route }: NavigateType) => {
           />
           <ButtonChallenge
             onPress={toggleModal}
-            title="Join"
-            buttonStyle={{ width: 120 }}
+            title={nameActionButton}
+            colors={nameActionButton === "Complete" ? ['#216C53', '#216C53'] : undefined}
+            buttonStyle={[styles.buttonStyle]}
             disabled={errChallenge?.response?.status === 400 || isJoined}
-            />
+          />
         </View>
         <View style={styles.wrapped_avarta}>
-          <Image style={styles.avatar} source={{uri: owner_id?.avatar.name}} />
+          <Image style={styles.avatar} source={{ uri: owner_id?.avatar.name }} />
           <View style={styles.infUser}>
             <Text style={{ fontSize: 16, fontWeight: 'bold', color: "#363636" }}>{owner_id?.username}</Text>
             <Text>Organizer</Text>
@@ -174,6 +216,13 @@ const ChallengeDetail = ({ navigation, route }: NavigateType) => {
             </TouchableOpacity>
           )}
         </View>
+        <View style={styles.section}>
+            <Text style={styles.sectionName}>Participant</Text>
+            <TouchableOpacity style={styles.seeAll} onPress={() => navigation.navigate('Participant')}>
+              <Text>See All</Text>
+              <Image source={require('../assets/icons/iconSeeAll.png')} />
+            </TouchableOpacity>
+          </View>
         {isModalVisible && (
         <WarningComponent
           title='verify'
@@ -184,7 +233,36 @@ const ChallengeDetail = ({ navigation, route }: NavigateType) => {
           toggleModal={toggleModal}
         />
       )}
+        {isModalVisible &&  (
+          <WarningComponent
+            title={errorComplete?'Warning':'Verify'}
+            description={errorComplete? errorComplete:`Are you sure to ${nameActionButton.toLowerCase()} this challenge ?`}
+            Action1='Cancel'
+            Action2={nameActionButton}
+            handleAction2={nameActionButton === "Complete" ? handleFinishChallenge : handleJoinChallenge}
+            toggleModal={toggleModal}
+          />
+        )}
+
       </View>
+      <View style={styles.listParticipant}>
+                {filteredData.map((user: DataProfile) => (
+                    <View style={styles.itemParticipant} key={user._id}>
+                        <View style={styles.itemInfo}>
+                            <View style={styles.InfoDetail}>
+                                <Image
+                                    source={{ uri: user.avatar.downloadLink }}
+                                    style={styles.avatar}
+                                />
+                                <View>
+                                    <Text style={styles.name}>{user.username}</Text>
+                                    <Text style={styles.challengemail}>{user.email}</Text>
+                                </View>
+                            </View>
+                        </View>
+                    </View>
+                ))}
+            </View>
     </ScrollView>
   )
 }
@@ -263,5 +341,57 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
+  section: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    padding: 10,
 
+  },
+  seeAll: {
+    flexDirection: 'row',
+    gap: 3,
+    alignItems: 'center',
+  },
+  sectionName: {
+    fontSize: 18,
+    color: '#120D26',
+  },
+  listParticipant: {
+    marginTop: 5,
+    borderRadius: 15,
+    marginHorizontal: 20,
+},
+itemParticipant: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    padding: 10,
+    marginTop: 10,
+    backgroundColor: "#ffff",
+    elevation: 20,
+    borderRadius: 15,
+},
+itemInfo: {
+  flexDirection: 'row',
+  alignItems: 'center',
+},
+InfoDetail: {
+  flexDirection: 'row',
+  alignItems: 'center',
+  gap: 10,
+
+},
+name: {
+  fontWeight: 'bold',
+  color: "#000",
+  fontSize: 18
+},
+challengemail: {
+  color: "#216C53"
+},
+
+  buttonStyle: {
+    width: 120
+  }
 })
