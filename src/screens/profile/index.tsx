@@ -27,7 +27,7 @@ export default function ProfileScreen({ navigation }: NavigateType) {
       </View>
       <View style={styles.profile}>
         <Image
-          source={dataProfile?.avatar.name ? { uri: dataProfile.avatar.name } : require('../../assets/profile/defaultProfile.png')}
+          source={dataProfile?.avatar.name ? { uri: dataProfile.avatar.name } : require('../../assets/profile/defaultAvatar.jpg')}
           style={styles.profileImage}
         />
 
