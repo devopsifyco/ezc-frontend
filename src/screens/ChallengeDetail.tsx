@@ -7,15 +7,19 @@ import Swiper from 'react-native-swiper';
 import ButtonChallenge from '../components/ButtonChallenge';
 import { useOneChallenges, useJoinChallenge, useCompleteChallenge } from '../hooks/useChallenge';
 import WarningComponent from '../components/WarningComponent';
-
 import Moment from 'moment';
-
+import { DataProfile } from '../models/Profile';
+import useParticipant from '../hooks/useParticipant';
 
 
 const ChallengeDetail = ({ navigation, route }: NavigateType) => {
 
-  const { id } = route.params;
+  const { id} = route.params
+  // const id = "65eeca5c63fb390a4ccdb021"
 
+  const { data, isLoading } = useParticipant({ id });
+  const { data: participantData, isLoading: participantIsLoading, isError: participantIsError } = useParticipant({ id });
+  const [filteredData, setFilteredData] = useState([]);
   const { mutate: JoinChallenge, error: errChallenge, } = useJoinChallenge();
   const { mutate: CompleteChallenge, error: errorComplete, isSuccess } = useCompleteChallenge();
   const [isJoined, setIsJoined] = useState(false);
@@ -48,6 +52,12 @@ const ChallengeDetail = ({ navigation, route }: NavigateType) => {
   const handlePress = () => {
     console.log('Button pressed!');
   };
+
+  useEffect(() => {
+    if (participantData) {
+      setFilteredData(participantData);
+    }
+  }, [participantData]);
 
  // handle modal
   const toggleModal = () => {
@@ -103,7 +113,7 @@ const ChallengeDetail = ({ navigation, route }: NavigateType) => {
   // read more content
   const [showFullContent, setShowFullContent] = useState(false);
 
-  // The number of lines you want to display
+
   const numberOfLinesToShow = 4;
 
  
@@ -206,6 +216,23 @@ const ChallengeDetail = ({ navigation, route }: NavigateType) => {
             </TouchableOpacity>
           )}
         </View>
+        <View style={styles.section}>
+            <Text style={styles.sectionName}>Participant</Text>
+            <TouchableOpacity style={styles.seeAll} onPress={() => navigation.navigate('Participant')}>
+              <Text>See All</Text>
+              <Image source={require('../assets/icons/iconSeeAll.png')} />
+            </TouchableOpacity>
+          </View>
+        {isModalVisible && (
+        <WarningComponent
+          title='verify'
+          description='Are you sure to join this challenge?'
+          Action1='Cancel'
+          Action2='Join'
+          handleAction2={handleJoinChallenge}
+          toggleModal={toggleModal}
+        />
+      )}
         {isModalVisible &&  (
           <WarningComponent
             title={errorComplete?'Warning':'Verify'}
@@ -218,6 +245,24 @@ const ChallengeDetail = ({ navigation, route }: NavigateType) => {
         )}
 
       </View>
+      <View style={styles.listParticipant}>
+                {filteredData.map((user: DataProfile) => (
+                    <View style={styles.itemParticipant} key={user._id}>
+                        <View style={styles.itemInfo}>
+                            <View style={styles.InfoDetail}>
+                                <Image
+                                    source={{ uri: user.avatar.downloadLink }}
+                                    style={styles.avatar}
+                                />
+                                <View>
+                                    <Text style={styles.name}>{user.username}</Text>
+                                    <Text style={styles.challengemail}>{user.email}</Text>
+                                </View>
+                            </View>
+                        </View>
+                    </View>
+                ))}
+            </View>
     </ScrollView>
   )
 }
@@ -296,8 +341,57 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
+  section: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    padding: 10,
+
+  },
+  seeAll: {
+    flexDirection: 'row',
+    gap: 3,
+    alignItems: 'center',
+  },
+  sectionName: {
+    fontSize: 18,
+    color: '#120D26',
+  },
+  listParticipant: {
+    marginTop: 5,
+    borderRadius: 15,
+    marginHorizontal: 20,
+},
+itemParticipant: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    padding: 10,
+    marginTop: 10,
+    backgroundColor: "#ffff",
+    elevation: 20,
+    borderRadius: 15,
+},
+itemInfo: {
+  flexDirection: 'row',
+  alignItems: 'center',
+},
+InfoDetail: {
+  flexDirection: 'row',
+  alignItems: 'center',
+  gap: 10,
+
+},
+name: {
+  fontWeight: 'bold',
+  color: "#000",
+  fontSize: 18
+},
+challengemail: {
+  color: "#216C53"
+},
+
   buttonStyle: {
     width: 120
   }
-
 })
