@@ -23,11 +23,9 @@ import { useGetAllChallenges } from '../hooks/useChallenge';
 
 const HomeScreen: React.FC<NavigateType> = ({ navigation }) => {
 
-  const { data: challenges, mutate: getChallenges } = useGetAllChallenges();
+  const { data: challenges} = useGetAllChallenges();
 
-  useEffect(() => {
-    getChallenges();
-  }, [getChallenges]);
+
 
 
   
@@ -49,8 +47,6 @@ const HomeScreen: React.FC<NavigateType> = ({ navigation }) => {
           <FontAwesomeIcon icon={faBell} size={28} color='#FF890B' />
         </TouchableOpacity>
       </View>
-
-
         <View style={{ height: 150 }}>
           <Slides />
         </View>

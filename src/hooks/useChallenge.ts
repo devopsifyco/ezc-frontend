@@ -5,16 +5,16 @@ import { EZCHALLENG_API } from '../api/endPoint';
 import { Challenge } from '../models/InfChallenge';
 
 const API_ALLCHALLENGE = `${EZCHALLENG_API}/challenges/not-participate`;
+const API_HASJOINEDCHALLENGE = `${EZCHALLENG_API}/challenges/joined`;
 const API_CHALLENGES = `${EZCHALLENG_API}/challenge`;
+
 
 
 //  --------------get all list challenge ----------------------
 export function useGetAllChallenges() {
-  const queryClient = useQueryClient()
-
-  const getAllChallenges = useMutation({
-    mutationKey: ['challengesList'],
-    mutationFn: async () => {
+  return useQuery({
+    queryKey: ['challengesList'],
+    queryFn: async () => {
       try {
         const email = await AsyncStorage.getItem('email');
         const newEmail = email ? email.replace(/["']/g, '') : '';
@@ -29,19 +29,12 @@ export function useGetAllChallenges() {
           }
         );
         return res.data;
-      } catch (error) {
-        console.error('Error fetching challenges:', error);
+      } catch (error: any) {
+        console.error('Error fetching challenges:', error?.response.data);
         throw error;
       }
-    },
-    onSuccess: () => {
-      console.log('Get all challenge successful'),
-        queryClient.invalidateQueries({ queryKey: ['challengesList'] });
     }
-
   });
-
-  return { ...getAllChallenges };
 }
 
 //  -----------get get all challenge by status ---------------------
@@ -174,8 +167,8 @@ export function useJoinChallenge() {
           },
         });
         return res.data;
-      } catch (error) {
-        throw new Error("Failed join challenge");
+      } catch (error: any) {
+        throw error?.response.data.message;
       }
     },
     onSuccess: () => {
@@ -190,6 +183,46 @@ export function useJoinChallenge() {
   });
 
   return { ...getJoinChallenge };
+}
+
+
+
+//---------------------user has join challenge-------------------------
+
+export function useGetHasJoinedChallenges() {
+  const queryClient = useQueryClient()
+
+  const getAllChallenges = useMutation({
+    mutationKey: ['hasJoinedChallenge'],
+    mutationFn: async () => {
+      try {
+        const email = await AsyncStorage.getItem('email');
+        const newEmail = email ? email.replace(/["']/g, '') : '';
+        const token = await AsyncStorage.getItem('accessToken');
+        const res = await axios.post(
+          API_HASJOINEDCHALLENGE, { email: newEmail },
+          {
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        return res.data;
+      } catch (error: any) {
+        console.error('Error get has joined challenges:', error);
+        throw error?.response.data.message;
+      }
+    },
+    onSuccess: () => {
+      console.log('Get get has joined successful'),
+        queryClient.invalidateQueries({ queryKey: ['challengesList'] });
+        queryClient.invalidateQueries({ queryKey: ['hasJoinedChallenge'] });
+    }
+
+  });
+
+  return { ...getAllChallenges };
 }
 
 //---------------------complete challenge------------------------------
@@ -235,6 +268,7 @@ export default {
   useDeleteChallenges,
   useUpdateChallenges,
   useJoinChallenge,
-  useCompleteChallenge
+  useCompleteChallenge,
+  useGetHasJoinedChallenges
 
 }

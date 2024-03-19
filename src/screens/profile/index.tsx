@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
   Text,
   View,
@@ -11,10 +11,18 @@ import { NavigateType } from '../../models/Navigations';
 import AboutScreen from './AboutScreen';
 import ChallengeScreen from './ChallengeScreen';
 import useProfile from '../../hooks/useProfile';
+import JoinedScreen from './JoinedScreen';
+import { useGetHasJoinedChallenges } from '../../hooks/useChallenge';
 
 export default function ProfileScreen({ navigation }: NavigateType) {
   const [selectedTab, setSelectedTab] = useState('ABOUT');
   const { data: dataProfile, isLoading } = useProfile();
+
+  const { data: hasJoined, mutate: getHasJoined } = useGetHasJoinedChallenges();
+
+    useEffect(() => {
+        getHasJoined();
+    }, [getHasJoined]);
 
   return (
     <View style={styles.container}>
@@ -40,7 +48,7 @@ export default function ProfileScreen({ navigation }: NavigateType) {
           </View>
           <View style={styles.arrowMiddle} />
           <View style={styles.itemfllower}>
-            <Text style={styles.itemNumber}>{dataProfile?.challenges ? dataProfile?.challenges.length : 0}</Text>
+            <Text style={styles.itemNumber}>{hasJoined?.userChallenges ? hasJoined?.userChallenges.length : 0}</Text>
             <Text style={styles.titleMedium}>Challenge</Text>
           </View>
         </View>
@@ -59,10 +67,20 @@ export default function ProfileScreen({ navigation }: NavigateType) {
           ]}>
           <Text style={styles.titleLarge}>CHALLENGE</Text>
         </TouchableOpacity>
+        <TouchableOpacity
+        onPress={() => setSelectedTab('JOINED')}
+          style={[
+            styles.tab,
+            selectedTab === 'JOINED' && styles.selectedTab,
+          ]}
+        >
+          <Text style={styles.titleLarge}>JOINED</Text>
+        </TouchableOpacity>
       </View>
 
       {selectedTab === 'ABOUT' && <AboutScreen data={dataProfile} />}
       {selectedTab === 'CHALLENGE' && <ChallengeScreen navigation={navigation} />}
+      {selectedTab === 'JOINED' && <JoinedScreen navigation={navigation} />}
     </View>
   );
 }

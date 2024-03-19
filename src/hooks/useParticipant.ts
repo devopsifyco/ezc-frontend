@@ -23,7 +23,6 @@ export default function useParticipant({ id }: any) {
       }
     }
   })
-  console.log('lấy data: ', data);
   
   return { data, isLoading, isError };
 }
