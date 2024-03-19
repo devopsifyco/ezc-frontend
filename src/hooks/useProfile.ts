@@ -20,7 +20,7 @@ const useProfile = () => {
           },
         }
       );
-
+      await AsyncStorage.setItem('id_owner', response.data._id);
       return response.data;
     },
   });
