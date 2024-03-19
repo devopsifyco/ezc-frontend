@@ -23,11 +23,11 @@ import { useGetAllChallenges } from '../hooks/useChallenge';
 
 const HomeScreen: React.FC<NavigateType> = ({ navigation }) => {
 
-  const { data: challenges, mutate: getChallenges } = useGetAllChallenges();
+  const { data: challenges } = useGetAllChallenges();
 
-  useEffect(() => {
-    getChallenges();
-  }, [getChallenges]);
+
+
+
 
 
   const handleNotificationPress = () => {
@@ -48,80 +48,105 @@ const HomeScreen: React.FC<NavigateType> = ({ navigation }) => {
         </TouchableOpacity>
       </View>
 
+      <ScrollView >
+        <View style={{ height: 150 }}>
+          <Slides />
+        </View>
+        <View style={styles.section}>
+          <Text style={styles.sectionName}>Processing</Text>
+          <TouchableOpacity style={styles.seeAll}>
+            <Text
+              onPress={() => navigation.navigate('SeeAllLive')}
+            >See All</Text>
+            <Image source={require('../assets/icons/iconSeeAll.png')} />
+          </TouchableOpacity>
+        </View>
+        <View>
+          <FlatList
+            data={challenges}
+            horizontal
+            showsHorizontalScrollIndicator={false}
+            keyExtractor={(item, index) => index.toString()}
+            renderItem={({ item, index }) => (
+              <LiveCard
+                id={item._id}
+                key={item.id ? item.id.toString() : index.toString()}
+                start_time={item.start_time}
+                end_time={item.end_time}
+                title={item.title}
+                company={item.company}
+                address={item.address}
+                images_path={item.images_path}
+                isLive={item.isLive}
+                points_reward={item.points_reward}
+                description={item.description}
+                onPress={() => handlePress(item._id)}
 
-      <View style={{ height: 150 }}>
-        <Slides />
-      </View>
-      <View style={styles.section}>
-        <Text style={styles.sectionName}>Processing</Text>
-        <TouchableOpacity style={styles.seeAll}>
-          <Text
-            onPress={() => navigation.navigate('SeeAllLive')}
-          >See All</Text>
-          <Image source={require('../assets/icons/iconSeeAll.png')} />
-        </TouchableOpacity>
-      </View>
-      <View>
-        <FlatList
-          data={challenges}
-          horizontal
-          showsHorizontalScrollIndicator={false}
-          keyExtractor={(item, index) => index.toString()}
-          renderItem={({ item, index }) => (
-            <LiveCard
-              id={item._id}
-              key={item.id ? item.id.toString() : index.toString()}
-              start_time={item.start_time}
-              end_time={item.end_time}
-              title={item.title}
-              company={item.company}
-              address={item.address}
-              images_path={item.images_path}
-              isLive={item.isLive}
-              points_reward={item.points_reward}
-              description={item.description}
-              onPress={() => handlePress(item._id)}
+              />
+            )}
+          />
+        </View>
+        <View style={{ flex: 1 }}>
+          <FlatList
+            data={challenges}
+            showsVerticalScrollIndicator={false}
+            keyExtractor={(item, index) => index.toString()}
+            contentContainerStyle={{ flexGrow: 1 }}
+            renderItem={({ item, index }) => (
+              <ListCard
+                id={item._id}
+                description={item.description}
+                key={item.id ? item.id.toString() : index.toString()}
+                start_time={item.start_time}
+                end_time={item.end_time}
+                title={item.title}
+                company={item.company}
+                address={item.address}
+                images_path={item.images_path}
+                isLive={item.isLive}
+                points_reward={item.points_reward}
+                onPress={() => handlePress(item._id)}
+              />
+            )}
+          />
+        </View>
 
-            />
-          )}
-        />
-      </View>
-
-      <View style={styles.section}>
-        <Text style={styles.sectionName}>Challenges</Text>
-        <TouchableOpacity style={styles.seeAll}>
-          <Text
-            onPress={() => navigation.navigate('SeeAllChallange')}
-          >See All</Text>
-          <Image source={require('../assets/icons/iconSeeAll.png')} />
-        </TouchableOpacity>
-      </View>
-      <View style={{ flex: 1 }}>
-        <FlatList
-          data={challenges}
-          showsVerticalScrollIndicator={false}
-          keyExtractor={(item, index) => index.toString()}
-          contentContainerStyle={{ flexGrow: 1 }}
-          renderItem={({ item, index }) => (
-            <ListCard
-              id={item._id}
-              description={item.description}
-              key={item.id ? item.id.toString() : index.toString()}
-              start_time={item.start_time}
-              end_time={item.end_time}
-              title={item.title}
-              company={item.company}
-              address={item.address}
-              images_path={item.images_path}
-              isLive={item.isLive}
-              points_reward={item.points_reward}
-              onPress={() => handlePress(item._id)}
-            />
-          )}
-        />
-      </View>
-
+        <View style={styles.section}>
+          <Text style={styles.sectionName}>Challenges</Text>
+          <TouchableOpacity style={styles.seeAll}>
+            <Text
+              onPress={() => navigation.navigate('SeeAllChallange')}
+            >See All</Text>
+            <Image source={require('../assets/icons/iconSeeAll.png')} />
+          </TouchableOpacity>
+        </View>
+        <View style={{ flex: 1 }}>
+          <FlatList
+            data={challenges}
+            showsVerticalScrollIndicator={false}
+            keyExtractor={(item, index) => index.toString()}
+            contentContainerStyle={{ flexGrow: 1 }}
+            renderItem={({ item, index }) => (
+              <ListCard
+                id={item._id}
+                description={item.description}
+                key={item.id ? item.id.toString() : index.toString()}
+                start_time={item.start_time}
+                end_time={item.end_time}
+                title={item.title}
+                company={item.company}
+                address={item.address}
+                images_path={item.images_path}
+                isLive={item.isLive}
+                points_reward={item.points_reward}
+                onPress={() => handlePress(item._id)}
+              />
+            )}
+          />
+        </View>
+      </ScrollView>
     </View>
+
 
   );
 };
