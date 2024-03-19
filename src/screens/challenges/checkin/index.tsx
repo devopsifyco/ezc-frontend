@@ -25,8 +25,6 @@ export default function CheckIn({ route }: any) {
     const { mutate: checkIn } = useCheckIn();
 
 
-
-
     if (isPending) {
         return (
             <View style={[styles.loadingItem, styles.displayCenter]}>
@@ -59,6 +57,7 @@ export default function CheckIn({ route }: any) {
 
     const renderItem = ({ item }: { item: ParticipantsType }) => {
         const participant = statusOfChallenge.participants.find((participant: { _id: string }) => participant._id === item._id);
+
         return (
             <View style={styles.formContainer}>
                 <View style={styles.listeItems}>
@@ -98,7 +97,7 @@ export default function CheckIn({ route }: any) {
                     renderItem={renderItem}
                 />
             ) : (
-                <Text>No one has participated in this challenge yet.</Text>
+                <Text style={styles.itemEmail}>No one has participated in this challenge yet.</Text>
             )}
         </View>
     );
