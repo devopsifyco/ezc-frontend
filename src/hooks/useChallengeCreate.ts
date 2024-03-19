@@ -32,7 +32,7 @@ export default function useChallengeCreate() {
     },
     onSuccess: () => {
       Alert.alert("Create challenge successful");
-      queryClient.invalidateQueries({queryKey: ['challengesList']});
+      queryClient.invalidateQueries({queryKey: ['challenges', 'pending']});
     },
     onError: error => Alert.alert(error.message),
   });

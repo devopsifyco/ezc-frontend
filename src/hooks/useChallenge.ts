@@ -5,20 +5,22 @@ import { EZCHALLENG_API } from '../api/endPoint';
 import { Challenge } from '../models/InfChallenge';
 
 const API_ALLCHALLENGE = `${EZCHALLENG_API}/challenges/not-participate`;
+const API_HASJOINEDCHALLENGE = `${EZCHALLENG_API}/challenges/joined`;
 const API_CHALLENGES = `${EZCHALLENG_API}/challenge`;
+
 
 
 //  --------------get all list challenge ----------------------
 export function useGetAllChallenges() {
-  const getAllChallenges = useMutation({
-    mutationKey: ['challengesList'], 
-    mutationFn: async () => {
+  return useQuery({
+    queryKey: ['challengesList'],
+    queryFn: async () => {
       try {
-        const email = await AsyncStorage.getItem('email'); 
+        const email = await AsyncStorage.getItem('email');
         const newEmail = email ? email.replace(/["']/g, '') : '';
         const token = await AsyncStorage.getItem('accessToken');
         const res = await axios.post(
-          API_ALLCHALLENGE, {email: newEmail},
+          API_ALLCHALLENGE, { email: newEmail },
           {
             headers: {
               'Content-Type': 'application/json',
@@ -27,15 +29,12 @@ export function useGetAllChallenges() {
           }
         );
         return res.data;
-      } catch (error) {
-        console.error('Error fetching challenges:', error);
+      } catch (error: any) {
+        console.error('Error fetching challenges:', error?.response.data);
         throw error;
       }
-    },
-    onSuccess: () => console.log('Get all challenge successful'),
+    }
   });
-
-  return { ...getAllChallenges };
 }
 
 //  -----------get get all challenge by status ---------------------
@@ -65,7 +64,7 @@ export function useGetAllChallengesByStatus(status: string) {
 
 export function useOneChallenges(_id: string) {
   const getOneChallenge = useMutation({
-    mutationKey: ['getOneChallenge', _id], 
+    mutationKey: ['getOneChallenge', _id],
     mutationFn: async () => {
       try {
         const token = await AsyncStorage.getItem('accessToken');
@@ -75,23 +74,26 @@ export function useOneChallenges(_id: string) {
             Authorization: `Bearer ${token}`,
           },
         });
+        
         return res.data;
       } catch (error) {
         throw error;
       }
     },
     onSuccess: (data) => {
-      console.log('Successful get one data');
+      console.log('Successful get one chellenge');
     },
   });
 
   return { ...getOneChallenge };
 }
 
-// ----------------------------------
-export function useUpdateChallenges( ) {
+// ----------------------------------Update challenge---------------------------
+export function useUpdateChallenges() {
+  const queryClient = useQueryClient()
+
   const getUpdateChallenge = useMutation({
-    mutationKey: ['UpdateChallenge'], 
+    mutationKey: ['UpdateChallenge'],
     mutationFn: async (params: Challenge) => {
       try {
         const token = await AsyncStorage.getItem('accessToken');
@@ -108,7 +110,8 @@ export function useUpdateChallenges( ) {
       }
     },
     onSuccess: () => {
-      console.log('Successful update data');
+      console.log('Successful update challenge');
+      queryClient.invalidateQueries({ queryKey: ['challenges', 'pending'] });
     },
   });
 
@@ -122,11 +125,11 @@ export function useUpdateChallenges( ) {
 
 export function useDeleteChallenges() {
   const getDeleteChallenge = useMutation({
-    mutationKey: ['DeleteChallenge'], 
-    mutationFn: async (params: {id: string | null}) => {
+    mutationKey: ['DeleteChallenge'],
+    mutationFn: async (params: { id: string | null }) => {
       try {
         const token = await AsyncStorage.getItem('accessToken');
-        const res = await axios.delete(`${API_CHALLENGES}/delete`,{
+        const res = await axios.delete(`${API_CHALLENGES}/delete`, {
           headers: {
             'Content-Type': 'application/json',
             Authorization: `Bearer ${token}`,
@@ -150,9 +153,11 @@ export function useDeleteChallenges() {
 //------------------join challenge-----------------------------
 
 export function useJoinChallenge() {
+  const queryClient = useQueryClient()
+
   const getJoinChallenge = useMutation({
-    mutationKey: ['JoinChallenge'], 
-    mutationFn: async (dataJoin: {email: string, id: string}) => {
+    mutationKey: ['JoinChallenge'],
+    mutationFn: async (dataJoin: { email: string, id: string }) => {
       try {
         const token = await AsyncStorage.getItem('accessToken');
         const res = await axios.post(`${API_CHALLENGES}/join`, dataJoin, {
@@ -162,15 +167,18 @@ export function useJoinChallenge() {
           },
         });
         return res.data;
-      } catch (error) {
-        throw new Error("Failed join challenge");
+      } catch (error: any) {
+        throw error?.response.data.message;
       }
     },
     onSuccess: () => {
-      console.log('Successful join data');
+      console.log('Successful join challenge');
+      queryClient.invalidateQueries({ queryKey: ['challengesList'] });
+
     },
     onError: (error: any) => {
       console.log(error?.response.data.message);
+
     }
   });
 
@@ -179,12 +187,88 @@ export function useJoinChallenge() {
 
 
 
-export default { 
-  useGetAllChallenges, 
+//---------------------user has join challenge-------------------------
+
+export function useGetHasJoinedChallenges() {
+  const queryClient = useQueryClient()
+
+  const getAllChallenges = useMutation({
+    mutationKey: ['hasJoinedChallenge'],
+    mutationFn: async () => {
+      try {
+        const email = await AsyncStorage.getItem('email');
+        const newEmail = email ? email.replace(/["']/g, '') : '';
+        const token = await AsyncStorage.getItem('accessToken');
+        const res = await axios.post(
+          API_HASJOINEDCHALLENGE, { email: newEmail },
+          {
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${token}`,
+            },
+          }
+        );
+        return res.data;
+      } catch (error: any) {
+        console.error('Error get has joined challenges:', error);
+        throw error?.response.data.message;
+      }
+    },
+    onSuccess: () => {
+      console.log('Get get has joined successful'),
+        queryClient.invalidateQueries({ queryKey: ['challengesList'] });
+        queryClient.invalidateQueries({ queryKey: ['hasJoinedChallenge'] });
+    }
+
+  });
+
+  return { ...getAllChallenges };
+}
+
+//---------------------complete challenge------------------------------
+
+
+export function useCompleteChallenge() {
+  const queryClient = useQueryClient();
+
+  const getCompleteChallenge = useMutation({
+    mutationKey: ['CompleteChallenge'],
+    mutationFn: async (dataComplete: { email: string, id: string }) => {
+      try {
+        const token = await AsyncStorage.getItem("accessToken");
+        const res = await axios.post(`${API_CHALLENGES}/complete`, dataComplete, {
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          }
+        })
+        return res.data
+      } catch (error: any) {
+        throw error?.response.data.message;
+      }
+    },
+    onSuccess: () => {
+      console.log('Successful complete challenge');
+      queryClient.invalidateQueries({ queryKey: ['challenges', 'approved'] });
+      queryClient.invalidateQueries({ queryKey: ['challenges', 'pending'] });
+    },
+    onError: (error: any) => {
+      console.log(error?.response.data.message);
+    }
+
+  })
+
+  return { ...getCompleteChallenge };
+}
+
+export default {
+  useGetAllChallenges,
   useGetAllChallengesByStatus,
   useOneChallenges,
   useDeleteChallenges,
   useUpdateChallenges,
-  useJoinChallenge
+  useJoinChallenge,
+  useCompleteChallenge,
+  useGetHasJoinedChallenges
 
 }

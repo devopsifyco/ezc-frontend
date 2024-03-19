@@ -6,31 +6,22 @@ import LinearGradient from 'react-native-linear-gradient';
 import ButtonProfile from '../../components/ButtonProfile';
 import ButtonProfile2 from '../../components/ButtonProfile2';
 import HeaderProfile from '../../components/HeaderProfile';
-import { useNavigation } from '@react-navigation/native';
-import { DataProfile } from '../../models/Profile';
+import useProfile from '../../hooks/useProfile';
+import { NavigateType } from '../../models/Navigations';
 
-export default function SubProfileScreen({
-  route
-}: {
-  route: { params: { dataProfile: DataProfile } }
-}) {
-  const { dataProfile } = route.params;
-  const navigation = useNavigation();
-
-  const moveEdit = () => {
-    navigation.navigate('EditProfile', { dataProfile });
-  };
+export default function SubProfileScreen({ navigation }: NavigateType) {
+  const { data: dataProfile } = useProfile();
   const [isModalVisible, setModalVisible] = React.useState(false);
   const toggleModal = () => setModalVisible(!isModalVisible);
 
-  const navigateToLoginScreen = () => {
-    navigation.navigate('LoginScreen');
+  const moveEdit = () => {
+    navigation.navigate('EditProfile', { dataProfile });
   };
 
   const handleLogout = async () => {
     try {
       await AsyncStorage.removeItem('accessToken');
-      navigateToLoginScreen();
+      navigation.navigate('LoginScreen');
     } catch (error) {
       console.error('Error logging out:', error);
     }
