@@ -23,12 +23,9 @@ import UpdateChallenges from './challenges/update';
 import PendingScreen from './Status/PendingScreen';
 import Status from './Status';
 import CreateChallenges from './challenges/create';
-<<<<<<< HEAD
 import CheckIn from './challenges/checkin';
-=======
 import ParticipantScreen from './ParticipantScreen';
 
->>>>>>> da01deb01ebd58c67c2276c9e28268f37178fe3c
 
 const Stack = createNativeStackNavigator();
 
@@ -62,11 +59,8 @@ export default function EZChallenge() {
         <Stack.Screen name="ChallengeDetail" component={ChallengeDetail} />
         <Stack.Screen name="UpdateChallenge" component={UpdateChallenges} />
         <Stack.Screen name="CreateChallenges" component={CreateChallenges} />
-<<<<<<< HEAD
         <Stack.Screen name='CheckIn' component={CheckIn} />
-=======
         <Stack.Screen name="Participant" component={ParticipantScreen} />
->>>>>>> da01deb01ebd58c67c2276c9e28268f37178fe3c
       </Stack.Group>
     </Stack.Navigator>
   );

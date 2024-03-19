@@ -1,24 +1,21 @@
-import { useMutation, MutationFunction } from "@tanstack/react-query";
+import { useMutation } from "@tanstack/react-query";
 import { EZCHALLENG_API } from "../api/endPoint";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Alert } from "react-native";
 
-interface Participant {
-    userId: string;
-    isCheckin: boolean;
-}
-
 export default function useCheckIn() {
-    const checkInMutation = useMutation<void, Error, { email: string; challengeId: string; checkinData: Participant[] }>({
+    return useMutation({
         mutationKey: ['confirmCheckIn'],
-        mutationFn: async ({ email, challengeId, checkinData }) => {
+        mutationFn: async ({ challengeId, checkinData }: { challengeId: string; checkinData: any }) => { 
             try {
+                const getEmail = await AsyncStorage.getItem('email');
+                const email = getEmail ? getEmail.replace(/["']/g, '') : '';
                 const userToken = await AsyncStorage.getItem('accessToken');
                 const res = await axios.post(`${EZCHALLENG_API}/challenge/check-in`, {
                     email,
                     challengeId,
-                    checkinData: checkinData.map(participant => ({ userId: participant.userId, isCheckin: true })),
+                    checkinData,
                 }, {
                     headers: {
                         'Content-Type': 'application/json',
@@ -33,16 +30,9 @@ export default function useCheckIn() {
         },
         onSuccess: (data: any) => {
            Alert.alert(data);
-            
         },
         onError: (err) => {
             Alert.alert(err.message)
         }
     });
-
-    const checkIn = async (email: string, challengeId: string, checkinData: Participant[]) => {
-        checkInMutation.mutate({ email, challengeId, checkinData });
-    };
-
-    return { checkIn };
 }

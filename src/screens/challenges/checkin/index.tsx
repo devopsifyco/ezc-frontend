@@ -22,8 +22,9 @@ export default function CheckIn({ route }: any) {
     const { id } = route.params;
     const { data: dataListParticipants, isPending, } = useShowParticipants(id);
     const { data: statusOfChallenge } = useGetOneChallengesApproved(id);
+    const { mutate: checkIn } = useCheckIn();
 
-    const { checkIn } = useCheckIn();
+
 
 
     if (isPending) {
@@ -34,12 +35,15 @@ export default function CheckIn({ route }: any) {
         )
     }
 
-    const confirm = async (email: string, participantId: string) => {
+    const confirm = (participantId: string) => {
         try {
             const participant = statusOfChallenge.participants.find((participant: { _id: string }) => participant._id === participantId);
 
             if (participant) {
-                await checkIn(email, id, [{ userId: participant._id, isCheckin: true }]);
+                checkIn({
+                    challengeId: id,
+                    checkinData: [{ userId: participant._id, isCheckin: true }]
+                });
             } else {
                 console.error('Participant not found');
             }
@@ -53,27 +57,37 @@ export default function CheckIn({ route }: any) {
         console.log('Remove', email);
     }
 
-    const renderItem = ({ item }: { item: ParticipantsType }) => (
-        <View style={styles.formContainer}>
-            <View style={styles.listeItems}>
-                <View style={styles.item}>
-                    <Image source={{ uri: item.avatar.name }} style={styles.itemImage} />
-                    <View style={styles.itemDetail}>
-                        <Text style={styles.itemName}>{item.username}</Text>
-                        <Text style={styles.itemEmail}>{item.email}</Text>
-                    </View>
-                    <View style={styles.displayOnelineSmall}>
-                        <TouchableOpacity style={styles.buttonAccept} onPress={() => confirm(item.email, item._id)}>
-                            <FontAwesomeIcon icon={faCheck} size={21} color='#FFF' />
-                        </TouchableOpacity>
-                        <TouchableOpacity style={styles.buttonDenied} onPress={() => remove(item.email, item._id)}>
-                            <FontAwesomeIcon icon={faRemove} size={24} color='#FFF' />
-                        </TouchableOpacity>
+    const renderItem = ({ item }: { item: ParticipantsType }) => {
+        const participant = statusOfChallenge.participants.find((participant: { _id: string }) => participant._id === item._id);
+        return (
+            <View style={styles.formContainer}>
+                <View style={styles.listeItems}>
+                    <View style={styles.item}>
+                        <Image source={{ uri: item.avatar.name }} style={styles.itemImage} />
+                        <View style={styles.itemDetail}>
+                            <Text style={styles.itemName}>{item.username}</Text>
+                            {/*<Text style={styles.itemEmail}>{item.email}</Text>*/}
+                        </View>
+                        <View style={styles.displayOnelineSmall}>
+                            {!participant.is_checkin && (
+                                <>
+                                    <TouchableOpacity style={styles.buttonAccept} onPress={() => confirm(item._id)}>
+                                        <FontAwesomeIcon icon={faCheck} size={21} color='#FFF' />
+                                    </TouchableOpacity>
+                                    <TouchableOpacity style={styles.buttonDenied} onPress={() => remove(item._id)}>
+                                        <FontAwesomeIcon icon={faRemove} size={24} color='#FFF' />
+                                    </TouchableOpacity>
+                                </>
+                            )}
+                            {participant.is_checkin && (
+                                <Text style={styles.checkinText}>Checked</Text>
+                            )}
+                        </View>
                     </View>
                 </View>
             </View>
-        </View>
-    );
+        )
+    };
 
     return (
         <View style={styles.container}>
@@ -163,4 +177,9 @@ const styles = StyleSheet.create({
     loadingItem: {
         flex: 1,
     },
+    checkinText: {
+        color: '#7BD6AA',
+        alignSelf: 'center',
+        fontWeight: 'bold',
+    }
 })
