@@ -2,8 +2,10 @@ import React, { useEffect, useState } from 'react';
 import { View, StyleSheet, Text, TouchableOpacity, Image, FlatList } from 'react-native';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { faRemove, faCheck } from '@fortawesome/free-solid-svg-icons';
-import useCheckInParticipants from '../../../hooks/useCheckInParticipants';
 import * as Progress from 'react-native-progress';
+import useShowParticipants from '../../../hooks/useShowParticipants';
+import useCheckIn from '../../../hooks/useCheckInParticipants';
+import { useGetOneChallengesApproved } from '../../../hooks/useChallengeApproved';
 
 interface ParticipantsType {
     _id: string;
@@ -18,7 +20,11 @@ interface ParticipantsType {
 export default function CheckIn({ route }: any) {
 
     const { id } = route.params;
-    const { data: dataListParticipants, isPending } = useCheckInParticipants(id);
+    const { data: dataListParticipants, isPending, } = useShowParticipants(id);
+    const { data: statusOfChallenge } = useGetOneChallengesApproved(id);
+
+    const { checkIn } = useCheckIn();
+
 
     if (isPending) {
         return (
@@ -28,12 +34,23 @@ export default function CheckIn({ route }: any) {
         )
     }
 
-    const confirm = (id: string) => {
-        console.log('Confirm', id);
-    }
+    const confirm = async (email: string, participantId: string) => {
+        try {
+            const participant = statusOfChallenge.participants.find((participant: { _id: string }) => participant._id === participantId);
 
-    const remove = (id: string) => {
-        console.log('Remove', id);
+            if (participant) {
+                await checkIn(email, id, [{ userId: participant._id, isCheckin: true }]);
+            } else {
+                console.error('Participant not found');
+            }
+        } catch (error: any) {
+            console.error('Error confirming check-in:', error.message);
+        }
+    };
+
+
+    const remove = (email: string) => {
+        console.log('Remove', email);
     }
 
     const renderItem = ({ item }: { item: ParticipantsType }) => (
@@ -46,10 +63,10 @@ export default function CheckIn({ route }: any) {
                         <Text style={styles.itemEmail}>{item.email}</Text>
                     </View>
                     <View style={styles.displayOnelineSmall}>
-                        <TouchableOpacity style={styles.buttonAccept} onPress={() => confirm(item._id)}>
+                        <TouchableOpacity style={styles.buttonAccept} onPress={() => confirm(item.email, item._id)}>
                             <FontAwesomeIcon icon={faCheck} size={21} color='#FFF' />
                         </TouchableOpacity>
-                        <TouchableOpacity style={styles.buttonDenied} onPress={() => remove(item._id)}>
+                        <TouchableOpacity style={styles.buttonDenied} onPress={() => remove(item.email, item._id)}>
                             <FontAwesomeIcon icon={faRemove} size={24} color='#FFF' />
                         </TouchableOpacity>
                     </View>
@@ -96,7 +113,6 @@ const styles = StyleSheet.create({
         borderColor: 'grey',
         color: 'grey',
         gap: 5,
-
     },
     itemDetail: {
         justifyContent: 'center',
@@ -105,6 +121,7 @@ const styles = StyleSheet.create({
     itemImage: {
         width: 50,
         height: 50,
+        borderRadius: 50,
     },
     itemName: {
         color: '#363636',

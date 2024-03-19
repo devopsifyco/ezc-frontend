@@ -31,7 +31,7 @@ const HomeScreen: React.FC<NavigateType> = ({ navigation }) => {
 
 
   const handleNotificationPress = () => {
-    navigation.navigate('NotificationScreen');
+    navigation.navigate('CheckIn', { id: '65f7b120ef830c41613e4278' });
   };
 
   const handlePress = (id: string) => {
