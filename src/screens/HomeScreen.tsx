@@ -23,11 +23,9 @@ import { useGetAllChallenges } from '../hooks/useChallenge';
 
 const HomeScreen: React.FC<NavigateType> = ({ navigation }) => {
 
-  const { data: challenges, mutate: getChallenges } = useGetAllChallenges();
+  const { data: challenges } = useGetAllChallenges();
 
-  useEffect(() => {
-    getChallenges();
-  }, [getChallenges]);
+
 
 
 

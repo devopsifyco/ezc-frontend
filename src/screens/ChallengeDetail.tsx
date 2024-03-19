@@ -14,15 +14,12 @@ import useParticipant from '../hooks/useParticipant';
 
 const ChallengeDetail = ({ navigation, route }: NavigateType) => {
 
-  const { id} = route.params
-  // const id = "65eeca5c63fb390a4ccdb021"
-
+  const { id, isJoined} = route.params
   const { data, isLoading } = useParticipant({ id });
   const { data: participantData, isLoading: participantIsLoading, isError: participantIsError } = useParticipant({ id });
   const [filteredData, setFilteredData] = useState([]);
   const { mutate: JoinChallenge, error: errChallenge, } = useJoinChallenge();
-  const { mutate: CompleteChallenge, error: errorComplete, isSuccess } = useCompleteChallenge();
-  const [isJoined, setIsJoined] = useState(false);
+  const { mutate: CompleteChallenge, error: errorComplete} = useCompleteChallenge();
   const { data: Challenge, isError, isPending, mutate } = useOneChallenges(id);
   const [isModalVisible, setModalVisible] = React.useState(false);
   const [nameActionButton, setNameActionButton] = useState("Join");
@@ -32,6 +29,8 @@ const ChallengeDetail = ({ navigation, route }: NavigateType) => {
     mutate();
 
   }, [id, mutate]);
+
+  
 
   const {
     owner_id,
@@ -190,7 +189,7 @@ const ChallengeDetail = ({ navigation, route }: NavigateType) => {
             title={nameActionButton}
             colors={nameActionButton === "Complete" ? ['#216C53', '#216C53'] : undefined}
             buttonStyle={[styles.buttonStyle]}
-            disabled={errChallenge?.response?.status === 400 || isJoined}
+            disabled={isJoined}
           />
         </View>
         <View style={styles.wrapped_avarta}>
@@ -223,20 +222,10 @@ const ChallengeDetail = ({ navigation, route }: NavigateType) => {
               <Image source={require('../assets/icons/iconSeeAll.png')} />
             </TouchableOpacity>
           </View>
-        {isModalVisible && (
-        <WarningComponent
-          title='verify'
-          description='Are you sure to join this challenge?'
-          Action1='Cancel'
-          Action2='Join'
-          handleAction2={handleJoinChallenge}
-          toggleModal={toggleModal}
-        />
-      )}
         {isModalVisible &&  (
           <WarningComponent
-            title={errorComplete?'Warning':'Verify'}
-            description={errorComplete? errorComplete:`Are you sure to ${nameActionButton.toLowerCase()} this challenge ?`}
+            title={errorComplete || errChallenge?'Warning':'Verify'}
+            description={errorComplete || errChallenge? errorComplete || errChallenge:`Are you sure to ${nameActionButton.toLowerCase()} this challenge ?`}
             Action1='Cancel'
             Action2={nameActionButton}
             handleAction2={nameActionButton === "Complete" ? handleFinishChallenge : handleJoinChallenge}
