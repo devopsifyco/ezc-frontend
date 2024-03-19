@@ -9,7 +9,7 @@ export function useGetOneChallengesApproved(idChallennge: string) {
       queryFn: async () => {
         try {
           const token = await AsyncStorage.getItem('accessToken');
-          const res = await axios.get(`http://192.168.46.242:4000/api/challenge/status/approved/${idChallennge}`, {
+          const res = await axios.get(`${EZCHALLENG_API}/challenge/status/approved/${idChallennge}`, {
             headers: {
               'Content-Type': `application/json`,
               Authorization: `Bearer ${token}`,

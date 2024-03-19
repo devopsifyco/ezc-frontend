@@ -1,10 +1,12 @@
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { EZCHALLENG_API } from "../api/endPoint";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Alert } from "react-native";
 
 export default function useCheckIn() {
+    const queryClient = useQueryClient();
+
     return useMutation({
         mutationKey: ['confirmCheckIn'],
         mutationFn: async ({ challengeId, checkinData }: { challengeId: string; checkinData: any }) => { 
@@ -30,6 +32,7 @@ export default function useCheckIn() {
         },
         onSuccess: (data: any) => {
            Alert.alert(data);
+           queryClient.invalidateQueries({ queryKey: ['challengesApproved']})
         },
         onError: (err) => {
             Alert.alert(err.message)
