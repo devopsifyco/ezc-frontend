@@ -5,13 +5,25 @@ import { useGetAllChallengesByStatus, useDeleteChallenges } from '../../hooks/us
 import Moment from 'moment';
 import { Challenge } from '../../models/InfChallenge';
 import { useQueryClient } from '@tanstack/react-query';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import WarningComponent from '../../components/WarningComponent';
 
+interface ChallengeScreenProps {
+  navigation: NavigateType;
+  desiredOwnerId: string;
+}
 
-export default function ApproveScreen({ navigation }: NavigateType) {
+
+export default function ApproveScreen({ navigation, desiredOwnerId }: ChallengeScreenProps) {
   const queryClient = useQueryClient();
   const { data: challengesApproved, isLoading: loadingApproved } = useGetAllChallengesByStatus('approved');
   
+ 
+
+  const showApprovedChallengeOfOwner: Challenge[] = challengesApproved ? challengesApproved.filter((challenge: Challenge) => challenge.owner_id === desiredOwnerId) : [];
+
+
+
   const handlePress = (id: string) => {
     navigation.navigate('ChallengeDetail', { id });
   };
@@ -24,7 +36,7 @@ export default function ApproveScreen({ navigation }: NavigateType) {
       ) : (
         <ScrollView style={styles.listItems}>
           <View style={styles.listItems}>
-            {challengesApproved?.map((challenge: Challenge, index: number) => (
+            {showApprovedChallengeOfOwner?.map((challenge: Challenge, index: number) => (
               <TouchableOpacity style={styles.item} key={index} onPress={() => handlePress(challenge._id)}>
                 <Image
                   style={styles.image}

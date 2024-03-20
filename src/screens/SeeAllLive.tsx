@@ -5,11 +5,9 @@ import ListCard from '../components/ListCard';
 import { useGetAllChallenges } from '../hooks/useChallenge';
 
 const SeeAllLive = ({ navigation }: NavigateType) => {
-  const { data: challenges, mutate } = useGetAllChallenges();
+  const { data: challenges } = useGetAllChallenges();
 
-  useEffect(() => {
-    mutate();
-  }, [mutate]);
+
 
 
   const handlePress = (id: string) => {

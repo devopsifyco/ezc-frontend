@@ -38,6 +38,7 @@ export default function ProfileScreen({ navigation }: NavigateType) {
     getHasJoined();
   }, [getHasJoined]);
 
+
   return (
     <View style={styles.container}>
       <View style={styles.header}>

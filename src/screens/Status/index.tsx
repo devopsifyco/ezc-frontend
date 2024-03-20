@@ -14,7 +14,10 @@ import RejectScreen from './RejectScreen';
 
 
 export default function Status({ navigation, route }: NavigateType) {
-    const value = route.params;
+    const {value, Id } = route.params;
+
+    
+    
     const [selectedTab, setSelectedTab] = useState(value);
     useEffect(() => {
         setSelectedTab(value.value);
@@ -52,9 +55,9 @@ export default function Status({ navigation, route }: NavigateType) {
                 </TouchableOpacity>
             </View>
 
-            {selectedTab === 'Pending' && <PendingScreen navigation= {navigation} />}
-            {selectedTab === 'Approve' && <ApproveScreen navigation= {navigation} />}
-            {selectedTab === 'Reject' && <RejectScreen navigation= {navigation}/>}
+            {selectedTab === 'Pending' && <PendingScreen navigation= {navigation} desiredOwnerId={Id}/>}
+            {selectedTab === 'Approve' && <ApproveScreen navigation= {navigation}  desiredOwnerId={Id}/>}
+            {selectedTab === 'Reject' && <RejectScreen navigation= {navigation} desiredOwnerId={Id}/>}
         </View>
     );
 }
