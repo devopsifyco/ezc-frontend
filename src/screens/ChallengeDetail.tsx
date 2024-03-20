@@ -99,7 +99,6 @@ const ChallengeDetail = ({ navigation, route }: NavigateType) => {
           navigation.goBack()
         }
       });
-      setIsJoined(true);
       setModalVisible(!isModalVisible);
 
     });

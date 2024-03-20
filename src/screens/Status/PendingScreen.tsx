@@ -7,13 +7,18 @@ import { Challenge } from '../../models/InfChallenge';
 import { useQueryClient } from '@tanstack/react-query';
 import WarningComponent from '../../components/WarningComponent';
 
+interface ChallengeScreenProps {
+  navigation: NavigateType;
+  desiredOwnerId: string;
+}
 
-
-export default function PendingScreen({ navigation }: NavigateType) {
+export default function PendingScreen({ navigation, desiredOwnerId }: ChallengeScreenProps) {
 
   const queryClient = useQueryClient();
   const { data: challengesPending, isLoading: loadingPending } = useGetAllChallengesByStatus('pending');
   const { mutateAsync: deleteChallenge } = useDeleteChallenges();
+
+  const showPendingChallengeOfOwner: Challenge[] = challengesPending ? challengesPending.filter((challenge: Challenge) => challenge.owner_id === desiredOwnerId) : [];
 
 
   const [selectedId, setSelectedId] = useState<string | null>(null);
@@ -46,7 +51,7 @@ export default function PendingScreen({ navigation }: NavigateType) {
       ) : (
         <ScrollView style={styles.listItems}>
           <View style={styles.listItems}>
-            {challengesPending?.map((challenge: Challenge, index: number) => (
+            {showPendingChallengeOfOwner?.map((challenge: Challenge, index: number) => (
               <TouchableOpacity style={styles.item} key={index} onPress={() => handlePress(challenge._id)}>
                 <Image
                   style={styles.image}

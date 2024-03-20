@@ -39,6 +39,8 @@ const ChallengeScreen: React.FC<ChallengeScreenProps> = ({ navigation, desiredOw
     navigation.navigate('UpdateChallenge', { id });
   }
 
+  
+
   const handleDelete = async () => {
     try {
       await deleteChallenge({ id: selectedId });
@@ -66,7 +68,7 @@ const ChallengeScreen: React.FC<ChallengeScreenProps> = ({ navigation, desiredOw
         <ScrollView style={styles.listItems}>
           <View style={styles.section}>
             <Text style={styles.sectionName}>Pending</Text>
-            <TouchableOpacity style={styles.seeAll} onPress={() => navigation.navigate('Status', { value: 'Pending' })}>
+            <TouchableOpacity style={styles.seeAll} onPress={() => navigation.navigate('Status', { value: 'Pending', Id_Owner: desiredOwnerId})}>
               <Text>See All</Text>
               <Image source={require('../../assets/icons/iconSeeAll.png')} />
             </TouchableOpacity>

@@ -86,32 +86,6 @@ const HomeScreen: React.FC<NavigateType> = ({ navigation }) => {
             )}
           />
         </View>
-        <View style={{ flex: 1 }}>
-          <FlatList
-            data={challenges}
-            showsVerticalScrollIndicator={false}
-            keyExtractor={(item, index) => index.toString()}
-            contentContainerStyle={{ flexGrow: 1 }}
-            renderItem={({ item, index }) => (
-              <ListCard
-                id={item._id}
-                description={item.description}
-                key={item.id ? item.id.toString() : index.toString()}
-                start_time={item.start_time}
-                end_time={item.end_time}
-                title={item.title}
-                company={item.company}
-                address={item.address}
-                images_path={item.images_path}
-                isLive={item.isLive}
-                points_reward={item.points_reward}
-                onPress={() => handlePress(item._id)} 
-                owner_id={''}          
-                />
-            )}
-          />
-        </View>
-
         <View style={styles.section}>
           <Text style={styles.sectionName}>Challenges</Text>
           <TouchableOpacity style={styles.seeAll}>
