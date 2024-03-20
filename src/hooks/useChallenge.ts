@@ -63,29 +63,24 @@ export function useGetAllChallengesByStatus(status: string) {
 //  -----------get one challenge ---------------------
 
 export function useOneChallenges(_id: string) {
-  const getOneChallenge = useMutation({
-    mutationKey: ['getOneChallenge', _id],
-    mutationFn: async () => {
+  
+  return useQuery({
+    queryKey: ['getOneChallenge', _id],
+    queryFn: async () => {
       try {
         const token = await AsyncStorage.getItem('accessToken');
         const res = await axios.get(`${API_CHALLENGES}/${_id}`, {
           headers: {
             'Content-Type': 'application/json',
             Authorization: `Bearer ${token}`,
-          },
+          }
         });
-        
         return res.data;
       } catch (error) {
         throw error;
       }
-    },
-    onSuccess: (data) => {
-      console.log('Successful get one chellenge');
-    },
+    }
   });
-
-  return { ...getOneChallenge };
 }
 
 // ----------------------------------
@@ -216,7 +211,7 @@ export function useGetHasJoinedChallenges() {
     onSuccess: () => {
       console.log('Get get has joined successful'),
         queryClient.invalidateQueries({ queryKey: ['challengesList'] });
-        queryClient.invalidateQueries({ queryKey: ['hasJoinedChallenge'] });
+      queryClient.invalidateQueries({ queryKey: ['hasJoinedChallenge'] });
     }
 
   });

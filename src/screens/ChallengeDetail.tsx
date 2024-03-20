@@ -14,23 +14,21 @@ import useParticipant from '../hooks/useParticipant';
 
 const ChallengeDetail = ({ navigation, route }: NavigateType) => {
 
-  const { id, isJoined} = route.params
+  const { id, isJoined } = route.params
+
+  
   const { data, isLoading } = useParticipant({ id });
   const { data: participantData, isLoading: participantIsLoading, isError: participantIsError } = useParticipant({ id });
   const [filteredData, setFilteredData] = useState([]);
   const { mutate: JoinChallenge, error: errChallenge, } = useJoinChallenge();
-  const { mutate: CompleteChallenge, error: errorComplete} = useCompleteChallenge();
-  const { data: Challenge, isError, isPending, mutate } = useOneChallenges(id);
+  const { mutate: CompleteChallenge, error: errorComplete } = useCompleteChallenge();
+
+  const { data: Challenge, isError, isPending} = useOneChallenges(id);
+
   const [isModalVisible, setModalVisible] = React.useState(false);
   const [nameActionButton, setNameActionButton] = useState("Join");
+  const [firstButton, setFirstButton] = useState('Donation');
 
-
-  useEffect(() => {
-    mutate();
-
-  }, [id, mutate]);
-
-  
 
   const {
     owner_id,
@@ -48,8 +46,8 @@ const ChallengeDetail = ({ navigation, route }: NavigateType) => {
   const swiperRef = useRef<Swiper>(null);
 
 
-  const handlePress = () => {
-    console.log('Button pressed!');
+  const handleCheckIn = () => {
+    navigation.navigate('CheckIn', { id: id });
   };
 
   useEffect(() => {
@@ -58,7 +56,7 @@ const ChallengeDetail = ({ navigation, route }: NavigateType) => {
     }
   }, [participantData]);
 
- // handle modal
+  // handle modal
   const toggleModal = () => {
     setModalVisible(!isModalVisible);
   };
@@ -82,18 +80,23 @@ const ChallengeDetail = ({ navigation, route }: NavigateType) => {
     }
   });
 
+  getEmailUser().then(email => {
+    if (email === owner_id?.email) {
+      setFirstButton('CheckIn')
+    }
+  });
+
   //handle join challenge
   const handleJoinChallenge = async () => {
     AsyncStorage.getItem('email').then(data => {
 
       const emailWithoutQuotes = data ? data.replace(/["']/g, '') : '';
 
-      JoinChallenge({email: emailWithoutQuotes, id: id}, {
+      JoinChallenge({ email: emailWithoutQuotes, id: id }, {
         onSuccess: () => {
           navigation.goBack()
         }
       });
-      setIsJoined(true);
       setModalVisible(!isModalVisible);
 
     });
@@ -114,9 +117,6 @@ const ChallengeDetail = ({ navigation, route }: NavigateType) => {
 
 
   const numberOfLinesToShow = 4;
-
- 
-
 
   return (
     <ScrollView>
@@ -180,8 +180,8 @@ const ChallengeDetail = ({ navigation, route }: NavigateType) => {
 
         <View style={styles.wrapped_button}>
           <ButtonChallenge
-            onPress={handlePress}
-            title="Donate"
+            onPress={handleCheckIn}
+            title={firstButton}
             buttonStyle={{ width: 120 }}
           />
           <ButtonChallenge
@@ -216,16 +216,16 @@ const ChallengeDetail = ({ navigation, route }: NavigateType) => {
           )}
         </View>
         <View style={styles.section}>
-            <Text style={styles.sectionName}>Participant</Text>
-            <TouchableOpacity style={styles.seeAll} onPress={() => navigation.navigate('Participant')}>
-              <Text>See All</Text>
-              <Image source={require('../assets/icons/iconSeeAll.png')} />
-            </TouchableOpacity>
-          </View>
-        {isModalVisible &&  (
+          <Text style={styles.sectionName}>Participant</Text>
+          <TouchableOpacity style={styles.seeAll} onPress={() => navigation.navigate('Participant')}>
+            <Text>See All</Text>
+            <Image source={require('../assets/icons/iconSeeAll.png')} />
+          </TouchableOpacity>
+        </View>
+        {isModalVisible && (
           <WarningComponent
-            title={errorComplete || errChallenge?'Warning':'Verify'}
-            description={errorComplete || errChallenge? errorComplete || errChallenge:`Are you sure to ${nameActionButton.toLowerCase()} this challenge ?`}
+            title={errorComplete || errChallenge ? 'Warning' : 'Verify'}
+            description={errorComplete || errChallenge ? errorComplete || errChallenge : `Are you sure to ${nameActionButton.toLowerCase()} this challenge ?`}
             Action1='Cancel'
             Action2={nameActionButton}
             handleAction2={nameActionButton === "Complete" ? handleFinishChallenge : handleJoinChallenge}
@@ -235,23 +235,23 @@ const ChallengeDetail = ({ navigation, route }: NavigateType) => {
 
       </View>
       <View style={styles.listParticipant}>
-                {filteredData.map((user: DataProfile) => (
-                    <View style={styles.itemParticipant} key={user._id}>
-                        <View style={styles.itemInfo}>
-                            <View style={styles.InfoDetail}>
-                                <Image
-                                    source={{ uri: user.avatar.downloadLink }}
-                                    style={styles.avatar}
-                                />
-                                <View>
-                                    <Text style={styles.name}>{user.username}</Text>
-                                    <Text style={styles.challengemail}>{user.email}</Text>
-                                </View>
-                            </View>
-                        </View>
-                    </View>
-                ))}
+        {filteredData.map((user: DataProfile) => (
+          <View style={styles.itemParticipant} key={user._id}>
+            <View style={styles.itemInfo}>
+              <View style={styles.InfoDetail}>
+                <Image
+                  source={{ uri: user.avatar.downloadLink }}
+                  style={styles.avatar}
+                />
+                <View>
+                  <Text style={styles.name}>{user.username}</Text>
+                  <Text style={styles.challengemail}>{user.email}</Text>
+                </View>
+              </View>
             </View>
+          </View>
+        ))}
+      </View>
     </ScrollView>
   )
 }
@@ -350,8 +350,8 @@ const styles = StyleSheet.create({
     marginTop: 5,
     borderRadius: 15,
     marginHorizontal: 20,
-},
-itemParticipant: {
+  },
+  itemParticipant: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
@@ -360,25 +360,25 @@ itemParticipant: {
     backgroundColor: "#ffff",
     elevation: 20,
     borderRadius: 15,
-},
-itemInfo: {
-  flexDirection: 'row',
-  alignItems: 'center',
-},
-InfoDetail: {
-  flexDirection: 'row',
-  alignItems: 'center',
-  gap: 10,
+  },
+  itemInfo: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  InfoDetail: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    gap: 10,
 
-},
-name: {
-  fontWeight: 'bold',
-  color: "#000",
-  fontSize: 18
-},
-challengemail: {
-  color: "#216C53"
-},
+  },
+  name: {
+    fontWeight: 'bold',
+    color: "#000",
+    fontSize: 18
+  },
+  challengemail: {
+    color: "#216C53"
+  },
 
   buttonStyle: {
     width: 120

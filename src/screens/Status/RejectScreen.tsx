@@ -7,11 +7,19 @@ import { Challenge } from '../../models/InfChallenge';
 import { useQueryClient } from '@tanstack/react-query';
 import WarningComponent from '../../components/WarningComponent';
 
-export default function RejectScreen({ navigation }: NavigateType) {
+
+interface ChallengeScreenProps {
+  navigation: NavigateType;
+  desiredOwnerId: string;
+}
+
+export default function RejectScreen({ navigation, desiredOwnerId }: ChallengeScreenProps) {
 
   const queryClient = useQueryClient();
   const { data: challengesRejected, isLoading: loadingRejected } = useGetAllChallengesByStatus('rejected');
   const { mutateAsync: deleteChallenge } = useDeleteChallenges();
+
+  const showRejectChallengeOfOwner: Challenge[] = challengesRejected ? challengesRejected.filter((challenge: Challenge) => challenge.owner_id === desiredOwnerId) : [];
 
 
   const [selectedId, setSelectedId] = useState<string | null>(null);
@@ -46,7 +54,7 @@ export default function RejectScreen({ navigation }: NavigateType) {
       ) : (
         <ScrollView style={styles.listItems}>
           <View style={styles.listItems}>
-            {challengesRejected?.map((challenge: Challenge, index: number) => (
+            {showRejectChallengeOfOwner?.map((challenge: Challenge, index: number) => (
               <TouchableOpacity style={styles.item} key={index} onPress={() => handlePress(challenge._id)}>
                 <Image
                   style={styles.image}

@@ -10,8 +10,13 @@ import Moment from 'moment';
 import { Challenge } from '../../models/InfChallenge';
 import WarningComponent from '../../components/WarningComponent';
 
+interface ChallengeScreenProps {
+  navigation: NavigateType;
+  desiredOwnerId: string;
+}
 
-export default function ChallengeScreen({ navigation }: NavigateType) {
+
+const ChallengeScreen: React.FC<ChallengeScreenProps> = ({ navigation, desiredOwnerId }) => {
 
   const queryClient = useQueryClient();
   const { data: challengesPending, isLoading: loadingPending } = useGetAllChallengesByStatus('pending');
@@ -19,7 +24,9 @@ export default function ChallengeScreen({ navigation }: NavigateType) {
   const { data: challengesRejected, isLoading: loadingRejected } = useGetAllChallengesByStatus('rejected');
   const { mutateAsync: deleteChallenge } = useDeleteChallenges();
 
-
+  const showPendingChallengeOfOwner: Challenge[] = challengesPending ? challengesPending.filter((challenge: Challenge) => challenge.owner_id === desiredOwnerId) : [];
+  const showApprovedChallengeOfOwner: Challenge[] = challengesApproved ? challengesApproved.filter((challenge: Challenge) => challenge.owner_id === desiredOwnerId) : [];
+  const showRejectChallengeOfOwner: Challenge[] = challengesRejected ? challengesRejected.filter((challenge: Challenge) => challenge.owner_id === desiredOwnerId) : [];
 
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [isModalVisible, setModalVisible] = React.useState(false);
@@ -31,6 +38,8 @@ export default function ChallengeScreen({ navigation }: NavigateType) {
   const handleEditPress = (id: string) => {
     navigation.navigate('UpdateChallenge', { id });
   }
+
+  
 
   const handleDelete = async () => {
     try {
@@ -51,6 +60,7 @@ export default function ChallengeScreen({ navigation }: NavigateType) {
     setModalVisible(!isModalVisible);
   };
 
+  
   return (
     <View style={styles.container}>
       {loadingPending || loadingApproved || loadingRejected ? (
@@ -59,13 +69,13 @@ export default function ChallengeScreen({ navigation }: NavigateType) {
         <ScrollView style={styles.listItems}>
           <View style={styles.section}>
             <Text style={styles.sectionName}>Pending</Text>
-            <TouchableOpacity style={styles.seeAll} onPress={() => navigation.navigate('Status', { value: 'Pending' })}>
+            <TouchableOpacity style={styles.seeAll} onPress={() => navigation.navigate('Status', { value: 'Pending', Id_Owner: desiredOwnerId})}>
               <Text>See All</Text>
               <Image source={require('../../assets/icons/iconSeeAll.png')} />
             </TouchableOpacity>
           </View>
           <View style={styles.listItems}>
-            {challengesPending?.map((challenge: Challenge, index: number) => (
+            {showPendingChallengeOfOwner?.map((challenge: Challenge, index: number) => (
               <TouchableOpacity style={styles.item} key={index} onPress={() => handlePress(challenge._id)}>
                 <Image
                   style={styles.image}
@@ -111,7 +121,7 @@ export default function ChallengeScreen({ navigation }: NavigateType) {
                 <Image source={require('../../assets/icons/iconSeeAll.png')} />
               </TouchableOpacity>
             </View>
-            {challengesApproved?.map((challenge: Challenge, index: number) => (
+            {showApprovedChallengeOfOwner?.map((challenge: Challenge, index: number) => (
               <TouchableOpacity style={styles.item} key={index} onPress={() => handlePress(challenge._id)}>
                 <Image
                   style={styles.image}
@@ -147,7 +157,7 @@ export default function ChallengeScreen({ navigation }: NavigateType) {
                 <Image source={require('../../assets/icons/iconSeeAll.png')} />
               </TouchableOpacity>
             </View>
-            {challengesRejected?.map((challenge: Challenge, index: number) => (
+            {showRejectChallengeOfOwner?.map((challenge: Challenge, index: number) => (
               <TouchableOpacity style={styles.item} key={index} onPress={() => handlePress(challenge._id)}>
                 <Image
                   style={styles.image}
@@ -168,7 +178,7 @@ export default function ChallengeScreen({ navigation }: NavigateType) {
                         }}>{challenge.address}</Text>
                       </View>
                     </View>
-                    <View style={{marginLeft:20}} >
+                    <View style={{ marginLeft: 20 }} >
                       <TouchableOpacity onPress={() => toggleModal(challenge._id)}>
                         <Image source={require('../../assets/icons/delete.png')} style={styles.editGroup} />
                       </TouchableOpacity>
@@ -195,6 +205,8 @@ export default function ChallengeScreen({ navigation }: NavigateType) {
     </View >
   );
 }
+
+export default ChallengeScreen;
 
 const styles = StyleSheet.create({
   container: {

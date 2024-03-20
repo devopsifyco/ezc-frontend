@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, Text, TextInput, TouchableOpacity, Alert, StyleSheet, ActivityIndicator } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, Alert, StyleSheet, ActivityIndicator, ScrollView, KeyboardAvoidingView, Platform } from 'react-native';
 import { useForm, Controller } from 'react-hook-form';
 import { useUpdateUserProfile } from '../../hooks/useUser';
 import { NavigateType } from '../../models/Navigations';
@@ -52,8 +52,10 @@ export default function EditProfile({ route, navigation }: { route: { params: { 
           <ActivityIndicator color="#fff" size={45} />
         </View>
       )}
-      <View style={styles.container}>
-
+      <KeyboardAvoidingView
+        behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+        style={styles.container}
+      >
         <View style={styles.formInput}>
           <View style={styles.displayCenter}>
             <Controller
@@ -78,6 +80,7 @@ export default function EditProfile({ route, navigation }: { route: { params: { 
                   value={value}
                   onChangeText={(text) => onChange(text)}
                   onBlur={onBlur}
+                  editable={false}
                 />
               )}
               name="email"
@@ -172,7 +175,7 @@ export default function EditProfile({ route, navigation }: { route: { params: { 
             </LinearGradient>
           </View>
         </View>
-      </View>
+      </KeyboardAvoidingView>
     </>
   );
 }
@@ -195,6 +198,7 @@ export const styles = StyleSheet.create({
   formInput: {
     flex: 1,
     justifyContent: 'center',
+    paddingBottom: 120,
   },
   containerInput: {
     marginVertical: 10,

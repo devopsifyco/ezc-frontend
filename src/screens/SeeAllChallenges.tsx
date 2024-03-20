@@ -6,12 +6,7 @@ import { useGetAllChallenges } from '../hooks/useChallenge';
 
 const SeeAllChallenges = ({ navigation }: NavigateType) => {
 
-  const { data: challenges, mutate } = useGetAllChallenges();
-
-  useEffect(() => {
-    mutate();
-  }, [mutate]);
-
+  const { data: challenges} = useGetAllChallenges();
   const handlePress = (id: string) => {
     navigation.navigate('ChallengeDetail', { id });
   };

@@ -23,6 +23,7 @@ import UpdateChallenges from './challenges/update';
 import PendingScreen from './Status/PendingScreen';
 import Status from './Status';
 import CreateChallenges from './challenges/create';
+import CheckIn from './challenges/checkin';
 import ParticipantScreen from './ParticipantScreen';
 
 
@@ -58,6 +59,7 @@ export default function EZChallenge() {
         <Stack.Screen name="ChallengeDetail" component={ChallengeDetail} />
         <Stack.Screen name="UpdateChallenge" component={UpdateChallenges} />
         <Stack.Screen name="CreateChallenges" component={CreateChallenges} />
+        <Stack.Screen name='CheckIn' component={CheckIn} />
         <Stack.Screen name="Participant" component={ParticipantScreen} />
       </Stack.Group>
     </Stack.Navigator>

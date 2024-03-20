@@ -14,11 +14,15 @@ import RejectScreen from './RejectScreen';
 
 
 export default function Status({ navigation, route }: NavigateType) {
-    const value = route.params;
-    const [selectedTab, setSelectedTab] = useState(value);
+    const {value, Id_Owner } = route.params;
+
+    
+    const [selectedTab, setSelectedTab] = useState({ value: value, ownerId: Id_Owner });
+
     useEffect(() => {
-        setSelectedTab(value.value);
-    },[1000])
+        setSelectedTab(prevState => ({ ...prevState, value: value }));
+    }, [value]);
+
 
     return (
         <View style={styles.container}>
@@ -32,29 +36,29 @@ export default function Status({ navigation, route }: NavigateType) {
             </View>
             <View style={styles.listActions}>
                 <TouchableOpacity
-                    onPress={() => setSelectedTab('Pending')}
-                    style={[styles.tab, selectedTab === 'Pending' && styles.selectedTab]}>
-                    <Text style={[styles.titleLarge, selectedTab == 'Pending' && styles.textSelectedTab]}>Pending</Text>
+                    onPress={() => setSelectedTab({value: 'Pending', ownerId: Id_Owner})}
+                    style={[styles.tab, selectedTab.value === 'Pending' && styles.selectedTab]}>
+                    <Text style={[styles.titleLarge, selectedTab.value == 'Pending' && styles.textSelectedTab]}>Pending</Text>
                 </TouchableOpacity>
                 <TouchableOpacity
-                    onPress={() => setSelectedTab('Approve')}
+                    onPress={() => setSelectedTab({value:'Approve', ownerId:Id_Owner })}
                     style={[
                         styles.tab,
 
-                        selectedTab === 'Approve' && styles.selectedTab,
+                        selectedTab.value === 'Approve' && styles.selectedTab,
                     ]}>
-                    <Text style={[styles.titleLarge, selectedTab == 'Approve' && styles.textSelectedTab]}>Approved</Text>
+                    <Text style={[styles.titleLarge, selectedTab.value == 'Approve' && styles.textSelectedTab]}>Approved</Text>
                 </TouchableOpacity>
                 <TouchableOpacity
-                    onPress={() => setSelectedTab('Reject')}
-                    style={[styles.tab, selectedTab === 'Reject' && styles.selectedTab]}>
-                    <Text style={[styles.titleLarge, selectedTab == 'Reject' && styles.textSelectedTab]}>Rejected</Text>
+                    onPress={() => setSelectedTab({value: 'Reject', ownerId: Id_Owner})}
+                    style={[styles.tab, selectedTab.value === 'Reject' && styles.selectedTab]}>
+                    <Text style={[styles.titleLarge, selectedTab.value == 'Reject' && styles.textSelectedTab]}>Rejected</Text>
                 </TouchableOpacity>
             </View>
 
-            {selectedTab === 'Pending' && <PendingScreen navigation= {navigation} />}
-            {selectedTab === 'Approve' && <ApproveScreen navigation= {navigation} />}
-            {selectedTab === 'Reject' && <RejectScreen navigation= {navigation}/>}
+            {selectedTab.value === 'Pending' && <PendingScreen navigation= {navigation} desiredOwnerId={selectedTab.ownerId}/>}
+            {selectedTab.value === 'Approve' && <ApproveScreen navigation= {navigation}  desiredOwnerId={selectedTab.ownerId}/>}
+            {selectedTab.value === 'Reject' && <RejectScreen navigation= {navigation} desiredOwnerId={selectedTab.ownerId}/>}
         </View>
     );
 }

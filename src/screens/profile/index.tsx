@@ -13,16 +13,31 @@ import ChallengeScreen from './ChallengeScreen';
 import useProfile from '../../hooks/useProfile';
 import JoinedScreen from './JoinedScreen';
 import { useGetHasJoinedChallenges } from '../../hooks/useChallenge';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function ProfileScreen({ navigation }: NavigateType) {
+  const [id_owner, setIdOwner] = useState<string | null>(null);
   const [selectedTab, setSelectedTab] = useState('ABOUT');
   const { data: dataProfile, isLoading } = useProfile();
-
   const { data: hasJoined, mutate: getHasJoined } = useGetHasJoinedChallenges();
 
-    useEffect(() => {
-        getHasJoined();
-    }, [getHasJoined]);
+  useEffect(() => {
+    const getOwnerId = async () => {
+      try {
+        const id_owner = await AsyncStorage.getItem('id_owner');
+        setIdOwner(id_owner);
+      } catch (error) {
+        console.error('Lỗi khi lấy giá trị từ AsyncStorage:', error);
+      }
+    };
+
+    getOwnerId();
+  }, []);
+
+  useEffect(() => {
+    getHasJoined();
+  }, [getHasJoined]);
+
 
   return (
     <View style={styles.container}>
@@ -68,7 +83,7 @@ export default function ProfileScreen({ navigation }: NavigateType) {
           <Text style={styles.titleLarge}>CHALLENGE</Text>
         </TouchableOpacity>
         <TouchableOpacity
-        onPress={() => setSelectedTab('JOINED')}
+          onPress={() => setSelectedTab('JOINED')}
           style={[
             styles.tab,
             selectedTab === 'JOINED' && styles.selectedTab,
@@ -79,7 +94,7 @@ export default function ProfileScreen({ navigation }: NavigateType) {
       </View>
 
       {selectedTab === 'ABOUT' && <AboutScreen data={dataProfile} />}
-      {selectedTab === 'CHALLENGE' && <ChallengeScreen navigation={navigation} />}
+      {selectedTab === 'CHALLENGE' && <ChallengeScreen navigation={navigation} desiredOwnerId={id_owner} />}
       {selectedTab === 'JOINED' && <JoinedScreen navigation={navigation} />}
     </View>
   );

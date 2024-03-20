@@ -1,4 +1,5 @@
 export interface Challenge {
+    owner_id: string;
     id:string;
     isLive: boolean;
     title: string;
