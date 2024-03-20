@@ -81,7 +81,7 @@ const HomeScreen: React.FC<NavigateType> = ({ navigation }) => {
                 points_reward={item.points_reward}
                 description={item.description}
                 onPress={() => handlePress(item._id)}
-
+                owner_id={''}          
               />
             )}
           />
@@ -115,6 +115,7 @@ const HomeScreen: React.FC<NavigateType> = ({ navigation }) => {
                 isLive={item.isLive}
                 points_reward={item.points_reward}
                 onPress={() => handlePress(item._id)}
+                owner_id={''}          
               />
             )}
           />
