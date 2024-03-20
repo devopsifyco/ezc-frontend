@@ -15,21 +15,19 @@ import useParticipant from '../hooks/useParticipant';
 const ChallengeDetail = ({ navigation, route }: NavigateType) => {
 
   const { id, isJoined } = route.params
+
+  
   const { data, isLoading } = useParticipant({ id });
   const { data: participantData, isLoading: participantIsLoading, isError: participantIsError } = useParticipant({ id });
   const [filteredData, setFilteredData] = useState([]);
   const { mutate: JoinChallenge, error: errChallenge, } = useJoinChallenge();
   const { mutate: CompleteChallenge, error: errorComplete } = useCompleteChallenge();
-  const { data: Challenge, isError, isPending, mutate } = useOneChallenges(id);
+
+  const { data: Challenge, isError, isPending} = useOneChallenges(id);
+
   const [isModalVisible, setModalVisible] = React.useState(false);
   const [nameActionButton, setNameActionButton] = useState("Join");
   const [firstButton, setFirstButton] = useState('Donation');
-
-
-  useEffect(() => {
-    mutate();
-  }, [id, mutate]);
-
 
 
   const {

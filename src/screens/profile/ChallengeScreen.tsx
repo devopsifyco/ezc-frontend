@@ -60,6 +60,7 @@ const ChallengeScreen: React.FC<ChallengeScreenProps> = ({ navigation, desiredOw
     setModalVisible(!isModalVisible);
   };
 
+  
   return (
     <View style={styles.container}>
       {loadingPending || loadingApproved || loadingRejected ? (
