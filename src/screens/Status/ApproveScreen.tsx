@@ -16,13 +16,12 @@ interface ChallengeScreenProps {
 
 export default function ApproveScreen({ navigation, desiredOwnerId }: ChallengeScreenProps) {
   const queryClient = useQueryClient();
-  const { data: challengesApproved, isLoading: loadingApproved } = useGetAllChallengesByStatus('approved');
   
- 
+  const { data: challengesApproved, isLoading: loadingApproved } = useGetAllChallengesByStatus('approved');
 
   const showApprovedChallengeOfOwner: Challenge[] = challengesApproved ? challengesApproved.filter((challenge: Challenge) => challenge.owner_id === desiredOwnerId) : [];
 
-
+  
 
   const handlePress = (id: string) => {
     navigation.navigate('ChallengeDetail', { id });
