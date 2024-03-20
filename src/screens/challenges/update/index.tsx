@@ -8,30 +8,50 @@ import { Challenge } from '../../../models/InfChallenge';
 import { styles } from './style';
 import SelectedImages from './ImageUpdate';
 import { Asset } from 'react-native-image-picker';
-
+import DateTimePicker, { DateTimePickerEvent } from '@react-native-community/datetimepicker';
 
 interface ImageData {
   fileName: string;
   base64: string;
 }
 
+const timeString = (time: Date | string | undefined) => {
+  if (!time) return 'HH:MM';
 
-import DateTimePicker, { DateTimePickerEvent } from '@react-native-community/datetimepicker';
+  const timeObject = typeof time === 'string' ? new Date(time) : time;
+  
+  const hours = timeObject.getHours().toString().padStart(2, '0');
+  const minutes = timeObject.getMinutes().toString().padStart(2, '0');
+
+  return `${hours}:${minutes}`;
+};
+
+
+
+const dateString = (dateString: string | undefined) => {
+  if (!dateString) return 'MM/DD/YYYY';
+
+  const date = new Date(dateString);
+  const day = date.getDate().toString().padStart(2, '0');
+  const month = (date.getMonth() + 1).toString().padStart(2, '0');
+  const year = date.getFullYear();
+
+  return `${month}-${day}-${year}`;
+};
+
 
 const UpdateChallenges = ({ navigation, route }: NavigateType) => {
   const { id } = route.params;
-  const { data: Challenge, mutate } = useOneChallenges(id);
+  const { data: Challenge } = useOneChallenges(id);
   const { mutate: updateMutate } = useUpdateChallenges();
 
   const [editedChallenge, setEditedChallenge] = useState<Challenge>(Challenge);
 
-  const [selectedImages, setSelectedImages] = useState<ImageData[]>([]); 
+  const [selectedImages, setSelectedImages] = useState<ImageData[]>([]);
 
 
-  useEffect(() => {
-    mutate();
-  }, [id, mutate]);
-  
+
+
   const {
     title,
     images_path,
@@ -52,7 +72,6 @@ const UpdateChallenges = ({ navigation, route }: NavigateType) => {
           id,
           images_path: selectedImages
         });
-        mutate();
       }
     } catch (error) {
       console.error('Error updating data:', error);
@@ -61,13 +80,13 @@ const UpdateChallenges = ({ navigation, route }: NavigateType) => {
 
   const handleImagesSelected = async (images: Asset[] | undefined) => {
     try {
-      const imageDatas:any =  images?.map(asset => ({
-        fileName: asset.fileName ?? '', 
-        base64: asset.base64 ?? '', 
+      const imageDatas: any = images?.map(asset => ({
+        fileName: asset.fileName ?? '',
+        base64: asset.base64 ?? '',
       })) ?? [];
       console.log("image Da ta", imageDatas)
       setSelectedImages(imageDatas)
-    
+
     } catch (error) {
       console.error('Error updating data:', error);
     }
@@ -93,19 +112,15 @@ const UpdateChallenges = ({ navigation, route }: NavigateType) => {
 
   } = useForm<Challenge>({});
 
- 
-
-  // console.log("ssss", selectedImage)
-
- 
 
 
-  const [startTime, setStartTime] = useState<Date>(new Date(start_time || 0));
-  const [endTime, setEndTime] = useState<Date>(new Date(end_time || 0));
+  const [startTime, setStartTime] = useState<Date>(new Date(start_time));
+  const [endTime, setEndTime] = useState<Date>(new Date(end_time));
   const [showDatePicker, setShowDatePicker] = useState(false);
   const [pickerMode, setPickerMode] = useState<'date' | 'endDate' | 'startTime' | 'endTime'>('date');
   const [selectedDate, setSelectedDate] = useState<Date>(new Date());
 
+  
 
   const showPicker = (mode: 'date' | 'endDate' | 'startTime' | 'endTime') => {
     setPickerMode(mode);
@@ -140,8 +155,8 @@ const UpdateChallenges = ({ navigation, route }: NavigateType) => {
       }
     }
   };
-  
-  
+
+
 
   return (
     <View style={styles.container}>
@@ -233,9 +248,7 @@ const UpdateChallenges = ({ navigation, route }: NavigateType) => {
             <TouchableOpacity
               style={styles.formInputTime}
               onPress={() => showPicker('date')}>
-              <Text style={styles.titleSmall}>
-                {new Date(editedChallenge?.start_time || start_time).toDateString()}
-              </Text>
+              <Text style={styles.titleSmall}>{dateString(start_time)}</Text>
             </TouchableOpacity>
           </View>
           <View style={styles.formContainerDateTime}>
@@ -243,9 +256,7 @@ const UpdateChallenges = ({ navigation, route }: NavigateType) => {
             <TouchableOpacity
               style={styles.formInputTime}
               onPress={() => showPicker('endDate')}>
-              <Text style={styles.titleSmall}>
-                {new Date(editedChallenge?.end_time || end_time).toDateString()}
-              </Text>
+              <Text style={styles.titleSmall}>{dateString(end_time)} </Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -260,14 +271,7 @@ const UpdateChallenges = ({ navigation, route }: NavigateType) => {
                 console.log('Showing Start Time picker');
                 showPicker('startTime');
               }}>
-              <Text style={styles.titleSmall}>
-                {new Date(editedChallenge?.start_time || startTime).toLocaleTimeString([], {
-                  hour: '2-digit',
-                  minute: '2-digit',
-                  hour12: false, // Use 24-hour format
-                  timeZone: 'Asia/Ho_Chi_Minh', // Set the time zone to Vietnam
-                })}
-              </Text>
+              <Text style={styles.titleSmall}>{timeString(start_time)}</Text>
             </TouchableOpacity>
           </View>
           <View style={styles.formContainerDateTime}>
@@ -278,14 +282,7 @@ const UpdateChallenges = ({ navigation, route }: NavigateType) => {
                 console.log('Showing End Time picker');
                 showPicker('endTime');
               }}>
-              <Text style={styles.titleSmall}>
-                {new Date(editedChallenge?.start_time || startTime).toLocaleTimeString([], {
-                  hour: '2-digit',
-                  minute: '2-digit',
-                  hour12: false, // Use 24-hour format
-                  timeZone: 'Asia/Ho_Chi_Minh', // Set the time zone to Vietnam
-                })}
-              </Text>
+              <Text style={styles.titleSmall}>{timeString(end_time)}</Text>
             </TouchableOpacity>
           </View>
         </View>
