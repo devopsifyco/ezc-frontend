@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, Image, StyleSheet, ScrollView, TouchableOpacity, ActivityIndicator } from 'react-native';
+import { View, Text, Image, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
 import { useQueryClient } from '@tanstack/react-query';
 import { NavigateType } from '../../models/Navigations';
 import {
@@ -9,7 +9,9 @@ import {
 import Moment from 'moment';
 import { Challenge } from '../../models/InfChallenge';
 import WarningComponent from '../../components/WarningComponent';
-
+import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
+import { faTrashCan, faEdit, faArrowRight, faLocationDot } from '@fortawesome/free-solid-svg-icons';
+import * as Progress from 'react-native-progress';
 interface ChallengeScreenProps {
   navigation: NavigateType;
   desiredOwnerId: string;
@@ -39,7 +41,7 @@ const ChallengeScreen: React.FC<ChallengeScreenProps> = ({ navigation, desiredOw
     navigation.navigate('UpdateChallenge', { id });
   }
 
-  
+
 
   const handleDelete = async () => {
     try {
@@ -60,18 +62,20 @@ const ChallengeScreen: React.FC<ChallengeScreenProps> = ({ navigation, desiredOw
     setModalVisible(!isModalVisible);
   };
 
-  
+
   return (
     <View style={styles.container}>
       {loadingPending || loadingApproved || loadingRejected ? (
-        <ActivityIndicator size="large" color="#0000ff" />
+        <View style={styles.displayLoading}>
+          <Progress.CircleSnail color={'white'} size={65} />
+        </View>
       ) : (
-        <ScrollView style={styles.listItems}>
+        <ScrollView style={styles.listContainer}>
           <View style={styles.section}>
             <Text style={styles.sectionName}>Pending</Text>
-            <TouchableOpacity style={styles.seeAll} onPress={() => navigation.navigate('Status', { value: 'Pending', Id_Owner: desiredOwnerId})}>
-              <Text>See All</Text>
-              <Image source={require('../../assets/icons/iconSeeAll.png')} />
+            <TouchableOpacity style={styles.seeAll} onPress={() => navigation.navigate('Status', { value: 'Pending', Id_Owner: desiredOwnerId })}>
+              <Text style={styles.textSeeAll}>See All</Text>
+              <FontAwesomeIcon icon={faArrowRight} size={18} color='#343C6A' />
             </TouchableOpacity>
           </View>
           <View style={styles.listItems}>
@@ -81,44 +85,39 @@ const ChallengeScreen: React.FC<ChallengeScreenProps> = ({ navigation, desiredOw
                   style={styles.image}
                   source={{ uri: challenge.images_path[0].downloadLink }}
                 />
-                <View style={styles.detailItems}>
+                <View style={styles.detailContent}>
                   <Text style={styles.time}>
                     {Moment(challenge.start_time).format('ddd, MMM DD • LT')} - {Moment(challenge.end_time).format('LT')}
                   </Text>
                   <View style={styles.times_group}>
                     <View style={styles.listItemDetail}>
-                      <Text style={styles.detail}>Challenge: {challenge.title}</Text>
+                      <Text style={styles.detail} numberOfLines={1}>{challenge.title}</Text>
                       <View style={styles.times_group}>
-                        <Image source={require('../../assets/icons/locationdetail.png')} />
+                        <FontAwesomeIcon icon={faLocationDot} size={22} color='#FF890B' />
                         <Text style={{
                           fontSize: 12,
                           color: "#363636"
                         }}>{challenge.address}</Text>
                       </View>
                     </View>
-                    <View style={styles.displayCenter}>
-                      <TouchableOpacity onPress={() => handleEditPress(challenge._id)}>
-                        <Image source={require('../../assets/icons/Shape.png')} style={styles.editGroup} />
-                      </TouchableOpacity>
-
-
-                      <TouchableOpacity onPress={() => toggleModal(challenge._id)}>
-                        <Image source={require('../../assets/icons/delete.png')} style={styles.editGroup} />
-                      </TouchableOpacity>
-                    </View>
                   </View>
-                  <Text style={styles.hour}>1m ago.</Text>
+                </View>
+                <View style={styles.actions}>
+                  <TouchableOpacity onPress={() => handleEditPress(challenge._id)}>
+                    <FontAwesomeIcon icon={faEdit} size={24} color='#216C53' />
+                  </TouchableOpacity>
+                  <TouchableOpacity onPress={() => toggleModal(challenge._id)}>
+                    <FontAwesomeIcon icon={faTrashCan} size={24} color='#FF0A00' />
+                  </TouchableOpacity>
                 </View>
               </TouchableOpacity>
             ))}
 
-
-            {/* ------------------------------------ */}
             <View style={styles.section}>
               <Text style={styles.sectionName}>Approved</Text>
               <TouchableOpacity style={styles.seeAll} onPress={() => navigation.navigate('Status', { value: 'Approve' })}>
-                <Text>See All</Text>
-                <Image source={require('../../assets/icons/iconSeeAll.png')} />
+                <Text style={styles.textSeeAll}>See All</Text>
+                <FontAwesomeIcon icon={faArrowRight} size={18} color='#343C6A' />
               </TouchableOpacity>
             </View>
             {showApprovedChallengeOfOwner?.map((challenge: Challenge, index: number) => (
@@ -127,15 +126,15 @@ const ChallengeScreen: React.FC<ChallengeScreenProps> = ({ navigation, desiredOw
                   style={styles.image}
                   source={{ uri: challenge.images_path[0].downloadLink }}
                 />
-                <View style={styles.detailItems}>
+                <View style={styles.detailContent}>
                   <Text style={styles.time}>
                     {Moment(challenge.start_time).format('ddd, MMM DD • LT')} - {Moment(challenge.end_time).format('LT')}
                   </Text>
                   <View style={styles.times_group}>
                     <View style={styles.listItemDetail}>
-                      <Text style={styles.detail}>Challenge: {challenge.title}</Text>
+                      <Text style={styles.detail} numberOfLines={1}>{challenge.title}</Text>
                       <View style={styles.times_group}>
-                        <Image source={require('../../assets/icons/locationdetail.png')} />
+                        <FontAwesomeIcon icon={faLocationDot} size={22} color='#FF890B' />
                         <Text style={{
                           fontSize: 12,
                           color: "#363636"
@@ -143,18 +142,15 @@ const ChallengeScreen: React.FC<ChallengeScreenProps> = ({ navigation, desiredOw
                       </View>
                     </View>
                   </View>
-                  <Text style={styles.hour}>1m ago.</Text>
                 </View>
               </TouchableOpacity>
             ))}
 
-
-            {/* -------------------------------------- */}
             <View style={styles.section} >
               <Text style={styles.sectionName}>Rejected</Text>
               <TouchableOpacity style={styles.seeAll} onPress={() => navigation.navigate('Status', { value: 'Reject' })}>
-                <Text>See All</Text>
-                <Image source={require('../../assets/icons/iconSeeAll.png')} />
+                <Text style={styles.textSeeAll}>See All</Text>
+                <FontAwesomeIcon icon={faArrowRight} size={18} color='#343C6A' />
               </TouchableOpacity>
             </View>
             {showRejectChallengeOfOwner?.map((challenge: Challenge, index: number) => (
@@ -163,28 +159,27 @@ const ChallengeScreen: React.FC<ChallengeScreenProps> = ({ navigation, desiredOw
                   style={styles.image}
                   source={{ uri: challenge.images_path[0].downloadLink }}
                 />
-                <View style={styles.detailItems}>
+                <View style={styles.detailContent}>
                   <Text style={styles.time}>
                     {Moment(challenge.start_time).format('ddd, MMM DD • LT')} - {Moment(challenge.end_time).format('LT')}
                   </Text>
                   <View style={styles.times_group}>
                     <View style={styles.listItemDetail}>
-                      <Text style={styles.detail}>Challenge: {challenge.title}</Text>
+                      <Text style={styles.detail} numberOfLines={1}>{challenge.title}</Text>
                       <View style={styles.times_group}>
-                        <Image source={require('../../assets/icons/locationdetail.png')} />
+                        <FontAwesomeIcon icon={faLocationDot} size={22} color='#FF890B' />
                         <Text style={{
                           fontSize: 12,
                           color: "#363636"
                         }}>{challenge.address}</Text>
                       </View>
                     </View>
-                    <View style={{ marginLeft: 20 }} >
-                      <TouchableOpacity onPress={() => toggleModal(challenge._id)}>
-                        <Image source={require('../../assets/icons/delete.png')} style={styles.editGroup} />
-                      </TouchableOpacity>
-                    </View>
                   </View>
-                  <Text style={styles.hour}>1m ago.</Text>
+                </View>
+                <View style={styles.actions} >
+                  <TouchableOpacity onPress={() => toggleModal(challenge._id)}>
+                    <FontAwesomeIcon icon={faTrashCan} size={24} color='red' />
+                  </TouchableOpacity>
                 </View>
               </TouchableOpacity>
             ))}
@@ -211,10 +206,9 @@ export default ChallengeScreen;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    top: 10,
   },
-  listItems: {
-    rowGap: 5,
+  listContainer: {
+    paddingHorizontal: 20,
   },
   displayCenter: {
     gap: 10,
@@ -222,26 +216,27 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
   },
+  listItems: {
+    gap: 10,
+    paddingBottom: 50
+  },
   item: {
     flexDirection: 'row',
     backgroundColor: '#FFFFFF',
-    justifyContent: 'center',
-    alignItems: 'center',
-    height: 110,
     borderRadius: 15,
-
+    paddingHorizontal: 6,
+    paddingVertical: 6,
+    gap: 8,
   },
   listItemDetail: {
     width: '80%',
   },
-  detailItems: {
-    backgroundColor: '#FFFFFF',
-    width: 260,
-    paddingLeft: 20,
+  detailContent: {
+    width: '65%',
   },
   image: {
-    width: 60,
-    height: 79,
+    width: 63,
+    height: 78,
     borderRadius: 10,
   },
 
@@ -285,9 +280,7 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    padding: 10,
-    paddingHorizontal: 20,
-
+    paddingVertical: 8,
   },
   seeAll: {
     flexDirection: 'row',
@@ -298,5 +291,25 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: '500',
     color: '#120D26',
+  },
+  actions: {
+    gap: 18,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  textSeeAll: {
+    color: '#FF890B',
+    fontWeight: 'bold',
+    fontSize: 14.5,
+  },
+  displayLoading: {
+    position: 'absolute',
+    zIndex: 12,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#2C3550',
+    opacity: 0.6,
+    width: '100%',
+    height: '100%',
   },
 });
