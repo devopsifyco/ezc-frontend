@@ -1,81 +1,79 @@
-import React, { useState } from 'react';
-import NotificationPopup from './NotificationPopup';
-import {
-  View,
-  Text,
-  Image,
-  TouchableOpacity,
-  StyleSheet,
-  FlatList,
-  ScrollView,
-} from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, TouchableOpacity, StyleSheet, FlatList, Image } from 'react-native';
+import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
+import { faCheck } from '@fortawesome/free-solid-svg-icons';
+import NotificationType from '../models/notification';
+import useGetAllNotificationOfUser from '../hooks/useGetAllNotificationOfUser';
+import useReadOneNotification from '../hooks/useReadOneNotification';
+import { useQueryClient } from '@tanstack/react-query';
+import useReadAllNotifications from '../hooks/useReadAllNotifications';
+import NotificationModal from './NotificationPopup';
 
 const NotificationScreen = () => {
-  const [isPopupVisible, setIsPopupVisible] = useState(false);
-  const [selectedNotification, setSelectedNotification] = useState(null);
+  const queryClient = useQueryClient();
+
   const [selectedTab, setSelectedTab] = useState('All');
   const [showIndexedList, setShowIndexedList] = useState(true);
+  const { data: DATANOTIFICATIONS, isPending } = useGetAllNotificationOfUser();
+  const { mutate: handleReadOne } = useReadOneNotification();
+  const { mutate: handReadAll } = useReadAllNotifications();
+  const [unreadCount, setUnreadCount] = useState(0);
+  const [filteredData, setFilteredData] = useState([]);
+  const [modalVisible, setModalVisible] = useState(false);
+  const [selectedNotification, setSelectedNotification] = useState<NotificationType | null>(null);
 
-  const [data, setData] = useState([
-    { id: 1, avatar: require('../assets/profile/noti-avatar2.png'), content: 'Thu became an excellent member when participating in 50 challenges. Please continue to maintain your form!', time: '1m ago', read: false },
-    { id: 2, avatar: require('../assets/profile/noti-avatar1.png'), content: 'Joe has joined your group', time: '1m ago', read: false },
-    { id: 3, avatar: require('../assets/profile/noti-avatar3.png'), content: 'Jino donated to the app', time: '1m ago', read: false },
-    { id: 4, avatar: require('../assets/profile/noti-avatar4.png'), content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.', time: '1m ago', read: false },
-    { id: 5, avatar: require('../assets/profile/noti-avatar2.png'), content: 'An went to see your challenge', time: '1m ago', read: false },
-    { id: 6, avatar: require('../assets/profile/noti-avatar1.png'), content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.', time: '1m ago', read: false },
-    { id: 7, avatar: require('../assets/profile/noti-avatar3.png'), content: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.', time: '1m ago', read: false },
-  ]);
+  useEffect(() => {
+    if (DATANOTIFICATIONS) {
+      const count = DATANOTIFICATIONS.filter((item: { read: any; }) => !item.read).length;
+      setUnreadCount(count);
+    }
+  }, [DATANOTIFICATIONS]);
 
-  const [unreadCount, setUnreadCount] = useState(data.filter(item => !item.read).length);
-  const dataOrDefault = data || [];
-  const filteredData = showIndexedList
-    ? dataOrDefault.filter(item => item.read === false)
-    : selectedTab === 'Read'
-    ? dataOrDefault.filter(item => item.read === true)
-    : dataOrDefault;
-  const totalIndex = data.length;
+  useEffect(() => {
+    if (DATANOTIFICATIONS) {
+      let filteredNotifications = DATANOTIFICATIONS;
 
-  const handleNotificationPress = (item) => {
-    setSelectedNotification(item);
-    setIsPopupVisible(true);
+      if (!showIndexedList && selectedTab !== 'All') {
+        filteredNotifications = DATANOTIFICATIONS.filter((item: { read: boolean; }) =>
+          selectedTab === 'Read' ? item.read : !item.read
+        );
+      } else if (selectedTab === 'UnRead') {
+        filteredNotifications = DATANOTIFICATIONS.filter((item: { read: boolean; }) => !item.read);
+      }
 
+      setFilteredData(filteredNotifications.reverse());
+    }
+  }, [DATANOTIFICATIONS, showIndexedList, selectedTab]);
+
+  const handleNotificationPress = (item: NotificationType) => {
     if (!item.read) {
-      setUnreadCount((prevCount) => prevCount - 1);
-      const updatedData = data.map((notification) =>
-        notification.id === item.id ? { ...notification, read: true } : notification
-      );
-      setData(updatedData);
+      setUnreadCount((prevCount: any) => Math.max(prevCount - 1, 0));
+      handleReadOne(item._id);
+      openModal(item);
+      queryClient.invalidateQueries({ queryKey: ['getAllNotificationOfUser'] });
+    } else {
+      openModal(item);
     }
   };
 
-  const handleClosePopup = () => {
-    setIsPopupVisible(false);
-    setSelectedNotification(null);
-  };
-
-  const handleTabPress = (tabName) => {
+  const handleTabPress = (tabName: string) => {
     setSelectedTab(tabName);
-
-    if (tabName === 'UnRead') {
-      setShowIndexedList(true);
-    } else if (tabName === 'Read') {
-      setShowIndexedList(false);
-    }
+    setShowIndexedList(tabName === 'UnRead');
   };
 
   const markAllAsRead = () => {
-    const updatedData = data.map((item) => ({ ...item, read: true }));
-    setData(updatedData);
     setUnreadCount(0);
+    handReadAll();
+    queryClient.invalidateQueries({ queryKey: ['getAllNotificationOfUser'] });
   };
 
-  const truncateText = (text, limit) => {
-    const words = text.split(' ');
-    const truncated = words.slice(0, limit).join(' ');
-    if (words.length > limit) {
-      return `${truncated} ...`;
-    }
-    return truncated;
+  const openModal = (notification: NotificationType) => {
+    setSelectedNotification(notification);
+    setModalVisible(true);
+  };
+
+  const closeModal = () => {
+    setModalVisible(false);
   };
 
   return (
@@ -122,8 +120,8 @@ const NotificationScreen = () => {
         <View style={styles.bottomLine} />
         <FlatList
           data={filteredData}
-          keyExtractor={(item) => item.id.toString()}
-          renderItem={({ item }) => (
+          keyExtractor={(_item, index) => index.toString()}
+          renderItem={({ item }: { item: NotificationType }) => (
             <TouchableOpacity
               style={[
                 styles.status,
@@ -133,32 +131,20 @@ const NotificationScreen = () => {
               ]}
               onPress={() => handleNotificationPress(item)}
             >
-              <ScrollView style={styles.listNoti}>
-                <View style={styles.itemNoti}>
-                  <View style={styles.InfoDetail}>
-                    <Image source={item.avatar} style={styles.avatar} />
-                    <View>
-                      <View style={styles.unreadGroup}>
-                        <Text style={styles.notiContent}>
-                          {truncateText(item.content, 10)}
-                        </Text>
-                        {!item.read && <View style={styles.pointUnread}></View>}
-                      </View>
-                      <Text style={styles.time}>{item.time}</Text>
-                    </View>
-                  </View>
-                </View>
-              </ScrollView>
+              <View style={styles.InforDetail}>
+                <FontAwesomeIcon icon={faCheck} size={28} color='#216C53' />
+                <Text style={styles.textMessage}>{item.message}</Text>
+                {!item.read && <View style={styles.dot} />}
+              </View>
             </TouchableOpacity>
           )}
         />
-        <NotificationPopup
-          isVisible={isPopupVisible}
-          onClose={handleClosePopup}
-          content={selectedNotification?.content}
-          time={selectedNotification?.time}
-        />
       </View>
+      <NotificationModal
+        isVisible={modalVisible}
+        onClose={closeModal}
+        message={selectedNotification?.message || ''}
+      />
     </View>
   );
 };
@@ -175,74 +161,68 @@ const styles = StyleSheet.create({
   foregroundImage: {
     position: 'absolute',
     resizeMode: 'cover',
-    left:250
+    left: 250
   },
   contentContainer: {
     flex: 1,
+    paddingHorizontal: 20,
+  },
+  notiGroup: {
+    flexDirection: "row",
+    marginTop: 50,
     justifyContent: 'space-between',
   },
-  notiGroup:{
-    display:"flex",
-    flexDirection:"row",
-    marginTop:50,
-    marginLeft:20,
-    gap:10
+  titleNoti: {
+    color: "#000",
+    fontSize: 24,
+    fontWeight: "700",
   },
-  titleNoti:{
-    color:"#000",
-    fontSize:24,
-    fontWeight:"700",
+  numCount: {
+    width: 30,
+    height: 30,
+    backgroundColor: "#216C53",
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    borderRadius: 10
   },
-  numCount:{
-    width:30,
-    height:30,
-    backgroundColor:"#216C53",
-    display:"flex",
-    justifyContent:"center",
-    alignItems:"center",
-    borderRadius:10
+  num: {
+    color: "#FFF",
+    fontSize: 18,
+    fontWeight: "700"
   },
-  num:{
-    color:"#FFF",
-    fontSize:18,
-    fontWeight:"700"
-  },
-  markAllButton:{
-    borderWidth:1,
-    borderColor:"#216C53",
-    borderRadius:10,
-    display:"flex",
+  markAllButton: {
+    borderWidth: 1,
+    borderColor: "#216C53",
+    borderRadius: 10,
+    display: "flex",
     alignSelf: 'flex-end',
   },
-  markAllText:{
-    fontSize:16,
-    fontWeight:"700",
-    padding:5,
-    color:"#808080"
+  markAllText: {
+    fontSize: 16,
+    fontWeight: "700",
+    padding: 5,
+    color: "#808080"
   },
-  tabBar:{
-    marginTop:30,
-    display:"flex",
-    flexDirection:"row",
-    justifyContent: 'space-around',
+  tabBar: {
+    marginTop: 30,
+    flexDirection: 'row',
+    justifyContent: 'center',
   },
-  selectedTab:{
-    
-  },
-  selectedText:{
-    color:"#000",
-    fontSize:16,
-    fontWeight:"bold"
+  selectedTab: {},
+  selectedText: {
+    color: "#216C53",
+    fontSize: 16,
+    fontWeight: "bold",
   },
   tabText: {
-    fontSize:16,
-    fontWeight:"bold",
-    color:"#808080"
+    fontSize: 16,
+    fontWeight: "bold",
+    color: "#808080",
+    textAlign: 'center',
   },
   tabButton: {
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-    position: 'relative',
+    width: '33.3%',
   },
   tabLine: {
     position: 'absolute',
@@ -253,82 +233,42 @@ const styles = StyleSheet.create({
     backgroundColor: '#104A51',
   },
   bottomLine: {
-    marginTop:2,
-    height: 1, 
-    backgroundColor: '#000',
+    borderWidth: 0.5,
+    color: '#000000',
   },
-  status:{
-    marginTop:10,
-    borderRadius:10,
-    marginHorizontal:10
+  status: {
+    marginTop: 10,
+    borderRadius: 10,
   },
-  listNoti: {
-    marginTop:15,
-  },
-  itemNoti: {
+  InforDetail: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+    gap: 10,
     alignItems: 'center',
-    padding: 10,
   },
-  name: {
-    fontWeight: 'bold',
-    color:"#000",
-    fontSize:18
+  textMessage: {
+    fontSize: 14,
+    color: "#808080",
+    width: '85%',
   },
-  InfoDetail: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    flex: 1,
-    gap:10
+  pointUnread: {
+    width: 10,
+    height: 10,
+    backgroundColor: "#FF0A00",
+    borderRadius: 20,
+    marginTop: 8,
+    marginLeft: 20
   },
-  titleContent: {
-    flex: 1,
-  },
-  title: {
-    paddingBottom: 16,
-  },
-  unreadGroup:{
-    display:"flex",
-    flexDirection:"row",
-  },
-  notiContent: {
-    color:"#000",
-    fontSize:14,
-    fontWeight:"600",
-    display:"flex",
-    flexWrap: 'wrap',
-    maxWidth:'85%',
-  },
-  time: {
-    fontSize:14,
-    color:"#808080"
-  },
-  pointUnread:{
-    width:10,
-    height:10,
-    backgroundColor:"#FF0A00",
-    borderRadius:20,
-    marginTop:8,
-    marginLeft:20
-  },
-  message: {
-
-  },
-  accounts: {
-  },
-  notificationItem: {
-
-  },
-  unread: {
-
-  },
-  avatar: {
-
-  },
-  avatarImage: {
- 
-  },
+  dot: {
+    position: 'absolute',
+    borderWidth: 5,
+    width: 5,
+    borderRadius: 20,
+    borderColor: 'red',
+    right: '5%',
+  }
 });
 
 export default NotificationScreen;
+

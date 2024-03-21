@@ -27,7 +27,7 @@ const HomeScreen: React.FC<NavigateType> = ({ navigation }) => {
 
 
   const handleNotificationPress = () => {
-    navigation.navigate('CheckIn', { id: '65f6ea1c7a0513a3b7e41a54' });
+    navigation.navigate('NotificationScreen');
   };
 
   const handlePress = (id: string) => {
@@ -77,7 +77,7 @@ const HomeScreen: React.FC<NavigateType> = ({ navigation }) => {
                 points_reward={item.points_reward}
                 description={item.description}
                 onPress={() => handlePress(item._id)}
-                owner_id={''}          
+                owner_id={''}
               />
             )}
           />
@@ -111,7 +111,7 @@ const HomeScreen: React.FC<NavigateType> = ({ navigation }) => {
                 isLive={item.isLive}
                 points_reward={item.points_reward}
                 onPress={() => handlePress(item._id)}
-                owner_id={''}          
+                owner_id={''}
               />
             )}
           />
