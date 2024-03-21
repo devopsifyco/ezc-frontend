@@ -1,8 +1,13 @@
-
 import React from 'react';
-import { View, Text, Modal, TouchableOpacity, Image, StyleSheet } from 'react-native';
+import { View, Text, Modal, TouchableOpacity, StyleSheet, GestureResponderEvent } from 'react-native';
 
-const NotificationPopup = ({ isVisible, onClose, content, time }) => {
+interface Props {
+  isVisible: boolean;
+  onClose: (event: GestureResponderEvent) => void;
+  message: string;
+}
+
+const NotificationModal = ({ isVisible, onClose, message }: Props) => {
   return (
     <Modal
       animationType="slide"
@@ -12,8 +17,7 @@ const NotificationPopup = ({ isVisible, onClose, content, time }) => {
     >
       <View style={styles.popupContainer}>
         <View style={styles.popupContent}>
-          <Text style={styles.popupText}>{content}</Text>
-          <Text style={styles.popupTime}>{time}</Text>
+          <Text style={styles.popupText}>{message}</Text>
           <TouchableOpacity style={styles.closeButton} onPress={onClose}>
             <Text style={styles.closeButtonText}>Close</Text>
           </TouchableOpacity>
@@ -38,11 +42,17 @@ const styles = StyleSheet.create({
   },
   popupText: {
     fontSize: 16,
-    color:"#000",
+    color: "#000",
     marginBottom: 10,
   },
   popupTime: {
     color: 'gray',
+    marginBottom: 10,
+  },
+  popupDetail: {
+    fontSize: 14,
+    color: "#000",
+    marginBottom: 10,
   },
   closeButton: {
     marginTop: 15,
@@ -52,9 +62,9 @@ const styles = StyleSheet.create({
     backgroundColor: '#FF0A00',
   },
   closeButtonText: {
-    fontSize:16,
+    fontSize: 16,
     color: "#FFF",
   },
 });
 
-export default NotificationPopup;
+export default NotificationModal;

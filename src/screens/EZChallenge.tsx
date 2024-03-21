@@ -38,10 +38,7 @@ export default function EZChallenge() {
         <Stack.Screen name="Welcome3" component={Welcome3} />
         <Stack.Screen name="LoginScreen" component={LoginScreen} />
         <Stack.Screen name="RegisterScreen" component={RegisterScreen} />
-        <Stack.Screen
-          name="VerifyRegisterScreen"
-          component={VerifyRegisterScreen}
-        />
+        <Stack.Screen name="VerifyRegisterScreen" component={VerifyRegisterScreen} />
         <Stack.Screen name="ForgotPassword" component={ForgotPassword} />
         <Stack.Screen name="ListGift" component={ListGift} />
         <Stack.Screen name="GiftDetail" component={GiftDetail} />
