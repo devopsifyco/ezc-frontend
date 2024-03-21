@@ -2,92 +2,54 @@ import React from 'react';
 import { View, ScrollView, StyleSheet, Text, TouchableOpacity, Image } from 'react-native';
 import { NavigateType } from '../models/Navigations';
 import HeaderChallenge from '../components/HeaderChallenge';
+import { GiftData } from '../models/infGifts';
+import { useGetAllGifts } from '../hooks/useGift';
 
 export default function ListGift({ navigation }: NavigateType) {
+
+  const { data: Gifts } = useGetAllGifts()
+
+
   return (
     <ScrollView style={styles.container}>
       <View style={styles.header}>
         <HeaderChallenge navigation={navigation} title='' />
       </View>
       <View style={styles.contain}>
-        <TouchableOpacity style={styles.list} onPress={() => {
-          navigation.navigate("GiftDetail")
-        }}>
-          <View style={styles.image}>
-            <Image source={require('../assets/images/bag.png')}
-            />
-          </View>
-          <View style={styles.info}>
-            <Text style={styles.name}>Fabric bag</Text>
-            <View style={styles.pointGroup}>
-              <Text style={styles.point}>Points:</Text>
-              <Text style={styles.num}>60</Text>
-            </View>
-            <Text style={styles.des}>Mode of receipt: Receive gifts at the nearest station</Text>
-          </View>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.list} onPress={() => {
-          navigation.navigate("GiftDetail")
-        }}>
-          <View style={styles.image}>
-            <Image source={require('../assets/images/note.png')}
-            />
-          </View>
-          <View style={styles.info}>
-            <Text style={styles.name}>Notebook</Text>
-            <View style={styles.pointGroup}>
-              <Text style={styles.point}>Points:</Text>
-              <Text style={styles.num}>50</Text>
-            </View>
-            <Text style={styles.des}>Mode of receipt: Receive gifts at the nearest station</Text>
-          </View>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.list} onPress={() => {
-          navigation.navigate("GiftDetail")
-        }}>
-          <View style={styles.image}>
-            <Image source={require('../assets/images/book.png')}
-            />
-          </View>
-          <View style={styles.info}>
-            <Text style={styles.name}>Book-The Power of Love</Text>
-            <View style={styles.pointGroup}>
-              <Text style={styles.point}>Points:</Text>
-              <Text style={styles.num}>30</Text>
-            </View>
-            <Text style={styles.des}>Mode of receipt: Receive gifts at the nearest station</Text>
-          </View>
-        </TouchableOpacity>
-        <TouchableOpacity style={styles.list} onPress={() => {
-          navigation.navigate("GiftDetail")
-        }}>
-          <View style={styles.image}>
-            <Image source={require('../assets/images/note.png')}
-            />
-          </View>
-          <View style={styles.info}>
-            <Text style={styles.name}>Notebook</Text>
-            <View style={styles.pointGroup}>
-              <Text style={styles.point}>Points:</Text>
-              <Text style={styles.num}>30</Text>
-            </View>
-            <Text style={styles.des}>Mode of receipt: Receive gifts at the nearest station</Text>
-          </View>
-        </TouchableOpacity>
+        {
+          Gifts?.map((Gift: GiftData, index: number) => (
+            <TouchableOpacity key={index} style={styles.list} onPress={() => {
+              navigation.navigate("GiftDetail")
+            }}>
+              <View style={styles.image}>
+                <Image source={{ uri: Gift.image?.downloadLink }}
+                  style={styles.avatar}
+                />
+              </View>
+              <View style={styles.info}>
+                <Text style={styles.name}>{Gift.name}</Text>
+                <View style={styles.pointGroup}>
+                  <Text style={styles.point}>Points:{Gift.points_required}</Text>
+                </View>
+                <Text style={styles.des}>Hình thức nhận: Nhận quà tại Trạm gần nhất</Text>
+              </View>
+            </TouchableOpacity>
+          ))
+        }
       </View>
     </ScrollView >
   );
 }
 export const styles = StyleSheet.create({
   container: {
-    flex: 1,
+    flexGrow:1,
   },
   header: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     paddingHorizontal: 20,
     alignItems: 'center',
-    marginVertical:20
+    marginVertical: 20
   },
   contain: {
     display: "flex",
@@ -105,15 +67,20 @@ export const styles = StyleSheet.create({
     borderWidth: 2,
   },
   image: {
-    marginTop: 10,
-    marginBottom: 10,
-    marginLeft: 20
+    padding:10
+  },
+  avatar: {
+    width: 75,
+    height: 100,
+    borderRadius:10
+
   },
   info: {
     marginLeft: 20,
   },
   name: {
-    color: "#216C53"
+    color: "#216C53",
+    fontWeight:"bold"
   },
   pointGroup: {
     display: "flex",
@@ -132,9 +99,10 @@ export const styles = StyleSheet.create({
     marginTop: 10,
   },
   des: {
+    maxWidth: '85%', 
+    overflow: 'hidden', 
     marginTop: 10,
-    display: "flex",
-    flexWrap: "wrap",
     width: 250,
+    fontSize:13
   }
 });
