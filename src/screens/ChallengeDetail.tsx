@@ -165,7 +165,7 @@ const ChallengeDetail = ({ navigation, route }: NavigateType) => {
               marginLeft: 5,
               color: "#363636"
             }}>
-              {Moment(start_time).format('ddd, MMM DD • HH:mm')} - {Moment(end_time).format('LT')}
+              {Moment.utc(start_time).format('ddd, MMM DD • HH:mm')} - {Moment.utc(end_time).format('LT')}
             </Text>
           </View>
           <View style={styles.times_group}>

@@ -35,7 +35,7 @@ const ListCard: React.FC<Challenge> = ({  Days, title, address, images_path, isL
             color: "#216C53",
             fontWeight: "bold",
           }}>
-            {Moment(Days).format('ddd, MMM DD • LT')}
+            {Moment.utc(Days).format('ddd, MMM DD • LT')}
           </Text>
           <Text numberOfLines={1} style={{
             fontSize: 15,

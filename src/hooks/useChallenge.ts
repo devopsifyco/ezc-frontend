@@ -91,8 +91,7 @@ export function useUpdateChallenges( ) {
     mutationFn: async (params: Challenge) => {
       try {
         const token = await AsyncStorage.getItem('accessToken');
-        // const res = await axios.put(`${API_CHALLENGES}/update`, params, {
-        const res = await axios.put(`http://192.168.42.96:4000/api/challenge/update`, params, {
+        const res = await axios.put(`${API_CHALLENGES}/update`, params, {
           headers: {
             'Content-Type': 'application/json',
             Authorization: `Bearer ${token}`,

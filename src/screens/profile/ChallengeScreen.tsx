@@ -83,7 +83,7 @@ const ChallengeScreen: React.FC<ChallengeScreenProps> = ({ navigation, desiredOw
                 />
                 <View style={styles.detailItems}>
                   <Text style={styles.time}>
-                    {Moment(challenge.start_time).format('ddd, MMM DD • LT')} - {Moment(challenge.end_time).format('LT')}
+                    {Moment.utc(challenge.start_time).format('ddd, MMM DD • LT')} - {Moment.utc(challenge.end_time).format('LT')}
                   </Text>
                   <View style={styles.times_group}>
                     <View style={styles.listItemDetail}>
@@ -129,7 +129,7 @@ const ChallengeScreen: React.FC<ChallengeScreenProps> = ({ navigation, desiredOw
                 />
                 <View style={styles.detailItems}>
                   <Text style={styles.time}>
-                    {Moment(challenge.start_time).format('ddd, MMM DD • LT')} - {Moment(challenge.end_time).format('LT')}
+                    {Moment.utc(challenge.start_time).format('ddd, MMM DD • LT')} - {Moment.utc(challenge.end_time).format('LT')}
                   </Text>
                   <View style={styles.times_group}>
                     <View style={styles.listItemDetail}>
@@ -165,7 +165,7 @@ const ChallengeScreen: React.FC<ChallengeScreenProps> = ({ navigation, desiredOw
                 />
                 <View style={styles.detailItems}>
                   <Text style={styles.time}>
-                    {Moment(challenge.start_time).format('ddd, MMM DD • LT')} - {Moment(challenge.end_time).format('LT')}
+                    {Moment.utc(challenge.start_time).format('ddd, MMM DD • LT')} - {Moment.utc(challenge.end_time).format('LT')}
                   </Text>
                   <View style={styles.times_group}>
                     <View style={styles.listItemDetail}>

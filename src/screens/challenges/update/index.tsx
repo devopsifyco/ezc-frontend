@@ -8,7 +8,7 @@ import { Challenge } from '../../../models/InfChallenge';
 import { styles } from './style';
 import SelectedImages from './ImageUpdate';
 import { Asset } from 'react-native-image-picker';
-import DateTimePicker, { DateTimePickerEvent } from '@react-native-community/datetimepicker';
+import DateTimePicker from '@react-native-community/datetimepicker';
 
 interface ImageData {
   fileName: string;
@@ -19,7 +19,7 @@ const timeString = (time: Date | string | undefined) => {
   if (!time) return 'HH:MM';
 
   const timeObject = typeof time === 'string' ? new Date(time) : time;
-  
+
   const hours = timeObject.getHours().toString().padStart(2, '0');
   const minutes = timeObject.getMinutes().toString().padStart(2, '0');
 
@@ -27,17 +27,16 @@ const timeString = (time: Date | string | undefined) => {
 };
 
 
+const dateString = (date: Date | undefined) => {
+  if (!date) return 'MM/DD/YYYY';
 
-const dateString = (dateString: string | undefined) => {
-  if (!dateString) return 'MM/DD/YYYY';
-
-  const date = new Date(dateString);
   const day = date.getDate().toString().padStart(2, '0');
   const month = (date.getMonth() + 1).toString().padStart(2, '0');
   const year = date.getFullYear();
 
   return `${month}-${day}-${year}`;
 };
+
 
 
 const UpdateChallenges = ({ navigation, route }: NavigateType) => {
@@ -61,22 +60,33 @@ const UpdateChallenges = ({ navigation, route }: NavigateType) => {
     start_time,
     end_time,
     address
-  } = Challenge || editedChallenge || {};
+  } = Challenge ? Challenge : editedChallenge || {};
 
 
   const handleUpdate = async () => {
     try {
-      if (editedChallenge) {
+      if (editedChallenge && startTime) {
+        const combinedStartTime = combineDateTime(startTime, startTime); 
+        const combinedEndTime = combineDateTime(endTime, endTime);
+
+        const startTimeAsDate = new Date(combinedStartTime);
+        const endTimeAsDate = new Date(combinedEndTime);
+        console.log("Day select", startTimeAsDate);
+        
         await updateMutate({
           ...editedChallenge,
           id,
-          images_path: selectedImages
+          images_path: selectedImages,
+          start_time: startTimeAsDate,
+          end_time: endTimeAsDate,
         });
       }
     } catch (error) {
       console.error('Error updating data:', error);
     }
   };
+  
+  
 
   const handleImagesSelected = async (images: Asset[] | undefined) => {
     try {
@@ -114,15 +124,19 @@ const UpdateChallenges = ({ navigation, route }: NavigateType) => {
 
 
 
-  const [startTime, setStartTime] = useState<Date>(new Date(start_time));
-  const [endTime, setEndTime] = useState<Date>(new Date(end_time));
+
   const [showDatePicker, setShowDatePicker] = useState(false);
-  const [pickerMode, setPickerMode] = useState<'date' | 'endDate' | 'startTime' | 'endTime'>('date');
-  const [selectedDate, setSelectedDate] = useState<Date>(new Date());
+  const [pickerMode, setPickerMode] = useState<'startDate' | 'endDate' | 'startTime' | 'endTime'>('startDate');
 
-  
 
-  const showPicker = (mode: 'date' | 'endDate' | 'startTime' | 'endTime') => {
+  const defaultStartDate = new Date(start_time || new Date());
+
+  const defaultEndDate = new Date(end_time || new Date());
+  const [startTime, setStartTime] = useState<Date>(defaultStartDate);
+  const [endTime, setEndTime] = useState<Date>(defaultEndDate);
+
+
+  const showPicker = (mode: 'startDate' | 'endDate' | 'startTime' | 'endTime') => {
     setPickerMode(mode);
     setShowDatePicker(true);
   };
@@ -131,31 +145,39 @@ const UpdateChallenges = ({ navigation, route }: NavigateType) => {
     setShowDatePicker(false);
   };
 
-  const handleDateChange = (event: DateTimePickerEvent, selectedDate?: Date) => {
+
+  const handleDateChange = (selectedDate?: Date) => {
     hidePicker();
     if (selectedDate !== undefined) {
-      if (pickerMode === 'date') {
-        handleInputChange('start_time', selectedDate.toISOString());
+      if (pickerMode === 'startDate') {
+        setStartTime(selectedDate);
       } else if (pickerMode === 'endDate') {
-        handleInputChange('end_time', selectedDate.toISOString());
+        setEndTime(selectedDate);
       }
     }
   };
 
-
-  const handleTimeChange = (event: DateTimePickerEvent, selectedDate?: Date) => {
+  const handleTimeChange = (selectedDate?: Date) => {
     hidePicker();
     if (selectedDate !== undefined) {
-      setSelectedDate(selectedDate);
-      let updatedTime = selectedDate.toISOString().split('T')[1];
       if (pickerMode === 'startTime') {
-        handleInputChange('start_time', `${start_time.split('T')[0]}T${updatedTime}`);
+        setStartTime(selectedDate);
       } else if (pickerMode === 'endTime') {
-        handleInputChange('end_time', `${end_time.split('T')[0]}T${updatedTime}`);
+        setEndTime(selectedDate);
       }
     }
   };
 
+  const combineDateTime = (date: Date, time: Date) => {
+    return new Date(
+      date.getFullYear(),
+      date.getMonth(),
+      date.getDate(),
+      time.getHours(),
+      time.getMinutes(),
+      time.getSeconds(),
+    ).toISOString();
+  };
 
 
   return (
@@ -247,8 +269,8 @@ const UpdateChallenges = ({ navigation, route }: NavigateType) => {
             <Text style={styles.titleMedium}>Start Date</Text>
             <TouchableOpacity
               style={styles.formInputTime}
-              onPress={() => showPicker('date')}>
-              <Text style={styles.titleSmall}>{dateString(start_time)}</Text>
+              onPress={() => showPicker('startDate')}>
+              <Text style={styles.titleSmall}>{dateString(startTime)}</Text>
             </TouchableOpacity>
           </View>
           <View style={styles.formContainerDateTime}>
@@ -256,7 +278,7 @@ const UpdateChallenges = ({ navigation, route }: NavigateType) => {
             <TouchableOpacity
               style={styles.formInputTime}
               onPress={() => showPicker('endDate')}>
-              <Text style={styles.titleSmall}>{dateString(end_time)} </Text>
+              <Text style={styles.titleSmall}>{dateString(endTime)} </Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -271,7 +293,7 @@ const UpdateChallenges = ({ navigation, route }: NavigateType) => {
                 console.log('Showing Start Time picker');
                 showPicker('startTime');
               }}>
-              <Text style={styles.titleSmall}>{timeString(start_time)}</Text>
+              <Text style={styles.titleSmall}>{timeString(startTime)}</Text>
             </TouchableOpacity>
           </View>
           <View style={styles.formContainerDateTime}>
@@ -282,21 +304,32 @@ const UpdateChallenges = ({ navigation, route }: NavigateType) => {
                 console.log('Showing End Time picker');
                 showPicker('endTime');
               }}>
-              <Text style={styles.titleSmall}>{timeString(end_time)}</Text>
+              <Text style={styles.titleSmall}>{timeString(endTime)}</Text>
             </TouchableOpacity>
           </View>
         </View>
 
         {showDatePicker && (
           <DateTimePicker
-            value={selectedDate}
-            onChange={pickerMode === 'date' || pickerMode === 'endDate' ? handleDateChange : handleTimeChange}
-            mode={pickerMode === 'date' || pickerMode === 'endDate' ? 'date' : 'time'}
+            value={pickerMode === 'startDate' || pickerMode === 'endDate' ? startTime : endTime}
+            onChange={(event, selectedDate) => {
+              if (selectedDate !== undefined) {
+                if (pickerMode === 'startDate' || pickerMode === 'endDate') {
+                  handleDateChange(selectedDate);
+                } else {
+                  handleTimeChange(selectedDate);
+                }
+              }
+            }}
+            mode={pickerMode === 'startDate' || pickerMode === 'endDate' ? 'date' : 'time'}
             display="default"
-            onCancel={() => hidePicker()}
-            onConfirm={() => hidePicker()}
+            onCancel={hidePicker}
+            onConfirm={hidePicker}
+            timeZoneOffsetInMinutes={7}
           />
         )}
+
+
 
         <View style={styles.inputContainer}>
           <Text style={styles.titleMedium}>Addreess Line</Text>
