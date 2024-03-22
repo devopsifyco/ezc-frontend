@@ -83,7 +83,7 @@ export function useOneChallenges(_id: string) {
   });
 }
 
-// ----------------------------------
+// ---------------------------------- upadate chalenge -------------------------
 export function useUpdateChallenges( ) {
   const queryClient = useQueryClient()
   const getUpdateChallenge = useMutation({

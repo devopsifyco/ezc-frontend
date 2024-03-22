@@ -6,9 +6,7 @@ export interface Challenge {
     title: string;
     description: string;
     address: string;
-    images_path: {
-      downloadLink: string
-}[];
+    images_path: { fileName: string, base64: string}[];
     company:string;
     start_time: Date;
     end_time: Date;

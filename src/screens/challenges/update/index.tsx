@@ -20,8 +20,8 @@ const timeString = (time: Date | string | undefined) => {
 
   const timeObject = typeof time === 'string' ? new Date(time) : time;
 
-  const hours = timeObject.getHours().toString().padStart(2, '0');
-  const minutes = timeObject.getMinutes().toString().padStart(2, '0');
+  const hours = timeObject.getUTCHours().toString().padStart(2, '0');
+  const minutes = timeObject.getUTCMinutes().toString().padStart(2, '0');
 
   return `${hours}:${minutes}`;
 };
@@ -66,27 +66,31 @@ const UpdateChallenges = ({ navigation, route }: NavigateType) => {
   const handleUpdate = async () => {
     try {
       if (editedChallenge && startTime) {
-        const combinedStartTime = combineDateTime(startTime, startTime); 
+        const combinedStartTime = combineDateTime(startTime, startTime);
         const combinedEndTime = combineDateTime(endTime, endTime);
+        console.log("Day,", combinedStartTime);
 
         const startTimeAsDate = new Date(combinedStartTime);
         const endTimeAsDate = new Date(combinedEndTime);
         console.log("Day select", startTimeAsDate);
-        
+
         await updateMutate({
           ...editedChallenge,
           id,
           images_path: selectedImages,
           start_time: startTimeAsDate,
           end_time: endTimeAsDate,
+        }, {
+          onSuccess:
+            () => navigation.goBack()
         });
       }
     } catch (error) {
       console.error('Error updating data:', error);
     }
   };
-  
-  
+
+
 
   const handleImagesSelected = async (images: Asset[] | undefined) => {
     try {
@@ -169,15 +173,18 @@ const UpdateChallenges = ({ navigation, route }: NavigateType) => {
   };
 
   const combineDateTime = (date: Date, time: Date) => {
-    return new Date(
+    const combinedDate = new Date(
       date.getFullYear(),
       date.getMonth(),
       date.getDate(),
       time.getHours(),
       time.getMinutes(),
       time.getSeconds(),
-    ).toISOString();
+    );
+
+    return combinedDate.toISOString();
   };
+
 
 
   return (
@@ -325,7 +332,7 @@ const UpdateChallenges = ({ navigation, route }: NavigateType) => {
             display="default"
             onCancel={hidePicker}
             onConfirm={hidePicker}
-            timeZoneOffsetInMinutes={7}
+            timeZoneOffsetInMinutes={0}
           />
         )}
 
