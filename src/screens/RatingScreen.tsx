@@ -7,16 +7,12 @@ import { useRatingChallenge } from '../hooks/useRatings';
 interface userRating {
   username: string,
   highest_points: number,
-  avatar: { name: string, downloadLink: string }[]
+  avatar: { name: string, downloadLink: string }
 }
 
 export default function RatingScreen({ navigation }: NavigateType) {
-
-  const { data: dataRating } = useRatingChallenge()
+  const { data: dataRating } = useRatingChallenge();
   const [selectedOption, setSelectedOption] = useState('Monthly');
-
-  console.log('hh', selectedOption);
-
   const [rankings, setRankings] = useState([]);
 
   useEffect(() => {
@@ -26,12 +22,11 @@ export default function RatingScreen({ navigation }: NavigateType) {
     }
   }, [dataRating]);
 
-  const handleOptionPress = ({ option }: any) => {
+  const handleOptionPress = (option: string) => {
     setSelectedOption(option);
   };
 
-
-  const getRankingImage = (index: number) => {
+  const topRanking = (index: number) => {
     switch (index) {
       case 0:
         return require('../assets/icons/icon-ranking1.png');
@@ -45,25 +40,27 @@ export default function RatingScreen({ navigation }: NavigateType) {
   };
 
   return (
-    <ScrollView style={styles.container}>
+    <View style={styles.container}>
       <View style={styles.header}>
-        <HeaderChallenge navigation={navigation} title='Ratings' />
+        <View style={styles.contenContainer}>
+          <HeaderChallenge navigation={navigation} title='Ratings' />
+          <View style={styles.optionButton}>
+            <TouchableOpacity
+              style={[styles.button, selectedOption === 'Monthly' ? styles.selectedButton : null]}
+              onPress={() => handleOptionPress('Monthly')}>
+              <Text style={styles.buttonText}>Monthly</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={[styles.button, selectedOption === 'AllTime' ? styles.selectedButton : null]}
+              onPress={() => handleOptionPress('AllTime')}>
+              <Text style={styles.buttonText}>All Time</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
       </View>
-      <View style={styles.optionButton}>
-        <TouchableOpacity
-          style={[styles.button, selectedOption === 'Monthly' ? styles.selectedButton : null]}
-          onPress={() => handleOptionPress({ option: 'Monthly' })}>
-          <Text style={styles.buttonText}>Monthly</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={[styles.button, selectedOption === 'AllTime' ? styles.selectedButton : null]}
-          onPress={() => handleOptionPress({ option: 'AllTime' })}>
-          <Text style={styles.buttonText}>All Time</Text>
-        </TouchableOpacity>
-      </View>
-      <View style={styles.containList}>
-        {
-          dataRating?.map((user: userRating, index: number) => (
+      <ScrollView style={styles.itemContainer}>
+        <View style={styles.containList}>
+          {dataRating?.map((user: userRating, index: number) => (
             <View style={styles.listRating} key={index}>
               <View style={styles.itemRating}>
                 <View style={styles.itemInfo}>
@@ -72,39 +69,38 @@ export default function RatingScreen({ navigation }: NavigateType) {
                   </View>
                   <View style={styles.InfoDetail_wrapper}>
                     <View style={styles.infoDetail}>
-                      <Image source={{ uri: user.avatar?.name }}
+                      <Image
+                        source={user?.avatar.name ? { uri: user.avatar.name } : require('../assets/profile/defaultAvatar.jpg')}
                         style={styles.avatar}
                       />
                       <View>
                         <Text style={styles.name}>{user.username}</Text>
-                        <Text style={styles.challengename}>{user.highest_points} Challenges</Text>
+                        <Text style={styles.challengename}>{user.highest_points} points</Text>
                       </View>
                     </View>
                     <View style={styles.hexagonContainer}>
-                      <Image source={getRankingImage(index)} style={styles.mouthIcon} />
+                      <Image source={topRanking(index)} style={styles.mouthIcon} />
                     </View>
                   </View>
                 </View>
               </View>
             </View>
-          ))
-        }
-      </View>
-    </ScrollView>
+          ))}
+        </View>
+      </ScrollView>
+
+    </View>
   );
 }
 
+
 const styles = StyleSheet.create({
   container: {
-    flexGrow: 1,
-
+    flex: 1,
   },
-  header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    paddingHorizontal: 20,
-    alignItems: 'center',
-    marginTop: 20
+  header: { paddingHorizontal: 20 },
+  contenContainer: {
+    paddingVertical: 20,
   },
   optionButton: {
     marginTop: 30,
@@ -114,7 +110,9 @@ const styles = StyleSheet.create({
     backgroundColor: 'rgba(33, 108, 83, 0.1)',
     borderRadius: 20,
     borderWidth: 1,
-    marginHorizontal: 30,
+  },
+  itemContainer: {
+    paddingHorizontal: 20,
   },
   button: {
     padding: 10,
@@ -129,7 +127,8 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     fontSize: 16,
-    fontWeight: "bold"
+    fontWeight: "bold",
+    color: '#363636',
   },
   selectedButtonText: {
     color: 'black',
@@ -138,12 +137,10 @@ const styles = StyleSheet.create({
   },
   containList: {
     marginTop: 20,
-    marginHorizontal: 15,
+    paddingBottom: 20,
     backgroundColor: "#216C53",
     borderTopLeftRadius: 20,
     borderTopRightRadius: 20,
-    elevation: 20,
-    paddingBottom: '20%'
   },
   listRating: {
     marginTop: 15,
