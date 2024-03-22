@@ -14,6 +14,8 @@ import useProfile from '../../hooks/useProfile';
 import JoinedScreen from './JoinedScreen';
 import { useGetHasJoinedChallenges } from '../../hooks/useChallenge';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
+import { faBars } from '@fortawesome/free-solid-svg-icons';
 
 export default function ProfileScreen({ navigation }: NavigateType) {
   const [id_owner, setIdOwner] = useState<string | null>(null);
@@ -45,7 +47,7 @@ export default function ProfileScreen({ navigation }: NavigateType) {
         <HeaderProfile navigation={navigation} />
         <TouchableOpacity
           onPress={() => navigation.navigate('SubProfileScreen', { dataProfile })}>
-          <Image source={require('../../assets/profile/menu-toggle.png')} />
+          <FontAwesomeIcon icon={faBars} size={32} color='#216C53' />
         </TouchableOpacity>
       </View>
       <View style={styles.profile}>
@@ -55,7 +57,6 @@ export default function ProfileScreen({ navigation }: NavigateType) {
         />
 
         <Text style={styles.profileName}>{dataProfile?.username}</Text>
-        <Text style={styles.profileName}>{dataProfile?.email}</Text>
         <View style={styles.numberStatus}>
           <View style={styles.itemfllowing}>
             <Text style={styles.itemNumber}>{dataProfile?.points}</Text>
@@ -64,7 +65,7 @@ export default function ProfileScreen({ navigation }: NavigateType) {
           <View style={styles.arrowMiddle} />
           <View style={styles.itemfllower}>
             <Text style={styles.itemNumber}>{hasJoined?.userChallenges ? hasJoined?.userChallenges.length : 0}</Text>
-            <Text style={styles.titleMedium}>Challenge</Text>
+            <Text style={styles.titleMedium}>Challenges</Text>
           </View>
         </View>
       </View>
@@ -121,7 +122,7 @@ const styles = StyleSheet.create({
     borderRadius: 50,
   },
   profileName: {
-    fontSize: 18,
+    fontSize: 26,
     fontWeight: 'bold',
     marginVertical: 8,
     color: '#120D26',
