@@ -161,7 +161,7 @@ export default function PlusButton() {
           'CreateChallenges',
         )}
       {isExpanded &&
-        renderSecondaryButton(faGift, pulseX, pulseY, 'Gift', 'ExchangeGifts')}
+        renderSecondaryButton(faGift, pulseX, pulseY, 'Gift', 'Giveaways')}
 
       <Animated.View style={[styles.button, sizeStyle]}>
         <TouchableHighlight onPress={handlePress} underlayColor="#FF890B">

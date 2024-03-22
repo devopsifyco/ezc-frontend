@@ -7,9 +7,8 @@ import ForgotPassword from './ForgotPassword';
 import BottomTabs from '../models/routers/BottomTabs';
 import SeeAllChallenges from './SeeAllChallenges';
 import SeeAllLive from './SeeAllLive';
-import ListGift from './SubExChangeGift';
-import ExchangeGifts from './ExchangeGifts';
-import GiftDetail from './GiftDetail';
+import ListGift from './Gift/SubExChangeGift';
+import GiftDetail from './Gift/GiftDetail';
 import SubProfileScreen from './profile/ProfileScreen';
 import EditProfile from './profile/EditProfile';
 import ChallengeDetail from './ChallengeDetail';
@@ -25,6 +24,8 @@ import Status from './Status';
 import CreateChallenges from './challenges/create';
 import CheckIn from './challenges/checkin';
 import ParticipantScreen from './ParticipantScreen';
+import Giveaways from './Gift/Giveaways';
+import ExChangeGift from './Gift/ExChangeGift';
 
 
 const Stack = createNativeStackNavigator();
@@ -42,7 +43,8 @@ export default function EZChallenge() {
         <Stack.Screen name="ForgotPassword" component={ForgotPassword} />
         <Stack.Screen name="ListGift" component={ListGift} />
         <Stack.Screen name="GiftDetail" component={GiftDetail} />
-        <Stack.Screen name="ExchangeGifts" component={ExchangeGifts} />
+        <Stack.Screen name="Giveaways" component={Giveaways} />
+        <Stack.Screen name="ExchangeGifts" component={ExChangeGift} />
         <Stack.Screen name="EZChallenge" component={BottomTabs} />
         <Stack.Screen name="Status" component={Status} />
         <Stack.Screen name="SubProfileScreen" component={SubProfileScreen} />
