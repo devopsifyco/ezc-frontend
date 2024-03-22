@@ -45,8 +45,8 @@ const LiveCard: FC<Challenge> = ({  Days, title, address, images_path, isLive, o
                             paddingHorizontal: 6,
                             paddingVertical: 8
                         }}>
-                            <Text style={{ fontSize: 18, fontWeight: '700' }}>{Moment(Days).format('DD')}</Text>{'\n'}
-                            {Moment(Days).format('MMM')}
+                            <Text style={{ fontSize: 18, fontWeight: '700' }}>{Moment.utc(Days).format('DD')}</Text>{'\n'}
+                            {Moment.utc(Days).format('MMM')}
                         </Text>
                     </View>
 

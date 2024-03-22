@@ -7,39 +7,49 @@ import ButtonChallenge from '../../../components/ButtonChallenge';
 import { Challenge } from '../../../models/InfChallenge';
 import { styles } from './style';
 import SelectedImages from './ImageUpdate';
+import { Asset } from 'react-native-image-picker';
+import DateTimePicker from '@react-native-community/datetimepicker';
+
+interface ImageData {
+  fileName: string;
+  base64: string;
+}
+
+const timeString = (time: Date | string | undefined) => {
+  if (!time) return 'HH:MM';
+
+  const timeObject = typeof time === 'string' ? new Date(time) : time;
+
+  const hours = timeObject.getUTCHours().toString().padStart(2, '0');
+  const minutes = timeObject.getUTCMinutes().toString().padStart(2, '0');
+
+  return `${hours}:${minutes}`;
+};
 
 
-import DateTimePicker, { DateTimePickerEvent } from '@react-native-community/datetimepicker';
+const dateString = (date: Date | undefined) => {
+  if (!date) return 'MM/DD/YYYY';
+
+  const day = date.getDate().toString().padStart(2, '0');
+  const month = (date.getMonth() + 1).toString().padStart(2, '0');
+  const year = date.getFullYear();
+
+  return `${month}-${day}-${year}`;
+};
+
+
 
 const UpdateChallenges = ({ navigation, route }: NavigateType) => {
   const { id } = route.params;
-  const { data: Challenge, mutate } = useOneChallenges(id);
+  const { data: Challenge } = useOneChallenges(id);
   const { mutate: updateMutate } = useUpdateChallenges();
 
   const [editedChallenge, setEditedChallenge] = useState<Challenge>(Challenge);
 
-  useEffect(() => {
-    mutate();
-  }, [id, mutate]);
+  const [selectedImages, setSelectedImages] = useState<ImageData[]>([]);
 
 
-  const handleUpdate = async () => {
-    try {
-      if (editedChallenge) {
-console.log('This is data want to update:', editedChallenge);
 
-
-        await updateMutate({
-          ...editedChallenge,
-          id,
-        });
-
-        mutate();
-      }
-    } catch (error) {
-      console.error('Error updating data:', error);
-    }
-  };
 
   const {
     title,
@@ -50,8 +60,51 @@ console.log('This is data want to update:', editedChallenge);
     start_time,
     end_time,
     address
-  } = Challenge || editedChallenge || {};
+  } = Challenge ? Challenge : editedChallenge || {};
 
+
+  const handleUpdate = async () => {
+    try {
+      if (editedChallenge && startTime) {
+        const combinedStartTime = combineDateTime(startTime, startTime);
+        const combinedEndTime = combineDateTime(endTime, endTime);
+        console.log("Day,", combinedStartTime);
+
+        const startTimeAsDate = new Date(combinedStartTime);
+        const endTimeAsDate = new Date(combinedEndTime);
+        console.log("Day select", startTimeAsDate);
+
+        await updateMutate({
+          ...editedChallenge,
+          id,
+          images_path: selectedImages,
+          start_time: startTimeAsDate,
+          end_time: endTimeAsDate,
+        }, {
+          onSuccess:
+            () => navigation.goBack()
+        });
+      }
+    } catch (error) {
+      console.error('Error updating data:', error);
+    }
+  };
+
+
+
+  const handleImagesSelected = async (images: Asset[] | undefined) => {
+    try {
+      const imageDatas: any = images?.map(asset => ({
+        fileName: asset.fileName ?? '',
+        base64: asset.base64 ?? '',
+      })) ?? [];
+      console.log("image Da ta", imageDatas)
+      setSelectedImages(imageDatas)
+
+    } catch (error) {
+      console.error('Error updating data:', error);
+    }
+  };
 
 
   const handleInputChange = (name: string, value: string) => {
@@ -73,21 +126,21 @@ console.log('This is data want to update:', editedChallenge);
 
   } = useForm<Challenge>({});
 
-  const selectedImages = watch('images_path');
-
-  //const validateImages = (value: { name: string; downloadLink: string }[]) => {
-  //  return value.length > 0 || ' *';
-  //};
 
 
-  const [startTime, setStartTime] = useState<Date>(new Date(start_time || 0));
-  const [endTime, setEndTime] = useState<Date>(new Date(end_time || 0));
+
   const [showDatePicker, setShowDatePicker] = useState(false);
-  const [pickerMode, setPickerMode] = useState<'date' | 'endDate' | 'startTime' | 'endTime'>('date');
-  const [selectedDate, setSelectedDate] = useState<Date>(new Date());
+  const [pickerMode, setPickerMode] = useState<'startDate' | 'endDate' | 'startTime' | 'endTime'>('startDate');
 
 
-  const showPicker = (mode: 'date' | 'endDate' | 'startTime' | 'endTime') => {
+  const defaultStartDate = new Date(start_time || new Date());
+
+  const defaultEndDate = new Date(end_time || new Date());
+  const [startTime, setStartTime] = useState<Date>(defaultStartDate);
+  const [endTime, setEndTime] = useState<Date>(defaultEndDate);
+
+
+  const showPicker = (mode: 'startDate' | 'endDate' | 'startTime' | 'endTime') => {
     setPickerMode(mode);
     setShowDatePicker(true);
   };
@@ -96,29 +149,40 @@ console.log('This is data want to update:', editedChallenge);
     setShowDatePicker(false);
   };
 
-  const handleDateChange = (event: DateTimePickerEvent, selectedDate?: Date) => {
+
+  const handleDateChange = (selectedDate?: Date) => {
     hidePicker();
     if (selectedDate !== undefined) {
-      if (pickerMode === 'date') {
-        handleInputChange('start_time', selectedDate.toISOString());
+      if (pickerMode === 'startDate') {
+        setStartTime(selectedDate);
       } else if (pickerMode === 'endDate') {
-        handleInputChange('end_time', selectedDate.toISOString());
+        setEndTime(selectedDate);
       }
     }
   };
 
-
-  const handleTimeChange = (event: DateTimePickerEvent, selectedDate?: Date) => {
+  const handleTimeChange = (selectedDate?: Date) => {
     hidePicker();
     if (selectedDate !== undefined) {
-      setSelectedDate(selectedDate);
-      let updatedTime = selectedDate.toISOString().split('T')[1];
       if (pickerMode === 'startTime') {
-        handleInputChange('start_time', `${start_time.split('T')[0]}T${updatedTime}`);
+        setStartTime(selectedDate);
       } else if (pickerMode === 'endTime') {
-        handleInputChange('end_time', `${end_time.split('T')[0]}T${updatedTime}`);
+        setEndTime(selectedDate);
       }
     }
+  };
+
+  const combineDateTime = (date: Date, time: Date) => {
+    const combinedDate = new Date(
+      date.getFullYear(),
+      date.getMonth(),
+      date.getDate(),
+      time.getHours(),
+      time.getMinutes(),
+      time.getSeconds(),
+    );
+
+    return combinedDate.toISOString();
   };
 
 
@@ -140,32 +204,21 @@ console.log('This is data want to update:', editedChallenge);
             <View style={styles.mediaContainer}>
               <Text style={styles.titleMedium}>Attached Photos and Videos</Text>
             </View>
+
             <Controller
               control={control}
               render={({ field }) => (
                 <SelectedImages
                   imageList={images_path}
-                  setSelectedImage={(index: number, asset: any) => {
-                    const updatedImages = [...selectedImages];
-                    //console.log('asset', asset, asset.constructor.name)
-                    updatedImages[index] = asset;
-                    setValue(
-                      'images_path',
-                      updatedImages.filter(images_path => images_path.fileName !== ''),
-                    );
-                  }}
-                  removeImage={(index: number) => {
-                    const updatedImages = [...selectedImages];
-                    updatedImages.splice(index, 1);
-                    setValue('images_path', updatedImages);
-                  }}
+                  initialImageURL={images_path}
+                  onImagesSelected={handleImagesSelected}
                   clearImages={() => setValue('images_path', [])}
                 />
               )}
               name="images_path"
               defaultValue={[]}
-            //rules={{ validate: validateImages }}
             />
+
           </View>
 
           <View style={styles.inputContainer}>
@@ -223,10 +276,8 @@ console.log('This is data want to update:', editedChallenge);
             <Text style={styles.titleMedium}>Start Date</Text>
             <TouchableOpacity
               style={styles.formInputTime}
-              onPress={() => showPicker('date')}>
-              <Text style={styles.titleSmall}>
-                {new Date(editedChallenge?.start_time || start_time).toDateString()}
-              </Text>
+              onPress={() => showPicker('startDate')}>
+              <Text style={styles.titleSmall}>{dateString(startTime)}</Text>
             </TouchableOpacity>
           </View>
           <View style={styles.formContainerDateTime}>
@@ -234,9 +285,7 @@ console.log('This is data want to update:', editedChallenge);
             <TouchableOpacity
               style={styles.formInputTime}
               onPress={() => showPicker('endDate')}>
-              <Text style={styles.titleSmall}>
-                {new Date(editedChallenge?.end_time || end_time).toDateString()}
-              </Text>
+              <Text style={styles.titleSmall}>{dateString(endTime)} </Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -251,14 +300,7 @@ console.log('This is data want to update:', editedChallenge);
                 console.log('Showing Start Time picker');
                 showPicker('startTime');
               }}>
-              <Text style={styles.titleSmall}>
-                {new Date(editedChallenge?.start_time || startTime).toLocaleTimeString([], {
-                  hour: '2-digit',
-                  minute: '2-digit',
-                  hour12: false, // Use 24-hour format
-                  timeZone: 'Asia/Ho_Chi_Minh', // Set the time zone to Vietnam
-                })}
-              </Text>
+              <Text style={styles.titleSmall}>{timeString(startTime)}</Text>
             </TouchableOpacity>
           </View>
           <View style={styles.formContainerDateTime}>
@@ -269,28 +311,32 @@ console.log('This is data want to update:', editedChallenge);
                 console.log('Showing End Time picker');
                 showPicker('endTime');
               }}>
-              <Text style={styles.titleSmall}>
-                {new Date(editedChallenge?.start_time || startTime).toLocaleTimeString([], {
-                  hour: '2-digit',
-                  minute: '2-digit',
-                  hour12: false, // Use 24-hour format
-                  timeZone: 'Asia/Ho_Chi_Minh', // Set the time zone to Vietnam
-                })}
-              </Text>
+              <Text style={styles.titleSmall}>{timeString(endTime)}</Text>
             </TouchableOpacity>
           </View>
         </View>
 
         {showDatePicker && (
           <DateTimePicker
-            value={selectedDate}
-            onChange={pickerMode === 'date' || pickerMode === 'endDate' ? handleDateChange : handleTimeChange}
-            mode={pickerMode === 'date' || pickerMode === 'endDate' ? 'date' : 'time'}
+            value={pickerMode === 'startDate' || pickerMode === 'endDate' ? startTime : endTime}
+            onChange={(event, selectedDate) => {
+              if (selectedDate !== undefined) {
+                if (pickerMode === 'startDate' || pickerMode === 'endDate') {
+                  handleDateChange(selectedDate);
+                } else {
+                  handleTimeChange(selectedDate);
+                }
+              }
+            }}
+            mode={pickerMode === 'startDate' || pickerMode === 'endDate' ? 'date' : 'time'}
             display="default"
-            onCancel={() => hidePicker()}
-            onConfirm={() => hidePicker()}
+            onCancel={hidePicker}
+            onConfirm={hidePicker}
+            timeZoneOffsetInMinutes={0}
           />
         )}
+
+
 
         <View style={styles.inputContainer}>
           <Text style={styles.titleMedium}>Addreess Line</Text>

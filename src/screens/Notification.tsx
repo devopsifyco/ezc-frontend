@@ -8,8 +8,10 @@ import useReadOneNotification from '../hooks/useReadOneNotification';
 import { useQueryClient } from '@tanstack/react-query';
 import useReadAllNotifications from '../hooks/useReadAllNotifications';
 import NotificationModal from './NotificationPopup';
+import HeaderChallenge from '../components/HeaderChallenge';
+import { NavigateType } from '../models/Navigations';
 
-const NotificationScreen = () => {
+const NotificationScreen = ({navigation}: NavigateType) => {
   const queryClient = useQueryClient();
 
   const [selectedTab, setSelectedTab] = useState('All');
@@ -77,7 +79,11 @@ const NotificationScreen = () => {
   };
 
   return (
+    <>
     <View style={styles.container}>
+      <TouchableOpacity style={styles.header}>
+        <HeaderChallenge navigation={navigation} title='' />
+      </TouchableOpacity>
       <Image source={require('../assets/images/background-noti.png')} style={styles.backgroundImage} />
       <Image source={require('../assets/images/ellipse-noti.png')} style={styles.foregroundImage} />
       <View style={styles.contentContainer}>
@@ -146,6 +152,7 @@ const NotificationScreen = () => {
         message={selectedNotification?.message || ''}
       />
     </View>
+    </>
   );
 };
 
@@ -157,6 +164,14 @@ const styles = StyleSheet.create({
   backgroundImage: {
     position: 'absolute',
     resizeMode: 'cover',
+  },
+  header: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingHorizontal: 20,
+    alignItems: 'center',
+    marginVertical: 20,
+    zIndex:999
   },
   foregroundImage: {
     position: 'absolute',

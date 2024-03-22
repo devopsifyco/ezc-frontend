@@ -83,12 +83,11 @@ export function useOneChallenges(_id: string) {
   });
 }
 
-// ----------------------------------Update challenge---------------------------
-export function useUpdateChallenges() {
+// ---------------------------------- upadate chalenge -------------------------
+export function useUpdateChallenges( ) {
   const queryClient = useQueryClient()
-
   const getUpdateChallenge = useMutation({
-    mutationKey: ['UpdateChallenge'],
+    mutationKey: ['UpdateChallenge'],   
     mutationFn: async (params: Challenge) => {
       try {
         const token = await AsyncStorage.getItem('accessToken');
@@ -105,8 +104,7 @@ export function useUpdateChallenges() {
       }
     },
     onSuccess: () => {
-      console.log('Successful update challenge');
-      queryClient.invalidateQueries({ queryKey: ['challenges', 'pending'] });
+      queryClient.invalidateQueries({queryKey: ['challenges', 'pending']});
     },
   });
 

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Image, TouchableOpacity, Text, StyleSheet } from 'react-native';
+import { View, Image, TouchableOpacity, Text, StyleSheet, FlatList, Button } from 'react-native';
 import {
     launchImageLibrary,
     ImageLibraryOptions,
@@ -7,17 +7,19 @@ import {
 } from 'react-native-image-picker';
 
 export interface SelectedImagesProps {
-    imageList: { fileName: string; base64: string }[];
-    setSelectedImage: (index: number, asset: { fileName: string; base64: string }) => void;
+    imageList: any[];
+    onImagesSelected: (images: Asset[]) => void
     removeImage?: (index: number) => void;
     clearImages?: () => void;
-    loadingComponent?: React.ReactElement;
+    initialImageURL?: { name: string; downloadLink: string; }[];
 
 }
 
 
 
-const SelectedImages: React.FC<SelectedImagesProps> = ({ imageList, setSelectedImage, removeImage, clearImages, loadingComponent }) => {
+const SelectedImages: React.FC<SelectedImagesProps> = ({  onImagesSelected, removeImage, clearImages, initialImageURL }) => {
+
+    const [selectedImages, setSelectedImages] = useState<Asset[]>([])
 
 
 
@@ -25,82 +27,80 @@ const SelectedImages: React.FC<SelectedImagesProps> = ({ imageList, setSelectedI
         let options: ImageLibraryOptions = {
             mediaType: 'photo',
             includeBase64: true,
-            maxHeight: 200,
-            maxWidth: 200,
+            maxHeight: 800,
+            maxWidth: 800,
+            quality:1,
         };
 
         launchImageLibrary(options, response => {
-            if (response.assets) {
-                response.assets.forEach((asset, index) => {
-                    setSelectedImage(index + imageList.length, asset);
-                });
+            if (response.didCancel) {
+                console.log('User cancelled image picker');
+            } else if (response.errorCode) {
+                console.log('ImagePicker Error: ', response.errorCode);
             } else {
-                console.log('No images selected.');
+                const newImages: Asset[] = [...selectedImages, ...(response.assets ?? [])];
+                setSelectedImages(newImages);
+                onImagesSelected(newImages);
             }
-        });
+        })
+
+
     };
 
-    const handleClearImages = () => {
-        if (clearImages) {
-            clearImages();
-        }
+   
+
+
+    // const handleClearImages = () => {
+    //     if (clearImages) {
+    //         clearImages();
+    //     }
+    // };
+
+    // const [backup_imageList, setBackup_imageList] = useState([initialImageURL]);
+
+    // console.log("New Anh", backup_imageList);
+    
+
+    // const removeFirstImage = (array: any) => {
+    //     array.shift();
+    //     setBackup_imageList(array)
+    // }
+
+
+    const renderSelectedImages = ({ item }: { item: Asset }) => (
+        <Image source={{ uri: item.uri }} style={{ width: 100, height: 100 }} />
+    );
+
+    const renderInitialImage = () => {
+        if (!initialImageURL) return null;
+
+        return initialImageURL.map((imageData, index) => (
+            <Image key={index} source={{ uri: imageData.downloadLink }} style={{ width: 200, height: 200 }} />
+        ));
     };
-
-    const [backup_imageList, setBackup_imageList] = useState({});
-
-
-    const removeFirstImage = (array: any) => {
-        array.shift();
-        setBackup_imageList(array)
-    }
 
 
     return (
         <>
-            {imageList?.length > 0 && (
-                <TouchableOpacity
-                    style={styles.fullWidthContainer}
-                    onPress={() => setSelectedImage(0, imageList[0].downloadLink)}>
-                    <Image source={{ uri: imageList[0].downloadLink }} style={styles.fullWidthImage} />
-                    {/* {removeImage && ( */}
-                        <TouchableOpacity
-                            style={styles.removeButtonFull}
-                            onPress={() => removeFirstImage(imageList)}>
-                            <Image
-                                source={require('../../../assets/icons/delete.png')}
-                                style={styles.iconRemove}
-                            />
-                        </TouchableOpacity>
-                    {/* )} */}
-                </TouchableOpacity>
-            )}
-
-            <View style={styles.viewAdd}>
-                {imageList?.slice(1).map((image, index) => (
-                    <View key={index + 1}>
-                        <TouchableOpacity onPress={() => setSelectedImage(index + 1, image.downloadLink)}>
-                            <Image source={{ uri: image.downloadLink }} style={styles.smallImage} />
-                        </TouchableOpacity>
-                            <TouchableOpacity style={styles.removeButton} onPress={() => removeImage(index + 1)}>
-                                <Image source={require('../../../assets/icons/delete.png')} style={styles.iconRemove} />
-                            </TouchableOpacity>
-                    </View>
-                ))}
-            </View>
-
-            <View style={styles.displayCenter}>
-                <TouchableOpacity
-                    onPress={imagePickerHandler}
-                    style={styles.addImageButton}>
-                    <Text style={styles.text}>Add files</Text>
-                    <Image
-                        source={require('../../../assets/icons/1.png')}
-                        style={styles.iconPlus}
-                    />
-                </TouchableOpacity>
-                <TouchableOpacity onPress={handleClearImages}>
-                    <Text style={styles.text}>Clear Images</Text>
-                </TouchableOpacity>
+            <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }}>
+                {renderInitialImage()}
+                <FlatList
+                    data={selectedImages}
+                    renderItem={renderSelectedImages}
+                    keyExtractor={(item, index) => index.toString()}
+                    horizontal={true}
+                />
+                <View style={styles.displayCenter}>
+                    <TouchableOpacity
+                        onPress={imagePickerHandler}
+                        style={styles.addImageButton}>
+                        <Text style={styles.text}>Add files</Text>
+                        <Image
+                            source={require('../../../assets/icons/1.png')}
+                            style={styles.iconPlus}
+                        />
+                    </TouchableOpacity>
+                </View>
             </View>
         </>
     );
