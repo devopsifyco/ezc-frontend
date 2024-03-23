@@ -7,9 +7,7 @@ import ButtonChallenge from '../../components/ButtonChallenge';
 
 
 export default function GiftDetail({ navigation, route }: NavigateType) {
-
   const { giftId } = route.params
-
   const { data: Gifts } = useOneGift(giftId);
 
   const {
@@ -20,72 +18,65 @@ export default function GiftDetail({ navigation, route }: NavigateType) {
     image
   } = Gifts || {};
 
-
   const handleExchangeGift = () => {
     navigation.navigate('ExchangeGifts');
   };
 
-
-
-
-  // read more content
   const [showFullContent, setShowFullContent] = useState(false);
-
 
   const numberOfLinesToShow = 10;
 
   return (
-    <ScrollView style={styles.container}>
-      <View style={styles.header}>
-        <HeaderChallenge navigation={navigation} title='' />
-      </View>
-      <View style={styles.contain}>
-        <View style={styles.image}>
-          <View style={styles.wrapper_avatar}>
-            <Image source={{ uri: image?.downloadLink }} style={styles.avatar} />
-          </View>
+    <View style={styles.container}>
+      <ScrollView contentContainerStyle={styles.scrollViewContent}>
+        <View style={styles.header}>
+          <HeaderChallenge navigation={navigation} title='Address' />
         </View>
-        <View style={styles.list}>
-          <View style={styles.info}>
-            <Text style={styles.name}>{name}</Text>
-            <View style={styles.detailGroup} >
-              <View style={styles.textGroup}>
-                <Text style={styles.point}>Points:</Text>
-                <Text style={styles.num}>{points_required}</Text>
-              </View>
-              <Image source={require('../../assets/images/line-detail.png')}
-                style={styles.line} />
-              <View style={styles.textGroup}>
-                <Text style={styles.title}>Mode of receipt:</Text>
-                <Text style={styles.textMode}>Receive gifts at the nearest station</Text>
-              </View>
-            </View>
-            <View style={styles.content}>
-              <Text numberOfLines={showFullContent ? undefined : numberOfLinesToShow} style={styles.des}>{description}</Text>
-              {!showFullContent && (
-                <TouchableOpacity
-                  onPress={() => setShowFullContent(true)}
-                >
-                  <Text style={styles.readMore}>Read more</Text>
-                </TouchableOpacity>
-              )}
+        <View style={styles.contain}>
+          <View style={styles.image}>
+            <View style={styles.wrapper_avatar}>
+              <Image source={{ uri: image?.downloadLink }} style={styles.avatar} />
             </View>
           </View>
+          <View style={styles.list}>
+            <View style={styles.info}>
+              <Text style={styles.name}>{name}</Text>
+              <View style={styles.detailGroup}>
+                <View style={styles.textGroup}>
+                  <Text style={styles.point}>Points:</Text>
+                  <Text style={styles.num}>{points_required}</Text>
+                </View>
+                <Image source={require('../../assets/images/line-detail.png')} style={styles.line} />
+                <View style={styles.textGroup}>
+                  <Text style={styles.title}>Mode of receipt:</Text>
+                  <Text style={styles.textMode}>Receive gifts at the nearest station</Text>
+                </View>
+              </View>
+              <View style={styles.content}>
+                <Text numberOfLines={showFullContent ? undefined : numberOfLinesToShow} style={styles.des}>{description}</Text>
+                {!showFullContent && (
+                  <TouchableOpacity onPress={() => setShowFullContent(true)}>
+                    <Text style={styles.readMore}>Read more</Text>
+                  </TouchableOpacity>
+                )}
+              </View>
+            </View>
+          </View>
         </View>
-      </View>
-      <View style={styles.exchangeButtonContainer}>
-        <ButtonChallenge
-          title={"Next"}
-          onPress={handleExchangeGift}
-          buttonStyle={styles.Button}
-        />
-      </View>
-    </ScrollView >
+        <View style={styles.exchangeButtonContainer}>
+          <ButtonChallenge title={"Next"} onPress={handleExchangeGift} buttonStyle={styles.Button} />
+        </View>
+      </ScrollView>
+    </View>
   );
 }
-export const styles = StyleSheet.create({
+
+const styles = StyleSheet.create({
   container: {
     flex: 1,
+  },
+  scrollViewContent: {
+    flexGrow: 1,
   },
   header: {
     flexDirection: 'row',
@@ -98,6 +89,7 @@ export const styles = StyleSheet.create({
     display: "flex",
     flexDirection: "column",
     paddingHorizontal: 13,
+    paddingBottom: 100, // Dành cho nút Next
   },
   list: {
     display: "flex",
@@ -112,16 +104,13 @@ export const styles = StyleSheet.create({
     width: "100%",
     height: 230,
     marginBottom: 10,
-
   },
   avatar: {
     width: "100%",
     height: "100%",
     borderRadius: 5,
-  }
-  ,
-  info: {
   },
+  info: {},
   name: {
     color: "#000",
     fontSize: 18,
@@ -173,14 +162,15 @@ export const styles = StyleSheet.create({
     color: "#216C53"
   },
   exchangeButtonContainer: {
-    justifyContent: 'center',
-    alignItems:"center",
-    marginBottom: 20,
-    marginTop:"60%"
+    position: 'absolute',
+    bottom: 20, 
+    left: 0,
+    right: 0,
+    alignItems: 'center',
   },
   Button: {
-    width:200,
-    borderRadius:50,
-
+    width: 200,
+    borderRadius: 50,
   }
 });
+
