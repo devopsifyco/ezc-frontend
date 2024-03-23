@@ -1,8 +1,8 @@
 import React from 'react';
-import {NavigationContainer} from '@react-navigation/native';
+import { NavigationContainer } from '@react-navigation/native';
 import EZChallenge from './src/screens/EZChallenge';
-import {QueryClient, QueryClientProvider} from '@tanstack/react-query';
-import ParticipantScreen from './src/screens/ParticipantScreen';
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+
 
 
 
@@ -12,7 +12,7 @@ const App = () => {
   return (
     <QueryClientProvider client={queryClient}>
       <NavigationContainer>
-        <EZChallenge/>
+        <EZChallenge />
       </NavigationContainer>
     </QueryClientProvider>
   );

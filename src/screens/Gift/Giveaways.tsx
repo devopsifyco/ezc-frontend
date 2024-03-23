@@ -1,9 +1,9 @@
 import React from 'react';
-import { NavigateType } from '../models/Navigations';
+import { NavigateType } from '../../models/Navigations';
 import { View, StyleSheet, Text, TouchableOpacity, Image } from 'react-native';
-import HeaderChallenge from '../components/HeaderChallenge';
+import HeaderChallenge from '../../components/HeaderChallenge';
 
-export default function ExchangeGifts({ navigation }: NavigateType) {
+export default function Giveaways({ navigation }: NavigateType) {
   return (
     <View style={styles.container}>
       <View style={styles.header}>
@@ -13,7 +13,7 @@ export default function ExchangeGifts({ navigation }: NavigateType) {
         <TouchableOpacity style={styles.object} onPress={() => {
           navigation.navigate("ListGift")
         }}>
-          <Image source={require('../assets/images/icon-gift.png')} style={styles.icon} />
+          <Image source={require('../../assets/images/icon-gift.png')} style={styles.icon} />
           <View>
             <Text style={styles.name}>Gifts</Text>
             <Text style={styles.des}>Receive sustainable green gifts with GP</Text>
@@ -21,7 +21,7 @@ export default function ExchangeGifts({ navigation }: NavigateType) {
         </TouchableOpacity>
 
         <View style={styles.object}>
-          <Image source={require('../assets/images/icon-donate.png')}
+          <Image source={require('../../assets/images/icon-donate.png')}
             style={styles.icon}
           />
           <View>
