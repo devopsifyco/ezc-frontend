@@ -1,9 +1,9 @@
 import React from 'react';
 import { View, ScrollView, StyleSheet, Text, TouchableOpacity, Image } from 'react-native';
-import { NavigateType } from '../models/Navigations';
-import HeaderChallenge from '../components/HeaderChallenge';
-import { GiftData } from '../models/infGifts';
-import { useGetAllGifts } from '../hooks/useGift';
+import { NavigateType } from '../../models/Navigations';
+import HeaderChallenge from '../../components/HeaderChallenge';
+import { GiftData } from '../../models/infGifts';
+import { useGetAllGifts } from '../../hooks/useGift';
 
 export default function ListGift({ navigation }: NavigateType) {
 
@@ -19,7 +19,7 @@ export default function ListGift({ navigation }: NavigateType) {
         {
           Gifts?.map((Gift: GiftData, index: number) => (
             <TouchableOpacity key={index} style={styles.list} onPress={() => {
-              navigation.navigate("GiftDetail")
+              navigation.navigate("GiftDetail", {giftId: Gift._id})
             }}>
               <View style={styles.image}>
                 <Image source={{ uri: Gift.image?.downloadLink }}

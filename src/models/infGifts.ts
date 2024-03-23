@@ -1,4 +1,5 @@
 export interface GiftData {
+    _id: string,
     name: string,
     description: string,
     points_required: number,
