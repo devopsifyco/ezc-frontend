@@ -12,7 +12,6 @@ import GiftDetail from './Gift/GiftDetail';
 import SubProfileScreen from './profile/ProfileScreen';
 import EditProfile from './profile/EditProfile';
 import ChallengeDetail from './ChallengeDetail';
-
 import { Welcome, Welcome2, Welcome3 } from './Welcome';
 import RatingScreen from './RatingScreen';
 import ChatScreen from './ChatScreen';
@@ -24,12 +23,9 @@ import Status from './Status';
 import CreateChallenges from './challenges/create';
 import CheckIn from './challenges/checkin';
 import ParticipantScreen from './ParticipantScreen';
-<<<<<<< HEAD
 import Giveaways from './Gift/Giveaways';
 import ExChangeGift from './Gift/ExChangeGift';
-=======
 import DonationScreen from './donate';
->>>>>>> EZC-547-donate
 
 
 const Stack = createNativeStackNavigator();
