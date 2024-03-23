@@ -7,3 +7,11 @@ export interface GiftData {
     image: {name: string, downloadLink: string},
 
 }
+
+export interface ExChangeData {
+    email: string,
+    gift_id: string,
+    fullname: string,
+    phone: string,
+    address: string
+}

@@ -29,7 +29,12 @@ export default function ListGift({ navigation }: NavigateType) {
               <View style={styles.info}>
                 <Text style={styles.name}>{Gift.name}</Text>
                 <View style={styles.pointGroup}>
-                  <Text style={styles.point}>Points:{Gift.points_required}</Text>
+                  <Text style={styles.point}>Points:</Text>
+                  <Text style={[styles.text15, { color: "#216C53" }]}>{Gift.points_required}</Text>
+                </View>
+                <View style={styles.pointGroup}>
+                  <Text style={styles.point}>Quantity:</Text>
+                  <Text style={[styles.text15, { color: "#216C53" }]}>{Gift.quantity}</Text>
                 </View>
                 <Text style={styles.des}>Hình thức nhận: Nhận quà tại Trạm gần nhất</Text>
               </View>
@@ -87,10 +92,9 @@ export const styles = StyleSheet.create({
     flexDirection: "row",
   },
   point: {
-    fontSize: 16,
+    fontSize: 15,
     fontWeight: "bold",
     color: "#000",
-    marginTop: 10,
   },
   num: {
     color: "#216C53",
@@ -104,5 +108,8 @@ export const styles = StyleSheet.create({
     marginTop: 10,
     width: 250,
     fontSize:13
+  },
+  text15:{
+    fontSize:15
   }
 });
