@@ -10,20 +10,21 @@ import WarningComponent from '../components/WarningComponent';
 import Moment from 'moment';
 import { DataProfile } from '../models/Profile';
 import useParticipant from '../hooks/useParticipant';
+import CheckIn from './challenges/checkin';
 
 
 const ChallengeDetail = ({ navigation, route }: NavigateType) => {
 
   const { id, isJoined } = route.params
 
-  
+
   const { data, isLoading } = useParticipant({ id });
   const { data: participantData, isLoading: participantIsLoading, isError: participantIsError } = useParticipant({ id });
   const [filteredData, setFilteredData] = useState([]);
   const { mutate: JoinChallenge, error: errChallenge, } = useJoinChallenge();
   const { mutate: CompleteChallenge, error: errorComplete } = useCompleteChallenge();
 
-  const { data: Challenge, isError, isPending} = useOneChallenges(id);
+  const { data: Challenge, isError, isPending } = useOneChallenges(id);
 
   const [isModalVisible, setModalVisible] = React.useState(false);
   const [nameActionButton, setNameActionButton] = useState("Join");
@@ -49,6 +50,10 @@ const ChallengeDetail = ({ navigation, route }: NavigateType) => {
   const handleCheckIn = () => {
     navigation.navigate('CheckIn', { id: id });
   };
+
+  const handleDonate = () => {
+    navigation.navigate('DonationScreen')
+  }
 
   useEffect(() => {
     if (participantData) {
@@ -103,16 +108,20 @@ const ChallengeDetail = ({ navigation, route }: NavigateType) => {
 
   };
 
-  // handle complete challenge
-
   const handleFinishChallenge = () => {
     CompleteChallenge({ email: owner_id?.email, id: id }, {
       onSuccess: () => navigation.goBack()
     })
   }
 
+  const handleButtonPress = () => {
+    if (firstButton === 'Donation') {
+      handleDonate()
+    } else {
+      handleCheckIn();
+    }
+  }
 
-  // read more content
   const [showFullContent, setShowFullContent] = useState(false);
 
 
@@ -180,7 +189,7 @@ const ChallengeDetail = ({ navigation, route }: NavigateType) => {
 
         <View style={styles.wrapped_button}>
           <ButtonChallenge
-            onPress={handleCheckIn}
+            onPress={handleButtonPress}
             title={firstButton}
             buttonStyle={{ width: 120 }}
           />

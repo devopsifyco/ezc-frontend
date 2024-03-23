@@ -25,6 +25,7 @@ import Status from './Status';
 import CreateChallenges from './challenges/create';
 import CheckIn from './challenges/checkin';
 import ParticipantScreen from './ParticipantScreen';
+import DonationScreen from './donate';
 
 
 const Stack = createNativeStackNavigator();
@@ -58,6 +59,7 @@ export default function EZChallenge() {
         <Stack.Screen name="CreateChallenges" component={CreateChallenges} />
         <Stack.Screen name='CheckIn' component={CheckIn} />
         <Stack.Screen name="Participant" component={ParticipantScreen} />
+        <Stack.Screen name='DonationScreen' component={DonationScreen} />
       </Stack.Group>
     </Stack.Navigator>
   );
