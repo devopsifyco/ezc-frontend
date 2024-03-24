@@ -70,12 +70,14 @@ export function useExchangeGift() {
         });
         return res.data;
       } catch (error: any) {
-        throw error?.response.data.message;
+
+        throw error?.response.data;
       }
     },
     onSuccess: () => {
       console.log('Successful ExChange gift');
       queryClient.invalidateQueries({ queryKey: ['getGift'] });
+      queryClient.invalidateQueries({ queryKey: ['dataProfile'] });
 
     },
     onError: (error: any) => {

@@ -6,13 +6,14 @@ import { NavigateType } from '../../models/Navigations';
 import { useOneGift, useExchangeGift } from '../../hooks/useGift';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { ExChangeData } from '../../models/infGifts';
-
+import ModalPoup from '../../components/ModalPoup';
 
 const ExChangeGift = ({ navigation, route }: NavigateType) => {
     const { giftId } = route.params;
     const { data: Gifts } = useOneGift(giftId);
-    const { mutate: DataExChangeGift } = useExchangeGift();
+    const { mutate: DataExChangeGift, error: errExchange } = useExchangeGift();
     const [emailInput, setEmailInput] = useState<string>('');
+
 
     const getEmailUser = async () => {
         try {
@@ -35,7 +36,7 @@ const ExChangeGift = ({ navigation, route }: NavigateType) => {
         setDataInput(initialData);
     }, [emailInput]);
 
-    
+
     const initialData: ExChangeData = {
         email: emailInput,
         gift_id: giftId,
@@ -52,10 +53,10 @@ const ExChangeGift = ({ navigation, route }: NavigateType) => {
 
     const [dataInput, setDataInput] = useState<ExChangeData>(initialData);
     const [inputErrors, setInputErrors] = useState<Record<string, string>>({});
-    
+
     const handleExchangeGift = async () => {
         try {
-            
+
             const inputValidationErrors: Record<string, string> = {};
             Object.keys(dataInput).forEach(key => {
                 if (!dataInput[key]) {
@@ -71,6 +72,8 @@ const ExChangeGift = ({ navigation, route }: NavigateType) => {
                 setInputErrors(inputValidationErrors);
             } else {
                 await DataExChangeGift({ ...dataInput });
+                setVisible(true)
+
             }
         } catch (error) {
             console.log("Error exchanging gift:", error);
@@ -97,6 +100,12 @@ const ExChangeGift = ({ navigation, route }: NavigateType) => {
 
         setInputErrors(newErrors);
     }
+    // hadle modal pop-up
+    const [visible, setVisible] = useState(false);
+
+    const showWarningPopup = () => {
+        setVisible(true);
+    };
 
     return (
         <View style={styles.container}>
@@ -170,11 +179,33 @@ const ExChangeGift = ({ navigation, route }: NavigateType) => {
                         <ButtonChallenge
                             buttonStyle={styles.ButtonStyle}
                             title='Exchange Gifts'
-                            onPress={handleExchangeGift}
+                            onPress={errExchange ? showWarningPopup : handleExchangeGift}
                         />
                     </View>
                 </View>
             </ScrollView>
+            <ModalPoup visible={visible}>
+                <View style={{ alignItems: 'center' }}>
+                    {errExchange ?
+                        <Image source={require('../../assets/images/warning.png')} style={{ width: 150, height: 150 }} /> :
+                        <Image source={require('../../assets/images/successful.png')} style={{ width: 150, height: 150 }} />
+                    }
+                </View>
+                <Text style={{ marginTop: 20, fontSize: 20, textAlign: 'center', color: '#000000', fontWeight: '600' }}>
+                    {errExchange ? 'Gift exchange failes' : "Gift exchange successful"}
+                </Text>
+                <Text style={{ textAlign: 'center', paddingHorizontal: 10, fontSize: 13 }}>
+                    {errExchange ? errExchange : `Gift redeemed successfully.\nThanks for choosing us.`}
+                </Text>
+                <View style={{ paddingHorizontal: 20, marginTop: 20 }}>
+                    <ButtonChallenge
+                        buttonStyle={{ width: '100%', borderRadius: 50 }}
+                        title='Back to Home'
+                        onPress={() => navigation.navigate('EZChallenge')}
+                        textStyle={{ fontSize: 20 }}
+                    />
+                </View>
+            </ModalPoup>
         </View>
     );
 }
@@ -184,13 +215,13 @@ export default ExChangeGift;
 const styles = StyleSheet.create({
     container: {
         flex: 1,
-        paddingHorizontal:13,
-        paddingTop:13,
+        paddingHorizontal: 13,
+        paddingTop: 13,
         flexDirection: "column",
         justifyContent: "space-between"
     },
     wrap_header: {
-        marginBottom:20
+        marginBottom: 20
     },
     wrap_content: {
     },
@@ -254,14 +285,14 @@ const styles = StyleSheet.create({
     },
     ButtonStyle: {
         borderRadius: 50,
-        height:50
+        height: 50
     },
     buttonContainer: {
         width: '70%',
         paddingHorizontal: 20,
-        marginBottom: 20 
+        marginBottom: 20
     },
     errorText: {
-        color:"red"
+        color: "red"
     }
 })

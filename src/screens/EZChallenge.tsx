@@ -27,7 +27,6 @@ import ParticipantScreen from './ParticipantScreen';
 import Giveaways from './Gift/Giveaways';
 import ExChangeGift from './Gift/ExChangeGift';
 
-
 const Stack = createNativeStackNavigator();
 
 export default function EZChallenge() {

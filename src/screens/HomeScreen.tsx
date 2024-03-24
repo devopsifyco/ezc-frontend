@@ -44,7 +44,7 @@ const HomeScreen: React.FC<NavigateType> = ({ navigation }) => {
         </TouchableOpacity>
       </View>
 
-      <ScrollView >
+      <ScrollView  showsVerticalScrollIndicator={false}>
         <View style={{ height: 150 }}>
           <Slides />
         </View>
