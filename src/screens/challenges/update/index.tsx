@@ -68,12 +68,8 @@ const UpdateChallenges = ({ navigation, route }: NavigateType) => {
       if (editedChallenge && startTime) {
         const combinedStartTime = combineDateTime(startTime, startTime);
         const combinedEndTime = combineDateTime(endTime, endTime);
-        console.log("Day,", combinedStartTime);
-
         const startTimeAsDate = new Date(combinedStartTime);
         const endTimeAsDate = new Date(combinedEndTime);
-        console.log("Day select", startTimeAsDate);
-
         await updateMutate({
           ...editedChallenge,
           id,
