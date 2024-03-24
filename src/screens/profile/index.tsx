@@ -1,45 +1,102 @@
-import React from 'react';
-import {Text, View, StyleSheet, Image} from 'react-native';
+import React, { useEffect, useState } from 'react';
+import {
+  Text,
+  View,
+  StyleSheet,
+  Image,
+  TouchableOpacity,
+} from 'react-native';
+import HeaderProfile from '../../components/HeaderProfile';
+import { NavigateType } from '../../models/Navigations';
+import AboutScreen from './AboutScreen';
+import ChallengeScreen from './ChallengeScreen';
+import useProfile from '../../hooks/useProfile';
+import JoinedScreen from './JoinedScreen';
+import { useGetHasJoinedChallenges } from '../../hooks/useChallenge';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
+import { faBars } from '@fortawesome/free-solid-svg-icons';
 
-const DATA = {
-  name: 'A Tien',
-  image: require('../../assets/profile/atien.jpg'),
-  flowing: 345,
-  flower: 55,
-  des: 'Em sống vì cộng đồng nên là thằng nào có tiền thì donate cho tao. Ít thì 5 quả trứng nhiều thì 1 quả tên lửa. Chúng mày nhớ chưa',
-  interest: ['Game Online', 'Music', 'Reading Book', 'Foot ball'],
-};
+export default function ProfileScreen({ navigation }: NavigateType) {
+  const [id_owner, setIdOwner] = useState<string | null>(null);
+  const [selectedTab, setSelectedTab] = useState('ABOUT');
+  const { data: dataProfile, isLoading } = useProfile();
+  const { data: hasJoined, mutate: getHasJoined } = useGetHasJoinedChallenges();
 
-export default function ProfileScreen() {
-  const {name, image, flower, flowing, des, interest} = DATA;
+  useEffect(() => {
+    const getOwnerId = async () => {
+      try {
+        const id_owner = await AsyncStorage.getItem('id_owner');
+        setIdOwner(id_owner);
+      } catch (error) {
+        console.error('Lỗi khi lấy giá trị từ AsyncStorage:', error);
+      }
+    };
+
+    getOwnerId();
+  }, []);
+
+  useEffect(() => {
+    getHasJoined();
+  }, [getHasJoined]);
+
 
   return (
     <View style={styles.container}>
+      <View style={styles.header}>
+        <HeaderProfile navigation={navigation} />
+        <TouchableOpacity
+          onPress={() => navigation.navigate('SubProfileScreen', { dataProfile })}>
+          <FontAwesomeIcon icon={faBars} size={32} color='#216C53' />
+        </TouchableOpacity>
+      </View>
       <View style={styles.profile}>
-        <Image source={image} style={styles.profileImage} />
-        <Text style={styles.profileName}>{name}</Text>
+        <Image
+          source={dataProfile?.avatar.name ? { uri: dataProfile.avatar.name } : require('../../assets/profile/defaultAvatar.jpg')}
+          style={styles.profileImage}
+        />
+
+        <Text style={styles.profileName}>{dataProfile?.username}</Text>
         <View style={styles.numberStatus}>
-          <View style={styles.itemFlowing}>
-            <Text style={styles.itemNumber}>{flowing}</Text>
-            <Text style={styles.titleMedium}>Flowing</Text>
+          <View style={styles.itemfllowing}>
+            <Text style={styles.itemNumber}>{dataProfile?.points}</Text>
+            <Text style={styles.titleMedium}>Points</Text>
           </View>
           <View style={styles.arrowMiddle} />
-          <View style={styles.itemFlower}>
-            <Text style={styles.itemNumber}>{flower}</Text>
-            <Text style={styles.titleMedium}>Flower</Text>
+          <View style={styles.itemfllower}>
+            <Text style={styles.itemNumber}>{hasJoined?.userChallenges ? hasJoined?.userChallenges.length : 0}</Text>
+            <Text style={styles.titleMedium}>Challenges</Text>
           </View>
         </View>
       </View>
-      <Text style={styles.titleLarge}>About me</Text>
-      <Text style={styles.description}>{des}</Text>
-      <View>
-        <Text style={styles.titleLarge}>Interests</Text>
-        {interest.map((item, index) => (
-          <Text key={index} style={styles.interestItem}>
-            {item}
-          </Text>
-        ))}
+      <View style={styles.listActions}>
+        <TouchableOpacity
+          onPress={() => setSelectedTab('ABOUT')}
+          style={[styles.tab, selectedTab === 'ABOUT' && styles.selectedTab]}>
+          <Text style={styles.titleLarge}>ABOUT</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => setSelectedTab('CHALLENGE')}
+          style={[
+            styles.tab,
+            selectedTab === 'CHALLENGE' && styles.selectedTab,
+          ]}>
+          <Text style={styles.titleLarge}>CHALLENGE</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => setSelectedTab('JOINED')}
+          style={[
+            styles.tab,
+            selectedTab === 'JOINED' && styles.selectedTab,
+          ]}
+        >
+          <Text style={styles.titleLarge}>JOINED</Text>
+        </TouchableOpacity>
       </View>
+
+      {selectedTab === 'ABOUT' && <AboutScreen data={dataProfile} />}
+      {selectedTab === 'CHALLENGE' && <ChallengeScreen navigation={navigation} desiredOwnerId={id_owner} />}
+      {selectedTab === 'JOINED' && <JoinedScreen navigation={navigation} />}
     </View>
   );
 }
@@ -47,7 +104,13 @@ export default function ProfileScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 16,
+    paddingHorizontal: 5,
+    paddingTop: 20,
+  },
+  header: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingHorizontal: 20,
   },
   profile: {
     alignItems: 'center',
@@ -59,7 +122,7 @@ const styles = StyleSheet.create({
     borderRadius: 50,
   },
   profileName: {
-    fontSize: 18,
+    fontSize: 26,
     fontWeight: 'bold',
     marginVertical: 8,
     color: '#120D26',
@@ -67,12 +130,12 @@ const styles = StyleSheet.create({
   numberStatus: {
     flexDirection: 'row',
     justifyContent: 'space-around',
-    width: '50%',
+    gap: 10,
   },
-  itemFlowing: {
+  itemfllowing: {
     alignItems: 'center',
   },
-  itemFlower: {
+  itemfllower: {
     alignItems: 'center',
   },
   itemNumber: {
@@ -80,15 +143,12 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: '#120D26',
   },
-  description: {
-    marginBottom: 16,
-    color: '#120D26',
-  },
+
   titleLarge: {
     fontSize: 16,
     fontWeight: 'bold',
     marginBottom: 8,
-    color: '#120D26',
+    color: '#216C53',
   },
   interestItem: {
     fontSize: 14,
@@ -105,5 +165,27 @@ const styles = StyleSheet.create({
     width: 1,
     height: 45,
     backgroundColor: '#120D26',
+  },
+  interestList: {},
+  listActions: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    paddingHorizontal: 20,
+
+  },
+  actionInteraction: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    paddingHorizontal: 20,
+
+  },
+  tab: {
+    flex: 1,
+    alignItems: 'center',
+  },
+  selectedTab: {
+    borderBottomWidth: 2,
+    borderColor: '#216C53',
+    width: 50,
   },
 });

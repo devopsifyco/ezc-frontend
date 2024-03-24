@@ -1,8 +1,19 @@
-import {StyleSheet} from 'react-native';
+import { StyleSheet } from 'react-native';
 
 export const styles = StyleSheet.create({
   container: {
     flex: 1,
+    alignItems: 'center',
+  },
+  displayLoading: {
+    position: 'absolute',
+    zIndex: 12,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#2C3550',
+    opacity: 0.6,
+    width: '100%',
+    height: '100%',
   },
   logo: {
     marginTop: 30,
@@ -11,7 +22,10 @@ export const styles = StyleSheet.create({
     color: '#A4A4A4',
     fontSize: 11.5,
   },
-  imageBackground: {},
+  imageBackground: {
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   formBackground: {
     backgroundColor: '#216C53',
     borderTopLeftRadius: 20,
@@ -19,12 +33,13 @@ export const styles = StyleSheet.create({
     paddingHorizontal: '6.3%',
     position: 'absolute',
     bottom: '0%',
+    width: '100%',
   },
   formContainer: {
     paddingTop: 20,
     paddingBottom: 20,
   },
-  formInput: {paddingBottom: 10, gap: 10},
+  formInput: { paddingBottom: 10, gap: 10 },
   inputContainter: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -38,21 +53,78 @@ export const styles = StyleSheet.create({
     width: 210,
   },
   options: {},
-  setCenter: {},
+  setCenter: {
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   tileWhiteColor: {},
-  titleBold: {fontWeight: 'bold'},
+  titleBold: { fontWeight: 'bold' },
   textRegister: {
     color: '#FFFFFF',
     top: 3.5,
   },
   moreLogin: {},
-  displayOneline: {},
-  moreOption: {flexDirection: 'row', justifyContent: 'space-between'},
+  displayOneline: {
+    flexDirection: 'row',
+    gap: 4,
+  },
+  moreOption: { flexDirection: 'row', justifyContent: 'space-between' },
   errorText: {
     color: 'red',
   },
-  inputVerify: {},
-  titleLarge: {},
+  formInputVerify: {},
+  inputVerifyContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-around',
+    gap: 25,
+  },
+  inputVerify: {
+    backgroundColor: 'rgba(63, 218, 133, 0.2)',
+    width: 57,
+    height: 57,
+    borderRadius: 10,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  titleLarge: { fontSize: 24 },
   itemVerify: {},
-  //passwordIcon: {paddingLeft: 85},
+  resendCode: {
+    flexDirection: 'row',
+    gap: 4,
+  },
+  displayCenter: {
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  modalContainer: {
+    backgroundColor: '#216C53',
+    height: 130,
+    width: '80%',
+    borderRadius: 10,
+    alignSelf: 'center',
+    top: '40%',
+  },
+  modalContent: {
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  modalText: {
+    paddingHorizontal: 20,
+    paddingVertical: 10,
+    color: '#FFFFFF',
+    fontSize: 16,
+    textAlign: 'center',
+  },
+  modalButton: {
+    width: 55,
+    height: 35,
+    backgroundColor: 'grey',
+    borderRadius: 15,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  modalButtonText: {
+    color: 'white',
+  },
 });

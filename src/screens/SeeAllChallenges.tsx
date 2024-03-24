@@ -1,28 +1,16 @@
 import { StyleSheet, Text, View, Image, TouchableOpacity, FlatList } from 'react-native'
 import react, { useEffect, useState } from 'react';
 import { NavigateType } from '../models/Navigations';
-import { Challenge } from '../models/InfChallenge';
 import ListCard from '../components/ListCard';
-import axios from 'axios';
+import { useGetAllChallenges } from '../hooks/useChallenge';
 
 const SeeAllChallenges = ({ navigation }: NavigateType) => {
 
-  const [challenges, setChallenges] = useState<Challenge[]>([]);
+  const { data: challenges} = useGetAllChallenges();
+  const handlePress = (id: string) => {
+    navigation.navigate('ChallengeDetail', { id });
+  };
 
-  useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await axios.get(
-          'https://63aa9cf2fdc006ba6046fb58.mockapi.io/challenges',
-        );
-        setChallenges(response.data);
-      } catch (error) {
-        console.error('Error fetching challenges:', error);
-      }
-    };
-
-    fetchData();
-  }, []);
   return (
     <View style={styles.container}>
       <View style={styles.header}>
@@ -36,16 +24,23 @@ const SeeAllChallenges = ({ navigation }: NavigateType) => {
         <FlatList
           data={challenges}
           showsVerticalScrollIndicator={false}
-          keyExtractor={(item) => item.id}
+          keyExtractor={(item, index) => index.toString()}
           contentContainerStyle={{ flexGrow: 1 }}
-          renderItem={({ item }) => (
+          renderItem={({ item, index }) => (
             <ListCard
-              date={item.Days}
-              title={item.name}
-              location={item.Address}
-              images={item.images}
+              id={item._id}
+              key={item.id ? item.id.toString() : index.toString()}
+              start_time={item.start_time}
+              end_time={item.end_time}
+              title={item.title}
+              company={item.company}
+              address={item.address}
+              images_path={item.images_path}
+              isLive={item.isLive}
+              points_reward={item.points_reward}
+              description={item.description}
+              onPress={() => handlePress(item._id)}
             />
-
           )}
         />
       </View>
