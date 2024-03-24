@@ -19,11 +19,20 @@ import { NavigateType } from '../models/Navigations';
 
 
 import { useGetAllChallenges } from '../hooks/useChallenge';
+import useGetAllNotificationOfUser from '../hooks/useGetAllNotificationOfUser';
 
 
 const HomeScreen: React.FC<NavigateType> = ({ navigation }) => {
-
+  const { data: DATANOTIFICATIONS } = useGetAllNotificationOfUser();
   const { data: challenges } = useGetAllChallenges();
+  const [unreadCount, setUnreadCount] = useState(0);
+
+  useEffect(() => {
+    if (DATANOTIFICATIONS) {
+      const count = DATANOTIFICATIONS.filter((item: any) => !item.read).length;
+      setUnreadCount(count);
+    }
+  }, [DATANOTIFICATIONS]);
 
 
   const handleNotificationPress = () => {
@@ -41,6 +50,8 @@ const HomeScreen: React.FC<NavigateType> = ({ navigation }) => {
         <Text style={styles.titles}>Home</Text>
         <TouchableOpacity onPress={handleNotificationPress}>
           <FontAwesomeIcon icon={faBell} size={28} color='#FF890B' />
+          {unreadCount > 0 && <View style={styles.notificateContainer}>
+            <Text style={styles.numberNotificate}>{unreadCount}</Text></View>}
         </TouchableOpacity>
       </View>
 
@@ -156,5 +167,20 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: '500',
     color: '#120D26',
+  },
+  notificateContainer: {
+    position: 'absolute',
+    width: 15, height: 15,
+    justifyContent: 'center',
+    alignItems: 'center',
+    top: -8,
+    right: -6,
+    backgroundColor: 'red',
+    borderRadius: 40,
+
+  },
+  numberNotificate: {
+    color: 'white',
+    fontSize: 10,
   },
 })

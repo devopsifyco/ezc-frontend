@@ -12,7 +12,6 @@ import GiftDetail from './Gift/GiftDetail';
 import SubProfileScreen from './profile/ProfileScreen';
 import EditProfile from './profile/EditProfile';
 import ChallengeDetail from './ChallengeDetail';
-
 import { Welcome, Welcome2, Welcome3 } from './Welcome';
 import RatingScreen from './RatingScreen';
 import ChatScreen from './ChatScreen';
@@ -26,6 +25,7 @@ import CheckIn from './challenges/checkin';
 import ParticipantScreen from './ParticipantScreen';
 import Giveaways from './Gift/Giveaways';
 import ExChangeGift from './Gift/ExChangeGift';
+import DonationScreen from './donate';
 
 const Stack = createNativeStackNavigator();
 
@@ -59,6 +59,7 @@ export default function EZChallenge() {
         <Stack.Screen name="CreateChallenges" component={CreateChallenges} />
         <Stack.Screen name='CheckIn' component={CheckIn} />
         <Stack.Screen name="Participant" component={ParticipantScreen} />
+        <Stack.Screen name='DonationScreen' component={DonationScreen} />
       </Stack.Group>
     </Stack.Navigator>
   );
