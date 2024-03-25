@@ -117,7 +117,7 @@ export default function DonationScreen() {
                     <ButtonChallenge
                         buttonStyle={{ width: '100%', borderRadius: 50 }}
                         title='Back to Home'
-                        onPress={() => navigation.navigate('EZChallenge')}
+                        onPress={() => navigation.goBack()}
                         textStyle={{ fontSize: 20 }}
                     />
                 </View>
