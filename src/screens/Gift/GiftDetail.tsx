@@ -18,8 +18,8 @@ export default function GiftDetail({ navigation, route }: NavigateType) {
     image
   } = Gifts || {};
 
-  const handleExchangeGift = () => {
-    navigation.navigate('ExchangeGifts');
+  const handleExchangeGift = (giftId: string) => {
+    navigation.navigate('ExchangeGifts', { giftId });
   };
 
   const [showFullContent, setShowFullContent] = useState(false);
@@ -64,7 +64,7 @@ export default function GiftDetail({ navigation, route }: NavigateType) {
           </View>
         </View>
         <View style={styles.exchangeButtonContainer}>
-          <ButtonChallenge title={"Next"} onPress={handleExchangeGift} buttonStyle={styles.Button} />
+          <ButtonChallenge title={"Next"} onPress={() => handleExchangeGift(giftId)} buttonStyle={styles.Button} />
         </View>
       </ScrollView>
     </View>
