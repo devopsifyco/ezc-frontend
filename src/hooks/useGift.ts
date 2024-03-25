@@ -99,7 +99,7 @@ export function useHistoryExChangeGift() {
         const email = await AsyncStorage.getItem('email');
         const newEmail = email ? email.replace(/["']/g, '') : '';
         const token = await AsyncStorage.getItem("accessToken");
-        const res = await axios.get(`${EZCHALLENG_API}/gift/history/${newEmail}`,
+        const res = await axios.get(`${EZCHALLENGE_API}/gift/history/${newEmail}`,
           {
             headers: {
               'Content-Type': 'application/json',
