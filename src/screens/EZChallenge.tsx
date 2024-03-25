@@ -4,7 +4,7 @@ import LoginScreen from './LoginScreen';
 import RegisterScreen from './RegisterScreen';
 import VerifyRegisterScreen from './VerifyRegisterScreen';
 import ForgotPassword from './ForgotPassword';
-import BottomTabs from '../models/routers/BottomTabs';
+import BottomTabs from '../routers/BottomTabs';
 import SeeAllChallenges from './SeeAllChallenges';
 import SeeAllLive from './SeeAllLive';
 import ListGift from './Gift/SubExChangeGift';

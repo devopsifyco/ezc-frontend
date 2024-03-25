@@ -167,7 +167,7 @@ const styles = StyleSheet.create({
     },
     button: {
         paddingHorizontal: 20,
-        top: 260,
+        top: 45,
     },
     displayOneLine: {
         flexDirection: 'row',
