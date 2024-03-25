@@ -30,7 +30,7 @@ export default function ParticipantScreen({ navigation, route }: NavigateType) {
     }
 
     return (
-        <ScrollView style={styles.container}>
+        <ScrollView contentContainerStyle={styles.container}>
             <View style={styles.header}>
                 <HeaderChallenge title='Participant' navigation={navigation} />
             </View>
@@ -45,37 +45,37 @@ export default function ParticipantScreen({ navigation, route }: NavigateType) {
                     />
                 </View>
             </View>
-            {
-                filteredData.length > 0 ?
-                    (<View style={styles.listParticipant}>
-                        {filteredData.map((user: DataProfile) => (
-                            <View style={styles.itemParticipant} key={user._id}>
-                                <View style={styles.itemInfo}>
-                                    <View style={styles.InfoDetail}>
-                                        <Image
-                                            source={{ uri: user.avatar.downloadLink }}
-                                            style={styles.avatar}
-                                        />
-                                        <View>
-                                            <Text style={styles.name}>{user.username}</Text>
-                                            <Text style={styles.challengemail}>{user.email}</Text>
+                {
+                    filteredData.length > 0 ?
+                        (<View style={styles.listParticipant}>
+                            {filteredData.map((user: DataProfile) => (
+                                <View style={styles.itemParticipant} key={user._id}>
+                                    <View style={styles.itemInfo}>
+                                        <View style={styles.InfoDetail}>
+                                            <Image
+                                                source={{ uri: user.avatar.downloadLink }}
+                                                style={styles.avatar}
+                                            />
+                                            <View>
+                                                <Text style={styles.name}>{user.username}</Text>
+                                                <Text style={styles.challengemail}>{user.email}</Text>
+                                            </View>
                                         </View>
                                     </View>
                                 </View>
-                            </View>
-                        ))}
-                    </View>) :
-                    (<View style={{ alignItems: 'center', justifyContent: "center" }}>
-                        <Image source={require('../assets/images/novarible.png')} style={{ width: 250, height: 250 }} />
-                    </View>)
-            }
+                            ))}
+                        </View>) :
+                        (<View style={{ alignItems: 'center', justifyContent: "center" }}>
+                            <Image source={require('../assets/images/novarible.png')} style={{ width: 250, height: 250 }} />
+                        </View>)
+                }
         </ScrollView>
     );
 }
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
+        flexGrow: 1,
 
     },
     listParticipant: {
@@ -93,6 +93,7 @@ const styles = StyleSheet.create({
         elevation: 20,
         borderRadius: 15,
         flex: 1,
+        zIndex: 999
     },
 
     name: {

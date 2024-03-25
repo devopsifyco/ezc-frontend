@@ -369,6 +369,7 @@ const styles = StyleSheet.create({
     marginTop: 5,
     borderRadius: 15,
     marginHorizontal: 20,
+    marginBottom:10
   },
   itemParticipant: {
     flexDirection: 'row',
