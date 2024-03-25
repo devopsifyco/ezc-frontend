@@ -6,8 +6,8 @@ import Swiper from 'react-native-swiper';
 const slideData = [
     { id: 1, imageUrl: require('../assets/slides.jpg'), title: 'Slide 1' },
     { id: 2, imageUrl: require('../assets/home/back-ground-slider.png'), title: 'Slide 2' },
-    { id: 3, imageUrl: require('../assets/home/back-ground-slider-3.png'), title: 'Slide 3' },
-    { id: 3, imageUrl: require('../assets/home/back-round-animate-1.png'), title: 'Slide 4' },
+    //{ id: 3, imageUrl: require('../assets/home/back-ground-slider-3.png'), title: 'Slide 3' },
+    //{ id: 3, imageUrl: require('../assets/home/back-round-animate-1.png'), title: 'Slide 4' },
 ];
 
 

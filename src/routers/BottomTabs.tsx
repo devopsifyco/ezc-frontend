@@ -2,7 +2,6 @@ import React from 'react';
 import { StyleSheet, View } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import HomeScreen from '../screens/HomeScreen';
-import ExploreScreen from '../screens/ExploreScreen';
 import MapScreen from '../screens/MapScreen';
 import EmptyScreen from '../screens/EmtyScreen';
 import ProfileScreen from '../screens/profile';
@@ -14,6 +13,7 @@ import {
   faUser,
 } from '@fortawesome/free-solid-svg-icons';
 import PlusButton from '../components/PlusButton';
+import DonationScreen from '../screens/donate';
 
 const Tab = createBottomTabNavigator();
 
@@ -34,7 +34,7 @@ export default function BottomTabs() {
 
             if (rn === 'HomeScreen') {
               icon = faHouse;
-            } else if (rn === 'ExploreScreen') {
+            } else if (rn === 'DonationScreen') {
               icon = faDonate;
             } else if (rn === 'MapScreen') {
               icon = faLocationDot;
@@ -61,8 +61,8 @@ export default function BottomTabs() {
           options={{ headerShown: false }}
         />
         <Tab.Screen
-          name="ExploreScreen"
-          component={ExploreScreen}
+          name="DonationScreen"
+          component={DonationScreen}
           options={{ headerShown: false }}
         />
         <Tab.Screen
