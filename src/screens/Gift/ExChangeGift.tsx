@@ -194,7 +194,7 @@ const ExChangeGift = ({ navigation, route }: NavigateType) => {
                 <Text style={{ marginTop: 20, fontSize: 20, textAlign: 'center', color: '#000000', fontWeight: '600' }}>
                     {errExchange ? 'Gift exchange failes' : "Gift exchange successful"}
                 </Text>
-                <Text style={{ textAlign: 'center', paddingHorizontal: 10, fontSize: 13 }}>
+                <Text style={{ textAlign: 'center', paddingHorizontal: 10, fontSize: 13, color: "#828282" }}>
                     {errExchange ? errExchange : `Gift redeemed successfully.\nThanks for choosing us.`}
                 </Text>
                 <View style={{ paddingHorizontal: 20, marginTop: 20 }}>
