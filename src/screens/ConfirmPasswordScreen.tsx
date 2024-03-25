@@ -1,11 +1,11 @@
-import React, {useRef} from 'react';
-import {Image, Text, TextInput, View} from 'react-native';
-import Button from '../components/Button';
-import {styles} from '../styles/signin-signup';
-import {NavigateType} from '../models/Navigations';
-import {useForm, Controller} from 'react-hook-form';
+import React, { useRef } from 'react';
+import { Image, Text, TextInput, View } from 'react-native';
+import { Button } from '../components/Button';
+import { styles } from '../styles/signin-signup';
+import { NavigateType } from '../models/Navigations';
+import { useForm, Controller } from 'react-hook-form';
 
-export default function ConfirmPasswordScreen({navigation}: NavigateType) {
+export default function ConfirmPasswordScreen({ navigation }: NavigateType) {
   const passwordRegisterRef = useRef<TextInput>(null);
 
   const handleRegister = () => navigation.navigate('VerifyRegisterScreen');
@@ -13,7 +13,7 @@ export default function ConfirmPasswordScreen({navigation}: NavigateType) {
   const {
     control,
     handleSubmit,
-    formState: {errors},
+    formState: { errors },
   } = useForm({
     defaultValues: {
       confirmPassword: '',
@@ -40,7 +40,7 @@ export default function ConfirmPasswordScreen({navigation}: NavigateType) {
             <Image source={require('../assets/login/password.png')} />
             <Controller
               control={control}
-              render={({field: {onChange, onBlur, value}}) => (
+              render={({ field: { onChange, onBlur, value } }) => (
                 <TextInput
                   ref={passwordRegisterRef}
                   style={styles.input}
@@ -53,7 +53,7 @@ export default function ConfirmPasswordScreen({navigation}: NavigateType) {
                 />
               )}
               name="confirmPassword"
-              rules={{required: 'Confirm Password is required!'}}
+              rules={{ required: 'Confirm Password is required!' }}
             />
           </View>
         </View>

@@ -1,5 +1,5 @@
 import {useMutation, useQueryClient} from '@tanstack/react-query';
-import {EZCHALLENG_API} from '../api/endPoint';
+import {EZCHALLENGE_API} from '../api/endPoint';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import {Alert} from 'react-native';
@@ -19,7 +19,7 @@ export default function useChallengeCreate() {
         "email": modifyEmail
       }
       const res = await axios.post(
-        `${EZCHALLENG_API}/challenge/create`,
+        `${EZCHALLENGE_API}/challenge/create`,
         fullData,
         {
           headers: {

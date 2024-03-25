@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query';
 import axios from 'axios';
-import { EZCHALLENG_API } from '../api/endPoint';
+import { EZCHALLENGE_API } from '../api/endPoint';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 const useProfile = () => {
@@ -12,7 +12,7 @@ const useProfile = () => {
       const emailUser = email?.slice(1, -1);
 
       const response = await axios.get(
-        `${EZCHALLENG_API}/user/${emailUser}`,
+        `${EZCHALLENGE_API}/user/${emailUser}`,
         {
           headers: {
             'Content-Type': 'application/json',

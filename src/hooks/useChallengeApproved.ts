@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { EZCHALLENG_API } from "../api/endPoint";
+import { EZCHALLENGE_API } from "../api/endPoint";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
@@ -9,7 +9,7 @@ export function useGetOneChallengesApproved(idChallennge: string) {
       queryFn: async () => {
         try {
           const token = await AsyncStorage.getItem('accessToken');
-          const res = await axios.get(`${EZCHALLENG_API}/challenge/status/approved/${idChallennge}`, {
+          const res = await axios.get(`${EZCHALLENGE_API}/challenge/status/approved/${idChallennge}`, {
             headers: {
               'Content-Type': `application/json`,
               Authorization: `Bearer ${token}`,

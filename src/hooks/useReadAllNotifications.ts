@@ -1,7 +1,7 @@
 import AsyncStorage from "@react-native-async-storage/async-storage"
 import { useMutation } from "@tanstack/react-query"
 import axios from "axios";
-import { EZCHALLENG_API } from "../api/endPoint";
+import { EZCHALLENGE_API } from "../api/endPoint";
 
 export default function useReadAllNotifications() {
     
@@ -11,7 +11,7 @@ export default function useReadAllNotifications() {
             const token = await AsyncStorage.getItem('accessToken');
             const getEmail = await AsyncStorage.getItem('email');
             const email = getEmail ? getEmail.replace(/["']/g, '') : '';
-            await axios.post(`${EZCHALLENG_API}/notifications/read`, {email}, {
+            await axios.post(`${EZCHALLENGE_API}/notifications/read`, {email}, {
                 headers: {
                     'Content-Type': 'application/json',
                     Authorization: `Bearer ${token}`,

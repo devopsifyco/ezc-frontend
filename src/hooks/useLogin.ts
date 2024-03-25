@@ -2,8 +2,8 @@ import {Alert} from 'react-native';
 import {useMutation} from '@tanstack/react-query';
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {EZCHALLENG_API} from '../api/endPoint';
-const API_LOGIN = `${EZCHALLENG_API}/login`;
+import {EZCHALLENGE_API} from '../api/endPoint';
+const API_LOGIN = `${EZCHALLENGE_API}/login`;
 
 export default function useLogin() {
   const login = useMutation({

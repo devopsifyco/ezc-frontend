@@ -1,16 +1,16 @@
 import React from 'react';
-import {Image, Text, TextInput, View} from 'react-native';
-import Button from '../components/Button';
+import { Image, Text, TextInput, View } from 'react-native';
+import { Button } from '../components/Button';
 import LoginOptions from '../components/LoginOptions';
-import {styles} from '../styles/signin-signup';
-import {NavigateType} from '../models/Navigations';
-import {Controller, useForm} from 'react-hook-form';
+import { styles } from '../styles/signin-signup';
+import { NavigateType } from '../models/Navigations';
+import { Controller, useForm } from 'react-hook-form';
 
-export default function ForgotPassword({navigation}: NavigateType) {
+export default function ForgotPassword({ navigation }: NavigateType) {
   const {
     control,
     handleSubmit,
-    formState: {errors},
+    formState: { errors },
   } = useForm({
     defaultValues: {
       email: '',
@@ -54,7 +54,7 @@ export default function ForgotPassword({navigation}: NavigateType) {
                     message: 'Invalid email address!',
                   },
                 }}
-                render={({field: {onChange, onBlur, value}}) => (
+                render={({ field: { onChange, onBlur, value } }) => (
                   <TextInput
                     style={styles.input}
                     placeholder="Enter your email"

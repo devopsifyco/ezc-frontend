@@ -1,7 +1,7 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import axios from 'axios';
-import { EZCHALLENG_API } from '../api/endPoint';
+import { EZCHALLENGE_API } from '../api/endPoint';
 import { Alert } from 'react-native';
 
 export function useUpdateUserProfile() {
@@ -13,7 +13,7 @@ export function useUpdateUserProfile() {
       try {
         const token = await AsyncStorage.getItem('accessToken');
 
-        const res = await axios.put(`${EZCHALLENG_API}/user/update`, newData, {
+        const res = await axios.put(`${EZCHALLENGE_API}/user/update`, newData, {
           headers: {
             'Content-Type': 'application/json',
             Authorization: `Bearer ${token}`,
