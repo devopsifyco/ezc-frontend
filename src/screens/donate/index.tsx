@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, StyleSheet, Image } from 'react-native';
 import Header from '../../components/Header';
 import { Controller, useForm } from 'react-hook-form';
-import Button from '../../components/Button';
+import { Button } from '../../components/Button';
 import useProfile from '../../hooks/useProfile';
 import useDonate from '../../hooks/useDonate';
 import { useNavigation } from '@react-navigation/native';

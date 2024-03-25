@@ -1,1 +1,1 @@
-export const EZCHALLENG_API = 'https://ezc-test-api.greenbee.gke.vn/api';
+export const EZCHALLENGE_API = 'https://ezc-test-api.greenbee.gke.vn/api';

@@ -1,7 +1,7 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
-import { EZCHALLENG_API } from "../api/endPoint";
+import { EZCHALLENGE_API } from "../api/endPoint";
 import { Alert } from "react-native";
 
 export default function useDonate() {
@@ -12,7 +12,7 @@ export default function useDonate() {
         const getEmail = await AsyncStorage.getItem('email');
         const email = getEmail ? getEmail.replace(/["']/g, '') : '';
         const newData = {...(typeof dataDonate === 'object' ? dataDonate : {}), email};
-        const res = await axios.post(`${EZCHALLENG_API}/donation/donate`, newData, {
+        const res = await axios.post(`${EZCHALLENGE_API}/donation/donate`, newData, {
             headers: {
                 'Content-Type': 'application/json',
                 Authorization: `Bearer ${token}`,

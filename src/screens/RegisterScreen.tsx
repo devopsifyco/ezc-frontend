@@ -8,7 +8,7 @@ import {
   ScrollView,
   Alert,
 } from 'react-native';
-import Button from '../components/Button';
+import { Button } from '../components/Button';
 import { styles } from '../styles/signin-signup';
 import { NavigateType } from '../models/Navigations';
 import { useForm, Controller } from 'react-hook-form';
@@ -16,7 +16,7 @@ import { RegistrationData } from '../models/Register';
 import useRegister from '../hooks/useRegister';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import axios from 'axios';
-import { EZCHALLENG_API } from '../api/endPoint';
+import { EZCHALLENGE_API } from '../api/endPoint';
 import * as Progress from 'react-native-progress';
 
 export default function RegisterScreen({ navigation }: NavigateType) {
@@ -46,7 +46,7 @@ export default function RegisterScreen({ navigation }: NavigateType) {
           AsyncStorage.setItem('email', data.email);
           try {
             await axios.post(
-              `${EZCHALLENG_API}/send-verification-code`,
+              `${EZCHALLENGE_API}/send-verification-code`,
               {
                 email: data.email,
               },

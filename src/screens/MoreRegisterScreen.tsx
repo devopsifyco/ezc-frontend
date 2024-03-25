@@ -1,19 +1,19 @@
-import React, {useRef} from 'react';
-import {Alert, Image, Text, TextInput, View} from 'react-native';
-import Button from '../components/Button';
+import React, { useRef } from 'react';
+import { Alert, Image, Text, TextInput, View } from 'react-native';
+import { Button } from '../components/Button';
 import LoginOptions from '../components/LoginOptions';
-import {styles} from '../styles/signin-signup';
-import {NavigateType} from '../models/Navigations';
-import {useForm, Controller} from 'react-hook-form';
-import {RegistrationData} from '../models/Register';
+import { styles } from '../styles/signin-signup';
+import { NavigateType } from '../models/Navigations';
+import { useForm, Controller } from 'react-hook-form';
+import { RegistrationData } from '../models/Register';
 import useRegister from '../hooks/useRegister';
 
-export default function MoreRegisterScreen({navigation}: NavigateType) {
+export default function MoreRegisterScreen({ navigation }: NavigateType) {
   const confirmPasswordRef = useRef<TextInput>(null);
-  const {mutate} = useRegister();
+  const { mutate } = useRegister();
 
   const handleRegister = async (data: RegistrationData) => {
-    const {username, email, password} = data;
+    const { username, email, password } = data;
     const confirmPassword = confirmPasswordRef.current?.value || '';
     if (password !== confirmPassword) {
       Alert.alert('Password do not match!');
@@ -34,16 +34,16 @@ export default function MoreRegisterScreen({navigation}: NavigateType) {
   const {
     control,
     handleSubmit,
-    formState: {errors},
+    formState: { errors },
   } = useForm({
     defaultValues: {
       confirmPassword: '',
     },
   });
 
-  const onSubmit = (data: {confirmPassword: string}) => {
+  const onSubmit = (data: { confirmPassword: string }) => {
     // Wrap handleRegister to match the expected type of handleSubmit
-    handleRegister({...data, username: '', email: '', password: ''});
+    handleRegister({ ...data, username: '', email: '', password: '' });
   };
 
   return (
@@ -72,7 +72,7 @@ export default function MoreRegisterScreen({navigation}: NavigateType) {
               />
               <Controller
                 control={control}
-                render={({field: {onChange, onBlur, value}}) => (
+                render={({ field: { onChange, onBlur, value } }) => (
                   <TextInput
                     ref={confirmPasswordRef}
                     style={styles.input}
@@ -85,7 +85,7 @@ export default function MoreRegisterScreen({navigation}: NavigateType) {
                   />
                 )}
                 name="confirmPassword"
-                rules={{required: 'Confirm Password is required!'}}
+                rules={{ required: 'Confirm Password is required!' }}
               />
             </View>
           </View>

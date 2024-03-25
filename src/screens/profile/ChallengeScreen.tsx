@@ -67,7 +67,7 @@ const ChallengeScreen: React.FC<ChallengeScreenProps> = ({ navigation, desiredOw
     <View style={styles.container}>
       {loadingPending || loadingApproved || loadingRejected ? (
         <View style={styles.displayLoading}>
-          <Progress.CircleSnail color={'white'} size={65} />
+          <Progress.CircleSnail color={'#216C53'} size={65} />
         </View>
       ) : (
         <ScrollView style={styles.listContainer}>
@@ -307,7 +307,6 @@ const styles = StyleSheet.create({
     zIndex: 12,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#2C3550',
     opacity: 0.6,
     width: '100%',
     height: '100%',
