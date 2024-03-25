@@ -68,6 +68,8 @@ export default function ProfileScreen({ navigation }: NavigateType) {
     navigation.navigate('DonationHistory');
   }
 
+  const moveHistoryExChangeGift = () => navigation.navigate('HistoryExChangeGift');
+
   const handleLogout = async () => {
     try {
       await AsyncStorage.removeItem('accessToken');
@@ -146,7 +148,7 @@ export default function ProfileScreen({ navigation }: NavigateType) {
         <View style={styles.menuContainer}>
           <ButtonIconText title="edit profile" iconProps={iconProps.faEdit} onPress={moveEdit} />
           <ButtonIconText title="donation" iconProps={iconProps.faDonate} onPress={moveDonateHistory} />
-          <ButtonIconText title="exchange" iconProps={iconProps.faExchange} onPress={() => { }} />
+          <ButtonIconText title="exchange" iconProps={iconProps.faExchange} onPress={moveHistoryExChangeGift} />
           <View style={styles.buttonLogout}>
             <ButtonIconText title='Logout' iconProps={iconProps.faSignOut} onPress={toggleModal} />
           </View>

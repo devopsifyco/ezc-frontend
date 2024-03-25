@@ -9,9 +9,15 @@ export interface GiftData {
 }
 
 export interface ExChangeData {
-    email: string,
     gift_id: string,
+    email: string,
     fullname: string,
     phone: string,
     address: string
+}
+
+export interface HistoryExChangeGiftData extends ExChangeData {
+    gift: GiftData,
+    redeemed_at: Date
+
 }
