@@ -1,4 +1,4 @@
-import React, {useRef, useState} from 'react';
+import React, { useRef, useState } from 'react';
 import {
   View,
   StyleSheet,
@@ -7,20 +7,20 @@ import {
   Text,
   TouchableOpacity,
 } from 'react-native';
-import {FontAwesomeIcon} from '@fortawesome/react-native-fontawesome';
+import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import {
   faGift,
   faPen,
   faMedal,
   faPlus,
 } from '@fortawesome/free-solid-svg-icons';
-import {useNavigation} from '@react-navigation/native';
+import { useNavigation } from '@react-navigation/native';
 
 interface DataProps {
-  icon: any, 
-  offsetX: any, 
-  offsetY: any, 
-  text: any, 
+  icon: any,
+  offsetX: any,
+  offsetY: any,
+  text: any,
   screen: any
 }
 
@@ -90,7 +90,7 @@ export default function PlusButton() {
 
 
   const renderSecondaryButton = (icon, offsetX, offsetY, text, screen) => (
-    <Animated.View style={{position: 'absolute', left: offsetX, top: offsetY}}>
+    <Animated.View style={{ position: 'absolute', left: offsetX, top: offsetY }}>
       <TouchableOpacity
         style={styles.secondaryButton}
         onPress={() => {
@@ -139,11 +139,11 @@ export default function PlusButton() {
   });
 
   const sizeStyle = {
-    transform: [{scale: buttonSize}],
+    transform: [{ scale: buttonSize }],
   };
 
   return (
-    <View style={{position: 'absolute', alignItems: 'center'}}>
+    <View style={{ position: 'absolute', alignItems: 'center' }}>
       {isExpanded &&
         renderSecondaryButton(
           faMedal,
@@ -161,11 +161,11 @@ export default function PlusButton() {
           'CreateChallenges',
         )}
       {isExpanded &&
-        renderSecondaryButton(faGift, pulseX, pulseY, 'Gift', 'Giveaways')}
+        renderSecondaryButton(faGift, pulseX, pulseY, 'Gift', 'ListGift')}
 
       <Animated.View style={[styles.button, sizeStyle]}>
         <TouchableHighlight onPress={handlePress} underlayColor="#FF890B">
-          <Animated.View style={{transform: [{rotate: rotation}]}}>
+          <Animated.View style={{ transform: [{ rotate: rotation }] }}>
             <FontAwesomeIcon icon={faPlus} size={24} color="#FFF" />
           </Animated.View>
         </TouchableHighlight>
@@ -186,7 +186,7 @@ const styles = StyleSheet.create({
     marginTop: -60,
     shadowColor: '#FF890B',
     shadowRadius: 5,
-    shadowOffset: {height: 10},
+    shadowOffset: { height: 10 },
     shadowOpacity: 0.3,
     borderWidth: 3,
     borderColor: '#FFFFFF',
@@ -199,7 +199,7 @@ const styles = StyleSheet.create({
     borderRadius: 28,
     backgroundColor: '#FF890B',
     right: 8,
-    
+
   },
   buttonText: {
     color: '#FFFFFF',

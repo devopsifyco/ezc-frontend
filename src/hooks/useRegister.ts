@@ -2,9 +2,9 @@ import {useMutation} from '@tanstack/react-query';
 import axios from 'axios';
 import {RegistrationData} from '../models/Register';
 import {Alert} from 'react-native';
-import {EZCHALLENG_API} from '../api/endPoint';
+import {EZCHALLENGE_API} from '../api/endPoint';
 
-const API_REGISTER = `${EZCHALLENG_API}/sign-up`;
+const API_REGISTER = `${EZCHALLENGE_API}/sign-up`;
 
 export default function useRegister() {
   const register = useMutation({

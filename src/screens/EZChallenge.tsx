@@ -9,7 +9,6 @@ import SeeAllChallenges from './SeeAllChallenges';
 import SeeAllLive from './SeeAllLive';
 import ListGift from './Gift/SubExChangeGift';
 import GiftDetail from './Gift/GiftDetail';
-import SubProfileScreen from './profile/ProfileScreen';
 import EditProfile from './profile/EditProfile';
 import ChallengeDetail from './ChallengeDetail';
 import { Welcome, Welcome2, Welcome3 } from './Welcome';
@@ -23,10 +22,10 @@ import Status from './Status';
 import CreateChallenges from './challenges/create';
 import CheckIn from './challenges/checkin';
 import ParticipantScreen from './ParticipantScreen';
-import Giveaways from './Gift/Giveaways';
 import ExChangeGift from './Gift/ExChangeGift';
 import DonationScreen from './donate';
 import HistoryExChangeGift from './Gift/HistoryExChangeGift';
+import DonationHistory from './donate/DonationHistory';
 
 const Stack = createNativeStackNavigator();
 
@@ -43,11 +42,9 @@ export default function EZChallenge() {
         <Stack.Screen name="ForgotPassword" component={ForgotPassword} />
         <Stack.Screen name="ListGift" component={ListGift} />
         <Stack.Screen name="GiftDetail" component={GiftDetail} />
-        <Stack.Screen name="Giveaways" component={Giveaways} />
         <Stack.Screen name="ExchangeGifts" component={ExChangeGift} />
         <Stack.Screen name="EZChallenge" component={BottomTabs} />
         <Stack.Screen name="Status" component={Status} />
-        <Stack.Screen name="SubProfileScreen" component={SubProfileScreen} />
         <Stack.Screen name="EditProfile" component={EditProfile} />
         <Stack.Screen name="SeeAllChallange" component={SeeAllChallenges} />
         <Stack.Screen name="SeeAllLive" component={SeeAllLive} />
@@ -62,6 +59,7 @@ export default function EZChallenge() {
         <Stack.Screen name="Participant" component={ParticipantScreen} />
         <Stack.Screen name='DonationScreen' component={DonationScreen} />
         <Stack.Screen name='HistoryExChangeGift' component={HistoryExChangeGift} />
+        <Stack.Screen name='DonationHistory' component={DonationHistory} />
       </Stack.Group>
     </Stack.Navigator>
   );

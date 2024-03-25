@@ -1,5 +1,5 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { EZCHALLENG_API } from "../api/endPoint";
+import { EZCHALLENGE_API } from "../api/endPoint";
 import axios from "axios";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Alert } from "react-native";
@@ -14,7 +14,7 @@ export default function useCheckIn() {
                 const getEmail = await AsyncStorage.getItem('email');
                 const email = getEmail ? getEmail.replace(/["']/g, '') : '';
                 const userToken = await AsyncStorage.getItem('accessToken');
-                const res = await axios.post(`${EZCHALLENG_API}/challenge/check-in`, {
+                const res = await axios.post(`${EZCHALLENGE_API}/challenge/check-in`, {
                     email,
                     challengeId,
                     checkinData,

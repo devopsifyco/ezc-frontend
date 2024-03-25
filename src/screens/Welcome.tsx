@@ -1,9 +1,9 @@
-import React, {useEffect} from 'react';
-import {Image, StyleSheet, View, Text} from 'react-native';
+import React, { useEffect } from 'react';
+import { Image, StyleSheet, View, Text } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import Button from '../components/Button';
+import { Button } from '../components/Button';
 
-export function Welcome({navigation}: any) {
+export function Welcome({ navigation }: any) {
   useEffect(() => {
     const handleGetStart = async () => {
       try {
@@ -33,7 +33,7 @@ export function Welcome({navigation}: any) {
   );
 }
 
-export function Welcome2({navigation}: any) {
+export function Welcome2({ navigation }: any) {
   const navigateWelcom3 = () => {
     AsyncStorage.setItem('welcomeCompleted', 'false');
     navigation.navigate('Welcome3');
@@ -62,7 +62,7 @@ export function Welcome2({navigation}: any) {
   );
 }
 
-export function Welcome3({navigation}: any) {
+export function Welcome3({ navigation }: any) {
   const handleCheckScreen = async () => {
     try {
       const welcomeCompleted = await AsyncStorage.getItem('welcomeCompleted');
@@ -70,7 +70,7 @@ export function Welcome3({navigation}: any) {
       if (welcomeCompleted === 'true') {
         navigation.reset({
           index: 0,
-          routes: [{name: 'EZChallenge'}],
+          routes: [{ name: 'EZChallenge' }],
         });
       } else {
         navigation.navigate('LoginScreen');
@@ -124,9 +124,9 @@ const styles = StyleSheet.create({
     paddingBottom: 30,
     bottom: '0%',
   },
-  titleLarge: {fontSize: 28, fontWeight: 'bold'},
-  titleMedium: {fontSize: 22, fontWeight: 'bold', textAlign: 'center'},
-  titleSmall: {fontSize: 15, fontWeight: 'bold', textAlign: 'center'},
-  displayCenter: {alignItems: 'center', gap: 10, justifyContent: 'center'},
-  displayCenter2: {justifyContent: 'center'},
+  titleLarge: { fontSize: 28, fontWeight: 'bold' },
+  titleMedium: { fontSize: 22, fontWeight: 'bold', textAlign: 'center' },
+  titleSmall: { fontSize: 15, fontWeight: 'bold', textAlign: 'center' },
+  displayCenter: { alignItems: 'center', gap: 10, justifyContent: 'center' },
+  displayCenter2: { justifyContent: 'center' },
 });

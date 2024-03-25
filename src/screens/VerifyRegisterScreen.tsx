@@ -1,6 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { Alert, Image, Text, TextInput, TouchableOpacity, View, Modal } from 'react-native';
-import Button from '../components/Button';
+import { Button } from '../components/Button';
 import { styles } from '../styles/signin-signup';
 import { NavigateType } from '../models/Navigations';
 import useVerify from '../hooks/useVerify';

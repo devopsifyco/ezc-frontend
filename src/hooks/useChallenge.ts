@@ -1,12 +1,12 @@
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import axios from 'axios';
-import { EZCHALLENG_API } from '../api/endPoint';
+import { EZCHALLENGE_API } from '../api/endPoint';
 import { Challenge } from '../models/InfChallenge';
 
-const API_ALLCHALLENGE = `${EZCHALLENG_API}/challenges/not-participate`;
-const API_HASJOINEDCHALLENGE = `${EZCHALLENG_API}/challenges/joined`;
-const API_CHALLENGES = `${EZCHALLENG_API}/challenge`;
+const API_ALLCHALLENGE = `${EZCHALLENGE_API}/challenges/not-participate`;
+const API_HASJOINEDCHALLENGE = `${EZCHALLENGE_API}/challenges/joined`;
+const API_CHALLENGES = `${EZCHALLENGE_API}/challenge`;
 
 
 

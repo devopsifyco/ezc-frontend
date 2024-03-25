@@ -1,9 +1,9 @@
 import {useMutation} from '@tanstack/react-query';
 import axios from 'axios';
 import { VerifyData } from '../models/Verify';
-import { EZCHALLENG_API } from '../api/endPoint';
+import { EZCHALLENGE_API } from '../api/endPoint';
 
-const API_VERIFY = `${EZCHALLENG_API}/verify-email`;
+const API_VERIFY = `${EZCHALLENGE_API}/verify-email`;
 
 export default function useVerify() {
   const verify = useMutation({

@@ -1,6 +1,6 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { EZCHALLENG_API } from "../api/endPoint";
+import { EZCHALLENGE_API } from "../api/endPoint";
 import axios from "axios";
 import { ExChangeData } from "../models/infGifts";
 
@@ -12,7 +12,7 @@ export function useGetAllGifts() {
     queryFn: async () => {
       try {
         const token = await AsyncStorage.getItem("accessToken");
-        const res = await axios.get(`${EZCHALLENG_API}/gifts`,
+        const res = await axios.get(`${EZCHALLENGE_API}/gifts`,
           {
             headers: {
               'Content-Type': 'application/json',
@@ -38,7 +38,7 @@ export function useOneGift(_id: string) {
     queryFn: async () => {
       try {
         const token = await AsyncStorage.getItem('accessToken');
-        const res = await axios.get(`${EZCHALLENG_API}/gift/${_id}`, {
+        const res = await axios.get(`${EZCHALLENGE_API}/gift/${_id}`, {
           headers: {
             'Content-Type': 'application/json',
             Authorization: `Bearer ${token}`,
@@ -62,7 +62,7 @@ export function useExchangeGift() {
     mutationFn: async (DataExChange: ExChangeData) => {
       try {
         const token = await AsyncStorage.getItem('accessToken');
-        const res = await axios.post(`${EZCHALLENG_API}/gift/exchange`, DataExChange, {
+        const res = await axios.post(`${EZCHALLENGE_API}/gift/exchange`, DataExChange, {
           headers: {
             'Content-Type': 'application/json',
             Authorization: `Bearer ${token}`,
