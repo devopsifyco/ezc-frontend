@@ -6,6 +6,8 @@ import Button from '../../components/Button';
 import useProfile from '../../hooks/useProfile';
 import useDonate from '../../hooks/useDonate';
 import { useNavigation } from '@react-navigation/native';
+import ModalPoup from '../../components/ModalPoup';
+import ButtonChallenge from '../../components/ButtonChallenge';
 
 export default function DonationScreen() {
     const navigation = useNavigation();
@@ -14,6 +16,9 @@ export default function DonationScreen() {
     const [defaultMessage, setDefaultMessage] = useState(``);
     const userPoints = userData?.points || 0;
     const { mutate: handleSendPoints } = useDonate();
+
+    // hadle modal pop-up
+    const [visible, setVisible] = useState(false);
 
     useEffect(() => {
         if (userData) {
@@ -25,7 +30,7 @@ export default function DonationScreen() {
     const onSubmit = (data: any) => {
         handleSendPoints(data, {
             onSuccess: () => {
-                navigation.goBack();
+                setVisible(true)
             }
         });
     };
@@ -98,6 +103,26 @@ export default function DonationScreen() {
                     />
                 </View>
             </View>
+            <ModalPoup visible={visible} delay={0}>
+                <View style={{ alignItems: 'center' }}>
+                    <Image source={require('../../assets/images/successful.png')} style={{ width: 150, height: 150 }} />
+                </View>
+                <Text style={{ marginTop: 20, fontSize: 20, textAlign: 'center', color: '#000000', fontWeight: '600' }}>
+                    Donate successful
+                </Text>
+                <Text style={{ textAlign: 'center', paddingHorizontal: 10, fontSize: 13 }}>
+                    Donate successfully.{'\n'}Thanks for donating to us.
+                </Text>
+                <View style={{ paddingHorizontal: 20, marginTop: 20 }}>
+                    <ButtonChallenge
+                        buttonStyle={{ width: '100%', borderRadius: 50 }}
+                        title='Back to Home'
+                        onPress={() => navigation.navigate('EZChallenge')}
+                        textStyle={{ fontSize: 20 }}
+                    />
+                </View>
+            </ModalPoup>
+
             <View style={styles.button}>
                 <Button title='Donate Now' onPress={handleSubmit(onSubmit)} />
             </View>

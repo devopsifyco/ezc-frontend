@@ -21,7 +21,6 @@ export default function useDonate() {
 
         return res.data
     },
-    onSuccess: (data) => Alert.alert(data),
     onError: (err) => console.log(err)
   });
 }

@@ -3,7 +3,7 @@ import React, { useEffect, useRef, useState } from 'react'
 
 
 
-const ModalPoup = ({ visible, children }: { visible: any, children: React.ReactNode }) => {
+const ModalPoup = ({ visible, children, delay = 1500 }: { visible: any, children: React.ReactNode, delay?: number }) => {
     const [showModal, setShowModal] = React.useState(visible);
     const [isLoading, setIsLoading] = React.useState(false);
 
@@ -15,16 +15,16 @@ const ModalPoup = ({ visible, children }: { visible: any, children: React.ReactN
 
     const toggleModal = () => {
         if (visible) {
-            setIsLoading(true); // Bật biểu tượng loading
+            setIsLoading(true); 
             setShowModal(true);
             Animated.spring(scaleValue, {
                 toValue: 1,
                 stiffness: 50,
                 damping: 10,
                 useNativeDriver: true,
-                delay: 1500
+                delay: delay
             }).start(() => {
-                setIsLoading(false); // Tắt biểu tượng loading sau khi delay kết thúc
+                setIsLoading(false);
             });
         } else {
             setTimeout(() => setShowModal(false), 200);
