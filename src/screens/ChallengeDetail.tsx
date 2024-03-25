@@ -226,7 +226,7 @@ const ChallengeDetail = ({ navigation, route }: NavigateType) => {
         </View>
         <View style={styles.section}>
           <Text style={styles.sectionName}>Participant</Text>
-          <TouchableOpacity style={styles.seeAll} onPress={() => navigation.navigate('Participant')}>
+          <TouchableOpacity style={styles.seeAll} onPress={() => navigation.navigate('Participant', { id })}>
             <Text>See All</Text>
             <Image source={require('../assets/icons/iconSeeAll.png')} />
           </TouchableOpacity>
@@ -244,22 +244,31 @@ const ChallengeDetail = ({ navigation, route }: NavigateType) => {
 
       </View>
       <View style={styles.listParticipant}>
-        {filteredData.map((user: DataProfile) => (
-          <View style={styles.itemParticipant} key={user._id}>
-            <View style={styles.itemInfo}>
-              <View style={styles.InfoDetail}>
-                <Image
-                  source={{ uri: user.avatar.downloadLink }}
-                  style={styles.avatar}
-                />
-                <View>
-                  <Text style={styles.name}>{user.username}</Text>
-                  <Text style={styles.challengemail}>{user.email}</Text>
+        {
+          filteredData.length > 0 ? (
+            filteredData.map((user: DataProfile) => (
+              <View style={styles.itemParticipant} key={user._id}>
+                <View style={styles.itemInfo}>
+                  <View style={styles.InfoDetail}>
+                    <Image
+                      source={{ uri: user.avatar.downloadLink }}
+                      style={styles.avatar}
+                    />
+                    <View>
+                      <Text style={styles.name}>{user.username}</Text>
+                      <Text style={styles.challengemail}>{user.email}</Text>
+                    </View>
+                  </View>
                 </View>
               </View>
+            ))
+          ) : (
+            <View style={{alignItems:"center"}}>
+              <Text style={{ fontSize:16}}>No paticipant available</Text>
             </View>
-          </View>
-        ))}
+          )
+        }
+
       </View>
     </ScrollView>
   )
@@ -282,6 +291,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#fff',
+   
   },
   wrapped_slide: {
     height: 210,
