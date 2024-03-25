@@ -89,6 +89,34 @@ export function useExchangeGift() {
   return { ...getExChangeGift };
 }
 
+//----------------------------exchange gift history---------------------------
+
+export function useHistoryExChangeGift() {
+  return useQuery({
+    queryKey: ["HistoryExChangeGift"],
+    queryFn: async () => {
+      try {
+        const email = await AsyncStorage.getItem('email');
+        const newEmail = email ? email.replace(/["']/g, '') : '';
+        const token = await AsyncStorage.getItem("accessToken");
+        const res = await axios.get(`${EZCHALLENGE_API}/gift/history/${newEmail}`,
+          {
+            headers: {
+              'Content-Type': 'application/json',
+              Authorization: `Bearer ${token}`
+            }
+          }
+        )
+        return res.data
+      } catch (error: any) {
+        console.error('Error fetching history exchange gifts:', error?.response.data);
+        throw error;
+      }
+    }
+  })
+}
+
+
 export default {
   useGetAllGifts,
   useOneGift,

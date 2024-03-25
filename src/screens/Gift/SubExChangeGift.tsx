@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, ScrollView, StyleSheet, Text, TouchableOpacity, Image } from 'react-native';
+import { View, ScrollView, StyleSheet, Text, TouchableOpacity, Image, Button } from 'react-native';
 import { NavigateType } from '../../models/Navigations';
 import HeaderChallenge from '../../components/HeaderChallenge';
 import { GiftData } from '../../models/infGifts';
@@ -19,7 +19,7 @@ export default function ListGift({ navigation }: NavigateType) {
         {
           Gifts?.map((Gift: GiftData, index: number) => (
             <TouchableOpacity key={index} style={styles.list} onPress={() => {
-              navigation.navigate("GiftDetail", {giftId: Gift._id})
+              navigation.navigate("GiftDetail", { giftId: Gift._id })
             }}>
               <View style={styles.image}>
                 <Image source={{ uri: Gift.image?.downloadLink }}
@@ -47,7 +47,7 @@ export default function ListGift({ navigation }: NavigateType) {
 }
 export const styles = StyleSheet.create({
   container: {
-    flexGrow:1,
+    flexGrow: 1,
   },
   header: {
     flexDirection: 'row',
@@ -72,12 +72,12 @@ export const styles = StyleSheet.create({
     borderWidth: 2,
   },
   image: {
-    padding:10
+    padding: 10
   },
   avatar: {
     width: 75,
     height: 100,
-    borderRadius:10
+    borderRadius: 10
 
   },
   info: {
@@ -85,7 +85,7 @@ export const styles = StyleSheet.create({
   },
   name: {
     color: "#216C53",
-    fontWeight:"bold"
+    fontWeight: "bold"
   },
   pointGroup: {
     display: "flex",
@@ -103,13 +103,13 @@ export const styles = StyleSheet.create({
     marginTop: 10,
   },
   des: {
-    maxWidth: '85%', 
-    overflow: 'hidden', 
+    maxWidth: '85%',
+    overflow: 'hidden',
     marginTop: 10,
     width: 250,
-    fontSize:13
+    fontSize: 13
   },
-  text15:{
-    fontSize:15
+  text15: {
+    fontSize: 15
   }
 });
