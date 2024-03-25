@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from 'react';
-import { View, StyleSheet, Text, TouchableOpacity, Image, TextInput, ActivityIndicator,ScrollView } from 'react-native';
+import { View, StyleSheet, Text, TouchableOpacity, Image, TextInput, ActivityIndicator, ScrollView } from 'react-native';
 import { useOneChallenges } from '../hooks/useChallenge';
 import { NavigateType } from '../models/Navigations';
 import { DataProfile } from '../models/Profile';
 import useChallengeCreate from '../hooks/useChallengeCreate';
 import useParticipant from '../hooks/useParticipant';
+import HeaderChallenge from '../components/HeaderChallenge';
 
-export default function ParticipantScreen() {
-    const id = "65eeca5c63fb390a4ccdb021"
+export default function ParticipantScreen({ navigation, route }: NavigateType) {
+    const id = route.params;
     const { data, isLoading, isError } = useParticipant({ id });
     const [searchQuery, setSearchQuery] = useState('');
     const [filteredData, setFilteredData] = useState([]);
@@ -18,7 +19,7 @@ export default function ParticipantScreen() {
             setFilteredData(filtered);
         }
     }, [searchQuery, data]);
-    
+
 
     if (isLoading) {
         return (
@@ -29,12 +30,9 @@ export default function ParticipantScreen() {
     }
 
     return (
-        <ScrollView style={styles.container}>
+        <ScrollView contentContainerStyle={styles.container}>
             <View style={styles.header}>
-                <TouchableOpacity>
-                    <Image source={require('../assets/icons/arrow-left.png')} />
-                </TouchableOpacity>
-                <Text style={styles.titles}>Participant</Text>
+                <HeaderChallenge title='Participant' navigation={navigation} />
             </View>
             <View style={styles.view}>
                 <View style={styles.input}>
@@ -47,31 +45,37 @@ export default function ParticipantScreen() {
                     />
                 </View>
             </View>
-            <View style={styles.listParticipant}>
-                {filteredData.map((user: DataProfile) => (
-                    <View style={styles.itemParticipant} key={user._id}>
-                        <View style={styles.itemInfo}>
-                            <View style={styles.InfoDetail}>
-                                <Image
-                                    source={{ uri: user.avatar.downloadLink }}
-                                    style={styles.avatar}
-                                />
-                                <View>
-                                    <Text style={styles.name}>{user.username}</Text>
-                                    <Text style={styles.challengemail}>{user.email}</Text>
+                {
+                    filteredData.length > 0 ?
+                        (<View style={styles.listParticipant}>
+                            {filteredData.map((user: DataProfile) => (
+                                <View style={styles.itemParticipant} key={user._id}>
+                                    <View style={styles.itemInfo}>
+                                        <View style={styles.InfoDetail}>
+                                            <Image
+                                                source={{ uri: user.avatar.downloadLink }}
+                                                style={styles.avatar}
+                                            />
+                                            <View>
+                                                <Text style={styles.name}>{user.username}</Text>
+                                                <Text style={styles.challengemail}>{user.email}</Text>
+                                            </View>
+                                        </View>
+                                    </View>
                                 </View>
-                            </View>
-                        </View>
-                    </View>
-                ))}
-            </View>
+                            ))}
+                        </View>) :
+                        (<View style={{ alignItems: 'center', justifyContent: "center" }}>
+                            <Image source={require('../assets/images/novarible.png')} style={{ width: 250, height: 250 }} />
+                        </View>)
+                }
         </ScrollView>
     );
 }
 
 const styles = StyleSheet.create({
     container: {
-        flex: 1,
+        flexGrow: 1,
 
     },
     listParticipant: {
@@ -89,6 +93,7 @@ const styles = StyleSheet.create({
         elevation: 20,
         borderRadius: 15,
         flex: 1,
+        zIndex: 999
     },
 
     name: {
@@ -129,6 +134,8 @@ const styles = StyleSheet.create({
         flexDirection: 'row',
         justifyContent: 'flex-start',
         alignItems: 'center',
+        paddingHorizontal: 20,
+        marginVertical: 20,
     },
     titles: {
         fontSize: 20,
