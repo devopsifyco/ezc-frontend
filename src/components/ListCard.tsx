@@ -2,9 +2,10 @@ import React from 'react';
 import { Text, View, StyleSheet, Image, TouchableOpacity, ImageSourcePropType } from 'react-native';
 import Moment from 'moment';
 import { Challenge } from '../models/InfChallenge';
+import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
+import { faLocationDot  } from '@fortawesome/free-solid-svg-icons';
 
-
-const ListCard: React.FC<Challenge> = ({  Days, title, address, images_path, isLive,onPress }) => {
+const ListCard: React.FC<Challenge> = ({  start_time, title, address, images_path, isLive,onPress }) => {
 
   return (
     <View
@@ -30,30 +31,37 @@ const ListCard: React.FC<Challenge> = ({  Days, title, address, images_path, isL
           paddingVertical: 15,
           paddingLeft: 35,
           paddingRight: 10,
+          width:"80%"
         }}>
           <Text style={{
             color: "#216C53",
             fontWeight: "bold",
           }}>
-            {Moment.utc(Days).format('ddd, MMM DD • LT')}
+            {Moment.utc(start_time).format('ddd, MMM DD • LT')}
           </Text>
           <Text numberOfLines={1} style={{
             fontSize: 15,
             fontWeight: "bold",
             color: "#000000",
-            marginBottom: 15,
-          }}>
+            marginTop:4,
+            marginBottom:8
+          }} >
             {title}
           </Text>
           <View style={{
             flexDirection: 'row',
-            alignItems: 'center',
+            alignItems: 'center',  
+            paddingRight: 10, 
           }}>
-            <Image source={require('../assets/icons/locationList.png')} />
-            <Text style={{
+            <FontAwesomeIcon icon={faLocationDot} size={18} color='#716E90'/>
+            <Text numberOfLines={2} style={{
               fontSize: 13,
               marginLeft: 4,
               fontWeight: "bold",
+              color:"#747688",
+              flexWrap: 'wrap',
+              marginRight: 10,
+              maxWidth: "80%",
             }}>{address}</Text>
           </View>
         </View>

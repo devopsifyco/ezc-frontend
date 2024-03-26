@@ -41,7 +41,7 @@ export default function ParticipantScreen({ navigation, route }: NavigateType) {
                         placeholder='Search here...'
                         value={searchQuery}
                         onChangeText={(text) => setSearchQuery(text)}
-                        style={{ flex: 1 }}
+                        style={{ flex: 1, color:"#363636" }}
                         placeholderTextColor={'#8C8D89'}
                     />
                 </View>

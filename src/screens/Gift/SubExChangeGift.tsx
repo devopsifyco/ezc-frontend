@@ -107,7 +107,9 @@ export const styles = StyleSheet.create({
     overflow: 'hidden',
     marginTop: 10,
     width: 250,
-    fontSize: 13
+    fontSize: 13,
+    color:"#747688"
+
   },
   text15: {
     fontSize: 15

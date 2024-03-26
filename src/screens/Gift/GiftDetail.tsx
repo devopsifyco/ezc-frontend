@@ -148,6 +148,8 @@ const styles = StyleSheet.create({
   },
   textMode: {
     width: "75%",
+    color:"#747688"
+
   },
   content: {
     width: "80%",
