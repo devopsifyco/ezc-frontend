@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, Image, StyleSheet, ScrollView, TouchableOpacity, ActivityIndicator } from 'react-native';
-import { useQueryClient } from '@tanstack/react-query';
 import { NavigateType } from '../../models/Navigations';
 import {
     useGetHasJoinedChallenges
@@ -41,7 +40,7 @@ export default function JoinedScreen({ navigation }: NavigateType) {
                                     </Text>
                                     <View style={styles.times_group}>
                                         <View style={styles.listItemDetail}>
-                                            <Text style={styles.detail}>Challenge: {challenge.title}</Text>
+                                            <Text style={styles.detail} numberOfLines={1}>Challenge: {challenge.title}</Text>
                                             <View style={styles.times_group}>
                                                 <Image source={require('../../assets/icons/locationdetail.png')} />
                                                 <Text style={{

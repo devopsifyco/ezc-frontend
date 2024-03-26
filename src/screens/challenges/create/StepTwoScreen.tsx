@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, TextInput, TouchableOpacity } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, Image } from 'react-native';
 import { useForm, Controller, SubmitHandler } from 'react-hook-form';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { useNavigation, useRoute } from '@react-navigation/native';
@@ -8,6 +8,8 @@ import { styles } from '.';
 import useChallengeCreate from '../../../hooks/useChallengeCreate';
 import * as Progress from 'react-native-progress';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import ModalPoup from '../../../components/ModalPoup';
+import ButtonChallenge from '../../../components/ButtonChallenge';
 
 type Input = {
   startDate: Date;
@@ -56,6 +58,9 @@ const StepTwoScreen = () => {
   const [pickerMode, setPickerMode] = useState<
     'startDate' | 'endDate' | 'startTime' | 'endTime'
   >('startDate');
+
+  // hadle modal pop-up
+  const [visible, setVisible] = useState(false);
 
   const {
     control,
@@ -177,7 +182,9 @@ const StepTwoScreen = () => {
 
     try {
       challengeCreate({ data: combinedData, email: email }, {
-        onSuccess: () => navigation.goBack()
+        onSuccess: () => {
+          setVisible(true)
+        }
       });
     } catch (error) {
       console.log(error);
@@ -324,6 +331,25 @@ const StepTwoScreen = () => {
             <Button title="Create" onPress={handleSubmit(onSubmit)} />
           </View>
         </View>
+        <ModalPoup visible={visible} delay={0}>
+          <View style={{ alignItems: 'center' }}>
+            <Image source={require('../../../assets/images/verifyChallenge.png')} style={{ width: 150, height: 150 }} />
+          </View>
+          <Text style={{ marginTop: 20, fontSize: 20, textAlign: 'center', color: '#000000', fontWeight: '600' }}>
+            Create challenge successful
+          </Text>
+          <Text style={{ textAlign: 'center', paddingHorizontal: 10, fontSize: 13 }}>
+            The verification of your challenge will soon be completed. Please check it in challenges page.{'\n'}Thanks for choosing us.
+          </Text>
+          <View style={{ paddingHorizontal: 20, marginTop: 20 }}>
+            <ButtonChallenge
+              buttonStyle={{ width: '100%', borderRadius: 50 }}
+              title='Back to Home'
+              onPress={() => navigation.navigate('EZChallenge')}
+              textStyle={{ fontSize: 20 }}
+            />
+          </View>
+        </ModalPoup>
       </View>
     </>
   );

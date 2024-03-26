@@ -9,6 +9,8 @@ import { styles } from './style';
 import SelectedImages from './ImageUpdate';
 import { Asset } from 'react-native-image-picker';
 import DateTimePicker from '@react-native-community/datetimepicker';
+import ModalPoup from '../../../components/ModalPoup';
+import { useQueryClient } from '@tanstack/react-query';
 
 interface ImageData {
   fileName: string;
@@ -41,12 +43,18 @@ const dateString = (date: Date | undefined) => {
 
 const UpdateChallenges = ({ navigation, route }: NavigateType) => {
   const { id } = route.params;
+  const queryClient = useQueryClient();
+
   const { data: Challenge } = useOneChallenges(id);
   const { mutate: updateMutate } = useUpdateChallenges();
 
   const [editedChallenge, setEditedChallenge] = useState<Challenge>(Challenge);
 
   const [selectedImages, setSelectedImages] = useState<ImageData[]>([]);
+
+  // hadle modal pop-up
+  const [visible, setVisible] = useState(false);
+
 
 
 
@@ -78,7 +86,9 @@ const UpdateChallenges = ({ navigation, route }: NavigateType) => {
           end_time: endTimeAsDate,
         }, {
           onSuccess:
-            () => navigation.goBack()
+            () => {
+              setVisible(true);
+            }
         });
       }
     } catch (error) {
@@ -180,6 +190,7 @@ const UpdateChallenges = ({ navigation, route }: NavigateType) => {
 
     return combinedDate.toISOString();
   };
+
 
 
 
@@ -354,6 +365,25 @@ const UpdateChallenges = ({ navigation, route }: NavigateType) => {
           />
         </View>
       </ScrollView>
+      <ModalPoup visible={visible}>
+        <View style={{ alignItems: 'center' }}>
+          <Image source={require('../../../assets/images/successful.png')} style={{ width: 150, height: 150 }} />
+        </View>
+        <Text style={{ marginTop: 20, fontSize: 20, textAlign: 'center', color: '#000000', fontWeight: '600' }}>
+          Update challenge successful
+        </Text>
+        <Text style={{ textAlign: 'center', paddingHorizontal: 10, fontSize: 13 }}>
+          Update challenge successfully.{'\n'}Thanks for choosing us.
+        </Text>
+        <View style={{ paddingHorizontal: 20, marginTop: 20 }}>
+          <ButtonChallenge
+            buttonStyle={{ width: '100%', borderRadius: 50 }}
+            title='Back to Home'
+            onPress={() => navigation.navigate('EZChallenge')}
+            textStyle={{ fontSize: 20 }}
+          />
+        </View>
+      </ModalPoup>
     </View>
   );
 };

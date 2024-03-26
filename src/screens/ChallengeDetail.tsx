@@ -11,6 +11,7 @@ import Moment from 'moment';
 import { DataProfile } from '../models/Profile';
 import useParticipant from '../hooks/useParticipant';
 import CheckIn from './challenges/checkin';
+import ModalPoup from '../components/ModalPoup';
 
 
 const ChallengeDetail = ({ navigation, route }: NavigateType) => {
@@ -30,6 +31,8 @@ const ChallengeDetail = ({ navigation, route }: NavigateType) => {
   const [nameActionButton, setNameActionButton] = useState("Join");
   const [firstButton, setFirstButton] = useState('Donation');
 
+  // hadle modal pop-up
+  const [visible, setVisible] = useState(false);
 
   const {
     owner_id,
@@ -99,7 +102,7 @@ const ChallengeDetail = ({ navigation, route }: NavigateType) => {
 
       JoinChallenge({ email: emailWithoutQuotes, id: id }, {
         onSuccess: () => {
-          navigation.goBack()
+          setVisible(true)
         }
       });
       setModalVisible(!isModalVisible);
@@ -110,7 +113,7 @@ const ChallengeDetail = ({ navigation, route }: NavigateType) => {
 
   const handleFinishChallenge = () => {
     CompleteChallenge({ email: owner_id?.email, id: id }, {
-      onSuccess: () => navigation.goBack()
+      onSuccess: () => setVisible(true)
     })
   }
 
@@ -263,13 +266,32 @@ const ChallengeDetail = ({ navigation, route }: NavigateType) => {
               </View>
             ))
           ) : (
-            <View style={{alignItems:"center"}}>
-              <Text style={{ fontSize:16}}>No paticipant available</Text>
+            <View style={{ alignItems: "center" }}>
+              <Text style={{ fontSize: 16 }}>No paticipant available</Text>
             </View>
           )
         }
-
       </View>
+      <ModalPoup visible={visible} delay={0}>
+        <View style={{ alignItems: 'center' }}>
+          <Image source={require('../assets/images/successful.png')} style={{ width: 150, height: 150 }} />
+        </View>
+        <Text style={{ marginTop: 20, fontSize: 20, textAlign: 'center', color: '#000000', fontWeight: '600' }}>
+          {nameActionButton} challenge successful
+        </Text>
+        <Text style={{ textAlign: 'center', paddingHorizontal: 10, fontSize: 13 }}>
+          {nameActionButton} successful.{'\n'}Thanks for choosing us.
+        </Text>
+        <View style={{ paddingHorizontal: 20, marginTop: 20 }}>
+          <ButtonChallenge
+            buttonStyle={{ width: '100%', borderRadius: 50 }}
+            title='Back to Home'
+            onPress={() => navigation.navigate('EZChallenge')}
+            textStyle={{ fontSize: 20 }}
+          />
+        </View>
+      </ModalPoup>
+
     </ScrollView>
   )
 }
@@ -291,7 +313,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#fff',
-   
+
   },
   wrapped_slide: {
     height: 210,
@@ -369,7 +391,7 @@ const styles = StyleSheet.create({
     marginTop: 5,
     borderRadius: 15,
     marginHorizontal: 20,
-    marginBottom:10
+    marginBottom: 10
   },
   itemParticipant: {
     flexDirection: 'row',
