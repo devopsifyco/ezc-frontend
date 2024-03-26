@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, Text, StyleSheet} from 'react-native';
+import { View, Text, StyleSheet } from 'react-native';
 import { DataProfile } from '../../models/Profile';
 
 export default function AboutScreen({ data }: { data: DataProfile | null }) {
@@ -18,6 +18,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     paddingTop: 10,
+    paddingHorizontal: 20,
   },
   description: {
     marginBottom: 16,

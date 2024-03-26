@@ -3,7 +3,7 @@ import { View, Text, TextInput, TouchableOpacity, Image } from 'react-native';
 import { useForm, Controller, SubmitHandler } from 'react-hook-form';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import { useNavigation, useRoute } from '@react-navigation/native';
-import Button from '../../../components/Button';
+import { Button } from '../../../components/Button';
 import { styles } from '.';
 import useChallengeCreate from '../../../hooks/useChallengeCreate';
 import * as Progress from 'react-native-progress';
@@ -291,6 +291,7 @@ const StepTwoScreen = () => {
               }}
               mode="time"
               display="default"
+              minimumDate={new Date()}
               onCancel={hidePicker}
               onConfirm={hidePicker}
             />
