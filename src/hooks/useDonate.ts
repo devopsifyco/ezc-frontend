@@ -1,10 +1,11 @@
 import AsyncStorage from "@react-native-async-storage/async-storage";
-import { useMutation } from "@tanstack/react-query";
+import { useMutation,useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
 import { EZCHALLENGE_API } from "../api/endPoint";
-import { Alert } from "react-native";
 
 export default function useDonate() {
+  const queryClient = useQueryClient();
+
   return useMutation({
     mutationKey: ['donatePoints'],
     mutationFn: async(dataDonate) => {
@@ -21,6 +22,7 @@ export default function useDonate() {
 
         return res.data
     },
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['dataProfile'] }),
     onError: (err) => console.log(err)
   });
 }
