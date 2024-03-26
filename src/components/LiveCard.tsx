@@ -3,6 +3,8 @@ import { Text, View, StyleSheet, Image, TouchableOpacity, } from 'react-native';
 import AvatarGroup from './AvatarGroup';
 import Moment from 'moment';
 import { Challenge } from '../models/InfChallenge';
+import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
+import { faLocationDot } from '@fortawesome/free-solid-svg-icons';
 
 
 
@@ -84,14 +86,14 @@ const LiveCard: FC<Challenge> = ({ start_time, title, address, images_path, isLi
                     <View style={{
                         flexDirection: 'row',
                         alignItems: 'center',
-                        flexWrap:'wrap'
+                        flexWrap: 'wrap'
                     }}>
-                        <Image source={require('../assets/icons/map-pin.png')} />
+                        <FontAwesomeIcon icon={faLocationDot} size={18} color='#716E90' />
                         <Text numberOfLines={2} style={{
                             fontSize: 13,
                             marginLeft: 5,
                             color: "#747688",
-                            flex: 1, 
+                            flex: 1,
                         }}>{address}</Text>
                     </View>
                 </View>

@@ -57,7 +57,6 @@ const ListCard: React.FC<Challenge> = ({  start_time, title, address, images_pat
             <Text numberOfLines={2} style={{
               fontSize: 13,
               marginLeft: 4,
-              fontWeight: "bold",
               color:"#747688",
               flexWrap: 'wrap',
               marginRight: 10,
