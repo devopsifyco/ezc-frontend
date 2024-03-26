@@ -36,7 +36,7 @@ export default function ListGift({ navigation }: NavigateType) {
                   <Text style={styles.point}>Quantity:</Text>
                   <Text style={[styles.text15, { color: "#216C53" }]}>{Gift.quantity}</Text>
                 </View>
-                <Text style={styles.des}>Hình thức nhận: Nhận quà tại Trạm gần nhất</Text>
+                <Text style={styles.des}>Mode of receipt: Receive gifts at the nearest station</Text>
               </View>
             </TouchableOpacity>
           ))
