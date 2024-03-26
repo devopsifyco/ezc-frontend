@@ -15,31 +15,32 @@ export default function WarningComponent({
     toggleModal
 }: WarningProps) {
 
+    const titleStyle = title === 'Warning' ? styles.warningTitle : styles.titleLogout;
 
     return (
         <Modal isVisible={true}>
             <View style={styles.formBackground}>
-                <Text style={styles.titleLogout}>{title}</Text>
+                <Text style={titleStyle}>{title}</Text>
                 <Text style={styles.titleText}>{description}</Text>
                 <View style={styles.actionLogout}>
-                    <LinearGradient
-                        colors={['#FF0A00', '#FF890B']}
-                        start={{ x: 0.0, y: 1.5 }}
-                        end={{ x: 1.0, y: 0.5 }}
-                        style={styles.button}>
-                        <TouchableOpacity onPress={toggleModal}>
-                            <Text>{Action1}</Text>
-                        </TouchableOpacity>
-                    </LinearGradient>
-                    <LinearGradient
-                        colors={['#FF0A00', '#FF890B']}
-                        start={{ x: 0.0, y: 0.5 }}
-                        end={{ x: 2.0, y: 0.5 }}
-                        style={styles.button}>
-                        <TouchableOpacity onPress={handleAction2}>
-                            <Text >{Action2}</Text>
-                        </TouchableOpacity>
-                    </LinearGradient>
+                    <TouchableOpacity onPress={toggleModal}>
+                        <LinearGradient
+                            colors={['#FF0A00', '#FF890B']}
+                            start={{ x: 0.0, y: 1.5 }}
+                            end={{ x: 1.0, y: 0.5 }}
+                            style={styles.button}>
+                            <Text style={styles.titleText}>{Action1}</Text>
+                        </LinearGradient>
+                    </TouchableOpacity>
+                    <TouchableOpacity onPress={handleAction2}>
+                        <LinearGradient
+                            colors={['#FF0A00', '#FF890B']}
+                            start={{ x: 0.0, y: 0.5 }}
+                            end={{ x: 2.0, y: 0.5 }}
+                            style={styles.button}>
+                            <Text style={styles.titleText}>{Action2}</Text>
+                        </LinearGradient>
+                    </TouchableOpacity>
                 </View>
             </View>
         </Modal>
@@ -102,7 +103,7 @@ const styles = StyleSheet.create({
     titleText: {
         fontSize: 14,
         color: '#FFFFFF',
-        textAlign:"center"
+        textAlign: "center"
     },
     actionLogout: {
         flexDirection: 'row',
@@ -115,4 +116,9 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
         alignItems: 'center',
     },
+    warningTitle:{
+        color:"#FFC90B",
+        fontSize: 18,
+        fontWeight: 'bold',
+    }
 });
