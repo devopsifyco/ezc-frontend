@@ -30,8 +30,6 @@ export default function ProfileScreen({ navigation }: NavigateType) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const { data: dataProfile, isLoading } = useProfile();
   const { data: hasJoined, mutate: getHasJoined } = useGetHasJoinedChallenges();
-  const [isModalVisible, setModalVisible] = useState(false);
-  const toggleModal = () => setModalVisible(!isModalVisible);
 
   useEffect(() => {
     const getOwnerId = async () => {
@@ -150,36 +148,10 @@ export default function ProfileScreen({ navigation }: NavigateType) {
           <ButtonIconText title="donation" iconProps={iconProps.faDonate} onPress={moveDonateHistory} />
           <ButtonIconText title="exchange" iconProps={iconProps.faExchange} onPress={moveHistoryExChangeGift} />
           <View style={styles.buttonLogout}>
-            <ButtonIconText title='Logout' iconProps={iconProps.faSignOut} onPress={toggleModal} />
+            <ButtonIconText title='Logout' iconProps={iconProps.faSignOut} onPress={handleLogout} />
           </View>
         </View>
       )}
-      <Modal visible={isModalVisible}>
-        <View style={styles.formBackground}>
-          <Text style={styles.titleLogout}>Logout</Text>
-          <Text style={styles.titleText}>Are you sure to Logout?</Text>
-          <View style={styles.actionLogout}>
-            <LinearGradient
-              colors={['#FF0A00', '#FF890B']}
-              start={{ x: 0.0, y: 1.5 }}
-              end={{ x: 1.0, y: 0.5 }}
-              style={styles.button}>
-              <TouchableOpacity onPress={toggleModal}>
-                <Text>Cancel</Text>
-              </TouchableOpacity>
-            </LinearGradient>
-            <LinearGradient
-              colors={['#FF0A00', '#FF890B']}
-              start={{ x: 0.0, y: 0.5 }}
-              end={{ x: 2.0, y: 0.5 }}
-              style={styles.button}>
-              <TouchableOpacity onPress={handleLogout}>
-                <Text>Logout</Text>
-              </TouchableOpacity>
-            </LinearGradient>
-          </View>
-        </View>
-      </Modal>
     </>
   );
 }
@@ -295,34 +267,5 @@ const styles = StyleSheet.create({
     bottom: '10%',
     alignItems: 'center',
     alignSelf: 'center'
-  },
-  formBackground: {
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#216C53',
-    padding: 40,
-    borderRadius: 20,
-    gap: 10,
-    zIndex: 1000,
-  },
-  titleLogout: {
-    fontSize: 18,
-    fontWeight: 'bold',
-    color: '#FFFFFF',
-  },
-  titleText: {
-    fontSize: 14,
-    color: '#FFFFFF',
-  },
-  actionLogout: {
-    flexDirection: 'row',
-    gap: 20,
-  },
-  button: {
-    height: 30,
-    paddingHorizontal: 20,
-    borderRadius: 10,
-    justifyContent: 'center',
-    alignItems: 'center',
   },
 });

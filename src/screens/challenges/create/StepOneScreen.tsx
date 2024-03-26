@@ -4,7 +4,7 @@ import { useForm, SubmitHandler, Controller } from 'react-hook-form';
 import SelectedImages from './SelectImage';
 import { styles } from '.';
 import { useNavigation } from '@react-navigation/native';
-import Button from '../../../components/Button';
+import { Button } from '../../../components/Button';
 import Header from './Header';
 
 type Input = {
