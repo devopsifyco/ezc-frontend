@@ -208,7 +208,7 @@ const ChallengeDetail = ({ navigation, route }: NavigateType) => {
           <Image style={styles.avatar} source={{ uri: owner_id?.avatar.name }} />
           <View style={styles.infUser}>
             <Text style={{ fontSize: 16, fontWeight: 'bold', color: "#363636" }}>{owner_id?.username}</Text>
-            <Text>Organizer</Text>
+            <Text style={{color:"#706E8F"}}>Organizer</Text>
           </View>
         </View>
         <View style={{ marginBottom: showFullContent ? 10 : 0 }}>
@@ -230,7 +230,7 @@ const ChallengeDetail = ({ navigation, route }: NavigateType) => {
         <View style={styles.section}>
           <Text style={styles.sectionName}>Participant</Text>
           <TouchableOpacity style={styles.seeAll} onPress={() => navigation.navigate('Participant', { id })}>
-            <Text>See All</Text>
+            <Text style={{color:"#747688"}}>See All</Text>
             <Image source={require('../assets/icons/iconSeeAll.png')} />
           </TouchableOpacity>
         </View>
@@ -267,7 +267,7 @@ const ChallengeDetail = ({ navigation, route }: NavigateType) => {
             ))
           ) : (
             <View style={{ alignItems: "center" }}>
-              <Text style={{ fontSize: 16 }}>No paticipant available</Text>
+              <Text style={{ fontSize: 16, color:"#747688" }}>No paticipant available</Text>
             </View>
           )
         }

@@ -60,12 +60,12 @@ const ExChangeGift = ({ navigation, route }: NavigateType) => {
             const inputValidationErrors: Record<string, string> = {};
             Object.keys(dataInput).forEach(key => {
                 if (!dataInput[key]) {
-                    inputValidationErrors[key] = 'Vui lòng nhập trường này';
+                    inputValidationErrors[key] = 'Please enter this field';
                 }
             });
 
             if (dataInput.phone && dataInput.phone.length > 11) {
-                inputValidationErrors['phone'] = 'Số điện thoại chỉ được tối đa 11 số';
+                inputValidationErrors['phone'] = 'The maximum phone number length is 11 digits';
             }
 
             if (Object.keys(inputValidationErrors).length > 0) {
@@ -91,9 +91,9 @@ const ExChangeGift = ({ navigation, route }: NavigateType) => {
         let newErrors: Record<string, string> = {};
 
         if (name === 'phone' && value.length > 11) {
-            newErrors[name] = 'Số điện thoại chỉ được tối đa 11 số';
+            newErrors[name] = 'The maximum phone number length is 11 digits';
         } else if (value.trim() === '') {
-            newErrors[name] = 'Vui lòng nhập trường này';
+            newErrors[name] = 'Please enter this field';
         } else {
             delete newErrors[name];
         }

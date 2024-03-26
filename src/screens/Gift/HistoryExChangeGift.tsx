@@ -5,12 +5,31 @@ import HeaderChallenge from '../../components/HeaderChallenge';
 import { HistoryExChangeGiftData } from '../../models/infGifts';
 import { useHistoryExChangeGift } from '../../hooks/useGift';
 import Moment from 'moment';
+import 'moment/locale/vi';
+Moment.locale('vi');
 
 export default function HistoryExChangeGift({ navigation }: NavigateType) {
 
     const { data: HistoryGifts } = useHistoryExChangeGift()
 
-    console.log("History", HistoryGifts);
+    const renderTime = (time: Date) => {
+        const currentTime = Moment();
+        const timeDiff = Moment.duration(currentTime.diff(time));
+
+        if (timeDiff.asSeconds() < 60) {
+            return 'just now';
+        } else if (timeDiff.asMinutes() < 60) {
+            return `${Math.floor(timeDiff.asMinutes())} minutes ago`;
+        } else if (timeDiff.asHours() < 24) {
+            return `${Math.floor(timeDiff.asHours())} hours ago`;
+        } else if (timeDiff.asDays() < 2) {
+            return 'yesterday';
+        } else if (timeDiff.asDays() < 7) {
+            return `${Math.floor(timeDiff.asDays())} days ago`;
+        } else {
+            return Moment(time).format('ddd, MMM DD • LT');
+        }
+    };
 
     return (
         <ScrollView style={styles.container}>
@@ -37,9 +56,9 @@ export default function HistoryExChangeGift({ navigation }: NavigateType) {
                                 </View>
                                 <Text style={{
                                     color: "#216C53",
-                                    fontWeight: "bold",
+                                    fontStyle:"italic"
                                 }}>
-                                    {Moment.utc(Gift.redeemed_at).format('ddd, MMM DD • LT')}
+                                    {renderTime(Gift.redeemed_at)}
                                 </Text>
                             </View>
                         </View>
@@ -129,7 +148,7 @@ export const styles = StyleSheet.create({
     },
     emptyText: {
         fontSize: 18,
-        color: '#747688', 
+        color: '#747688',
         textAlign: 'center',
     },
 });

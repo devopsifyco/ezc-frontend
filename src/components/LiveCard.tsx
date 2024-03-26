@@ -3,10 +3,12 @@ import { Text, View, StyleSheet, Image, TouchableOpacity, } from 'react-native';
 import AvatarGroup from './AvatarGroup';
 import Moment from 'moment';
 import { Challenge } from '../models/InfChallenge';
+import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
+import { faLocationDot } from '@fortawesome/free-solid-svg-icons';
 
 
 
-const LiveCard: FC<Challenge> = ({  Days, title, address, images_path, isLive, onPress }) => {
+const LiveCard: FC<Challenge> = ({ start_time, title, address, images_path, isLive, onPress }) => {
 
     return (
         <View style={{
@@ -31,7 +33,7 @@ const LiveCard: FC<Challenge> = ({  Days, title, address, images_path, isLive, o
                             width: 218,
                             height: 150
                         }}
-                        source={{ uri: `${images_path?.[0]?.downloadLink}`}} resizeMode="cover" />
+                        source={{ uri: `${images_path?.[0]?.downloadLink}` }} resizeMode="cover" />
                     <View style={{ position: 'absolute', left: 8, top: 8 }}>
                         <Text style={{
                             width: 45,
@@ -45,8 +47,8 @@ const LiveCard: FC<Challenge> = ({  Days, title, address, images_path, isLive, o
                             paddingHorizontal: 6,
                             paddingVertical: 8
                         }}>
-                            <Text style={{ fontSize: 18, fontWeight: '700' }}>{Moment.utc(Days).format('DD')}</Text>{'\n'}
-                            {Moment.utc(Days).format('MMM')}
+                            <Text style={{ fontSize: 18, fontWeight: '700' }}>{Moment.utc(start_time).format('DD')}</Text>{'\n'}
+                            {Moment.utc(start_time).format('MMM')}
                         </Text>
                     </View>
 
@@ -84,11 +86,14 @@ const LiveCard: FC<Challenge> = ({  Days, title, address, images_path, isLive, o
                     <View style={{
                         flexDirection: 'row',
                         alignItems: 'center',
+                        flexWrap: 'wrap'
                     }}>
-                        <Image source={require('../assets/icons/map-pin.png')} />
-                        <Text style={{
+                        <FontAwesomeIcon icon={faLocationDot} size={18} color='#716E90' />
+                        <Text numberOfLines={2} style={{
                             fontSize: 13,
                             marginLeft: 5,
+                            color: "#747688",
+                            flex: 1,
                         }}>{address}</Text>
                     </View>
                 </View>
