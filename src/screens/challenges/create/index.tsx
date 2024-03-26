@@ -6,7 +6,6 @@ import {
 } from 'react-native';
 import StepOneScreen from './StepOneScreen';
 import StepTwoScreen from './StepTwoScreen';
-import FinalStep from './FinalStep';
 
 
 const CreateChallenges = ({ route }: any) => {
@@ -25,8 +24,6 @@ const CreateChallenges = ({ route }: any) => {
         return <StepOneScreen />;
       case 2:
         return <StepTwoScreen />;
-      case 3:
-        return <FinalStep />;
       default:
         return null;
     }

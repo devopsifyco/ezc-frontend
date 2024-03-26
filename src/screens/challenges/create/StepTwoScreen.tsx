@@ -114,21 +114,19 @@ const StepTwoScreen = () => {
   };
 
   const validateStartDate = (value: Date) => {
-    const currentTime = new Date();
-    const minStartDate = new Date(
-      currentTime.getTime() + 3 * 24 * 60 * 60 * 1000,
-    );
-    return value >= minStartDate || 'At least 3 days from today!';
+    if (!value) {
+      return 'Please select date!'
+    }
   };
 
   const validateEndDate = (value: Date) => {
     if (startDate !== undefined) {
-      const minEndDate = new Date(
-        startDate.getTime() + 7 * 24 * 60 * 60 * 1000,
-      );
-      return value >= minEndDate || 'At least 7 days from start!';
+      if (startDate !== undefined) {
+        const minEndDate = new Date(startDate.getTime() + 2 * 24 * 60 * 60 * 1000);
+        return value >= minEndDate || 'At least 2 days from start!';
+      }
     }
-    return ' *';
+    return 'Please select date!'
   };
 
   useEffect(() => {
@@ -252,6 +250,7 @@ const StepTwoScreen = () => {
               }}
               mode="date"
               display="default"
+              minimumDate={new Date()}
               onCancel={hidePicker}
               onConfirm={hidePicker}
             />
