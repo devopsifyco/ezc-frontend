@@ -6,6 +6,7 @@ import * as Progress from 'react-native-progress';
 import useShowParticipants from '../../../hooks/useShowParticipants';
 import useCheckIn from '../../../hooks/useCheckInParticipants';
 import { useGetOneChallengesApproved } from '../../../hooks/useChallengeApproved';
+import Header from '../../../components/Header';
 
 interface ParticipantsType {
     _id: string;
@@ -62,10 +63,9 @@ export default function CheckIn({ route }: any) {
             <View style={styles.formContainer}>
                 <View style={styles.listeItems}>
                     <View style={styles.item}>
-                        <Image source={{ uri: item.avatar.name }} style={styles.itemImage} />
+                        <Image source={{ uri: item.avatar.downloadLink }} style={styles.itemImage} />
                         <View style={styles.itemDetail}>
                             <Text style={styles.itemName}>{item.username}</Text>
-                            {/*<Text style={styles.itemEmail}>{item.email}</Text>*/}
                         </View>
                         <View style={styles.displayOnelineSmall}>
                             {!participant.is_checkin && (
@@ -90,6 +90,7 @@ export default function CheckIn({ route }: any) {
 
     return (
         <View style={styles.container}>
+            <Header title='Checkin participants' />
             {dataListParticipants ? (
                 <FlatList
                     keyExtractor={(_item, index) => index.toString()}
